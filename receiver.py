@@ -28,15 +28,10 @@ mm_to_encoder = 1/(25*math.pi/2048)
 
 def on_message(client, userdata, msg):
     print(str(msg.payload,'utf-8'))
-    message = str(msg.payload, 'utf-8')
-    #print('x' in str(msg.payload))
+    message = str(msg.payload, 'utf-8') 
     global position
-    #print('hej1')
-    #print(msg.payload[msg.payload.find('x')+1:])
-    if ('x' in message):
-        #print('hej2')
-        position[0] = position[0] + int(message[message.find('x')+1:])
-        #print('hej3')
+    if ('x' in message):       
+        position[0] = position[0] + int(message[message.find('x')+1:])       
         odrv0.axis0.controller.move_to_pos(position[0]*mm_to_encoder)
         print('input='+str(position[0]*mm_to_encoder))
         print(position)
