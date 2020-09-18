@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <!--<script src='paho-mqtt.js'></script>-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+        <script>
+            // Create a client instance
+        let client;
+            // set callback handlers
+
+            function MQTTconnect() {
+                client = new Paho.MQTT.Client('130.237.59.45', 9001, "MonjolaJavascript");
+                client.onConnectionLost = onConnectionLost;
+                client.onMessageArrived = onMessageArrived;
+                client.connect({ onSuccess: onConnect });
+            }
+            // connect the client
+
+
+
+            // called when the client connects
+            function onConnect() {
+                // Once a connection has been made, make a subscription and send a message.
+                console.log("onConnect");
+                client.subscribe("test/topic");
+                message = new Paho.MQTT.Message("Javascript connected");
+                message.destinationName = "test/topic";
+                client.send(message);
+            }
+
+            // called when the client loses its connection
+            function onConnectionLost(responseObject) {
+                if (responseObject.errorCode !== 0) {
+                    console.log("onConnectionLost:" + responseObject.errorMessage);
+                }
+            }
+
+            // called when a message arrives
+            function onMessageArrived(message) {
+                console.log("onMessageArrived:" + message.payloadString);
+            }
+            function sendcordinate(msg) {
+                let distance = ''
+                if (document.getElementById('10mm').checked) {
+                    distance = '10';
+                } else if (document.getElementById('100mm').checked) {
+                    distance = '100';
+                } else {
+                    distance = '1';
+                }
+                console.log(distance)
+                msg = msg+distance;
+                message = new Paho.MQTT.Message(msg);
+                message.destinationName = "test/topic";
+                client.send(message);
+            }
+            function turnonoff(status){
+                const onoffmsg = new Paho.MQTT.Message(status);
+                onoffmsg.destinationName = "test/topic";
+                client.send(onoffmsg);
+            }
+        </script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <script>
+            MQTTconnect();
+        </script>
+        <div><button onclick=sendcordinate("x+")>^</button></div>
+        <div>
+            <button onclick=sendcordinate("y+")>
+                <-
+            </button>
+            <button onclick=sendcordinate("home")>
+                home
+            </button>
+            <button onclick=sendcordinate("y-")>
+                ->
+            </button>
+        </div>
+        <div>
+            <button onclick=sendcordinate("x-")>
+                v
+            </button>
+        </div>
+        
+        <div>
+            <input type="radio" name="1" id="1mm" value="1mm">1mm<br>
+            <input type="radio" name="1" id="10mm" value="10mm">10mm<br>
+            <input type="radio" name="1" id="100mm" value="100mm">100mm<br>
+
+        </div>
+        <div>
+            <button onclick=turnonoff('off')>off</button>
+            <button onclick=turnonoff('on')>on</button>
+        </div>
+        <script src="" async defer></script>
+    </body>
+</html>
+
+
