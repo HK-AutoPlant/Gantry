@@ -2,111 +2,94 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-        <!--<script src='paho-mqtt.js'></script>-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
-        <script>
-            // Create a client instance
-        let client;
-            // set callback handlers
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
 
-            function MQTTconnect() {
-                client = new Paho.MQTT.Client('130.237.59.45', 9001, "MonjolaJavascript");
-                client.onConnectionLost = onConnectionLost;
-                client.onMessageArrived = onMessageArrived;
-                client.connect({ onSuccess: onConnect });
-            }
-            // connect the client
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"
+        type="text/javascript"></script>
+    <script src="script.js"></script>
+</head>
 
-
-
-            // called when the client connects
-            function onConnect() {
-                // Once a connection has been made, make a subscription and send a message.
-                console.log("onConnect");
-                client.subscribe("test/topic");
-                message = new Paho.MQTT.Message("Javascript connected");
-                message.destinationName = "test/topic";
-                client.send(message);
-            }
-
-            // called when the client loses its connection
-            function onConnectionLost(responseObject) {
-                if (responseObject.errorCode !== 0) {
-                    console.log("onConnectionLost:" + responseObject.errorMessage);
-                }
-            }
-
-            // called when a message arrives
-            function onMessageArrived(message) {
-                console.log("onMessageArrived:" + message.payloadString);
-            }
-            function sendcordinate(msg) {
-                let distance = ''
-                if (document.getElementById('10mm').checked) {
-                    distance = '10';
-                } else if (document.getElementById('100mm').checked) {
-                    distance = '100';
-                } else {
-                    distance = '1';
-                }
-                console.log(distance)
-                msg = msg+distance;
-                message = new Paho.MQTT.Message(msg);
-                message.destinationName = "test/topic";
-                client.send(message);
-            }
-            function turnonoff(status){
-                const onoffmsg = new Paho.MQTT.Message(status);
-                onoffmsg.destinationName = "test/topic";
-                client.send(onoffmsg);
-            }
-        </script>
-    </head>
-    <body>
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-        <script>
-            MQTTconnect();
-        </script>
-        <div><button onclick=sendcordinate("x+")>^</button></div>
-        <div>
-            <button onclick=sendcordinate("y+")>
-                <-
-            </button>
-            <button onclick=sendcordinate("home")>
-                home
-            </button>
-            <button onclick=sendcordinate("y-")>
-                ->
-            </button>
+<body>
+    <div class="grid-container">
+        <div class="Logo">
+            <h1>AutoPlant</h1>
         </div>
-        <div>
-            <button onclick=sendcordinate("x-")>
-                v
-            </button>
+        <div class="Explanation">
+            <ul>
+                <li>red is empty</li>
+                <li>green is occupied</li>
+                <li>Blue is in progress</li>
+            </ul>
         </div>
-        
-        <div>
-            <input type="radio" name="1" id="1mm" value="1mm">1mm<br>
-            <input type="radio" name="1" id="10mm" value="10mm">10mm<br>
-            <input type="radio" name="1" id="100mm" value="100mm">100mm<br>
-
-        </div>
-        <div>
+        <div class="On-off">
             <button onclick=turnonoff('off')>off</button>
             <button onclick=turnonoff('on')>on</button>
         </div>
-        <script src="" async defer></script>
-    </body>
+        <div class="Void">
+            <p>Empty space</p>
+        </div>
+        <div class="Top-View">
+            <p>Picture of the top view</p>
+        </div>
+        <div class="Buffer">
+            <p>Picture of the Buffer</p>
+        </div>
+        <div class="Manual-Control">
+            <div class="Manual-Control-Inner">
+                <div class="Up">
+                    <button onclick=sendcordinate("x+")>^</button>
+                </div>
+                <div class="Side">
+                    <button onclick=sendcordinate("y+")>
+                        < </button>
+                            <button onclick=sendcordinate("home")>
+                                home
+                            </button>
+                            <button onclick=sendcordinate("y-")>
+                                >
+                            </button>
+                </div>
+                <div class="Down">
+                    <button onclick=sendcordinate("x-")>
+                        v
+                    </button>
+                </div>
+            </div>
+
+            <div class="mm-choice">
+                <div class="one">
+                    <input class="mm-button" type="radio" name="1" id="1mm" value="1mm">1mm
+                </div>
+                <div class="ten"><input class="mm-button" type="radio" name="1" id="10mm" value="10mm">10mm</div>
+
+                <div class="hundred"><input class="mm-button" type="radio" name="1" id="100mm" value="100mm">100mm</div>
+
+
+
+
+            </div>
+        </div>
+        <div class="Log">
+            <p>log window</p>
+        </div>
+        <div class="Webcam">
+            <p>webcam feed</p>
+        </div>
+    </div>
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+    <script src="" async defer></script>
+</body>
+
 </html>
-
-

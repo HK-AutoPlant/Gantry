@@ -1,0 +1,66 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 0.3fr 1.7fr 1fr;
+  gap: 1px 1px;
+  grid-template-areas:
+    "Logo Explanation On-off Void"
+    "Top-View Top-View Top-View Buffer"
+    "Manual-Control Log Log Webcam";
+}
+
+.Logo { grid-area: Logo; }
+
+.Explanation { grid-area: Explanation; }
+
+.On-off { grid-area: On-off; }
+
+.Void { grid-area: Void; }
+
+.Top-View { grid-area: Top-View; }
+
+.Buffer { grid-area: Buffer; }
+
+.Manual-Control { grid-area: Manual-Control; }
+
+.Log { grid-area: Log; }
+
+.Webcam { grid-area: Webcam; }
+
+.Manual-Control-Inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: 1px 1px;
+  grid-template-areas:
+    ". Up . ."
+    "Side Side Side ."
+    ". Down . ."
+    ". . . .";
+}
+
+.Up { grid-area: Up; text-align: center; }
+
+.Side { grid-area: Side; text-align: center; }
+
+.Down { grid-area: Down; text-align: center; }
+
+.mm-button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.mm-choice {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 1px 1px;
+  grid-template-areas:
+    "one ten hundred";
+}
