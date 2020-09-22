@@ -12,7 +12,7 @@ zAxisMotor.Home();
 while(True):
     msg = 'z200'; #Read the message:
     if(msg =='Home'):
-        zAxisMotor.Home();
+        zAxisMotor.home();
     elif(msg[0] == 'z'):
         zAxisMotor.move(int(msg[1:]));
     elif(msg == 'Auto'):

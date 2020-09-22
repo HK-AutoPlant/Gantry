@@ -14,7 +14,7 @@ class stepperMotor():
 
         self.currentPosition = 0;
 
-    def Home(self):
+    def home(self):
         print("Homing the motor");
         self._A4988.wakeUp();
         self._A4988.moveCW();
@@ -45,7 +45,13 @@ class stepperMotor():
         print("Current Position: ", self.currentPosition);
 
 
+    def moveUp(self):
+        print("Move to predefined position")
+    def moveDown(self):
+        print("Move to predefined position")
+
     def distanceToSteps(self, distance):
+        # 2mm per varv!
         dm = 0.01;
         leadAngle = distance;
         return distance;
