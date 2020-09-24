@@ -16,6 +16,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         #Load the UI Page
         uic.loadUi('mainwindow.ui', self)
+	#self.pushButton.clicked.connect(self.pressed)
 
     def pressed(self, odrv):        
         self.progressBar.setProperty("value",self.progressBar.value()+1)
