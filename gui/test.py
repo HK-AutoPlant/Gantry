@@ -1,59 +1,83 @@
-# window.progressbar.    = od.busvoltage()
-# pyuic5 mainwindow.ui -o MainWindow.py
-#while (1):
-	#app.exec()
-	
 from PyQt5 import QtWidgets, uic , QtCore  
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 #from pyqtgraph import PlotWidget
 #import pyqtgraph as pg
-import sys
 import time
 import odrive
+import traceback, sys
 
-b = 0
-window = 0
-b1 = 0
-# #
-# class WorkerThread(QtCore.QObject):
-#     signalExample = QtCore.pyqtSignal(str, int)
- 
-#     def __init__(self):
-#         super().__init__()
- 
-#     @QtCore.pyqtSlot()
-#     def run(self):
-#         while True:
-#             # Long running task ...
-#             self.signalExample.emit("leet", 1337)
-#             time.sleep(5)
+
+class WorkerSignals(QObject):
+    '''
+    Defines the signals available from a running worker thread.
+
+    Supported signals are:
+
+    finished
+        No data
+    
+    error
+        `tuple` (exctype, value, traceback.format_exc() )
+    
+    result
+        `object` data returned from processing, anything
+
+    progress
+        `int` indicating % progress 
+
+    '''
+    finished = pyqtSignal()
+    error = pyqtSignal(tuple)
+    result = pyqtSignal(object)
+    progress = pyqtSignal(int)
 
 
 class Worker(QRunnable):
     '''
     Worker thread
+
     Inherits from QRunnable to handler worker thread setup, signals and wrap-up.
+
     :param callback: The function callback to run on this worker thread. Supplied args and 
                      kwargs will be passed through to the runner.
     :type callback: function
     :param args: Arguments to pass to the callback function
     :param kwargs: Keywords to pass to the callback function
+
     '''
+
     def __init__(self, fn, *args, **kwargs):
         super(Worker, self).__init__()
+
         # Store constructor arguments (re-used for processing)
         self.fn = fn
         self.args = args
         self.kwargs = kwargs
+        self.signals = WorkerSignals()    
+
+        # Add the callback to our kwargs
+        self.kwargs['progress_callback'] = self.signals.progress        
 
     @pyqtSlot()
     def run(self):
         '''
         Initialise the runner function with passed args, kwargs.
         '''
-        self.fn(*self.args, **self.kwargs)
+        
+        # Retrieve args/kwargs here; and fire processing using them
+        try:
+            result = self.fn(*self.args, **self.kwargs)
+        except:
+            traceback.print_exc()
+            exctype, value = sys.exc_info()[:2]
+            self.signals.error.emit((exctype, value, traceback.format_exc()))
+        else:
+            self.signals.result.emit(result)  # Return the result of the processing
+        finally:
+            self.signals.finished.emit()  # Done
+        
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -71,8 +95,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.odrv0 = self.ConnectOdrive()
        
         self.startWorkers()
-        self.odriveConnect.clicked.connect(self.startWorkers)
-        self.closedLoopAxis1CheckBox.clicked.connect(self.closedLoop)
+        #self.odriveConnect.clicked.connect(self.startWorkers)
         #self.showVolt()
         #self.velocity_in_X()
        # self.batteryCheck() 
@@ -82,29 +105,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.timer.timeout.connect(self.limitVelocity_in_X)
         self.timer.start()
 
-        # timer for updating battery voltage
-        self.batteryUpdateTimer = QTimer()
-        self.batteryUpdateTimer.setInterval(5000)
-        self.batteryUpdateTimer.timeout.connect(self.batteryUpdatevalue)
-        self.batteryUpdateTimer.start()
-
-    def closedLoop(self):
-        if self.closedLoopAxis1CheckBox.isChecked():
-            try:            
-                self.odrv0.axis1.requested_state = 8
-            except:
-                pass
-
-    def batteryUpdatevalue(self):
-        #print("trying")
-        try:
-            #print(self.odrv0.vbus_voltage)
-            vbusVoltage = self.odrv0.vbus_voltage
-            self.batteryVoltage.setText(str(vbusVoltage))
-            self.lcdNumber.setProperty("value",vbusVoltage)
-        except:
-            pass
-
+    def showVolt(self):
+        print(self.odrv0.vbus_voltage)
+        vbusVoltage = self.odrv0.vbus_voltage
+        self.batteryVoltage.setText(str(vbusVoltage))
+        self.lcdNumber.setProperty("value",vbusVoltage)
 
     def limitVelocity_in_X(self):
         max_vel = self.velocityLimitX.value()  
@@ -139,7 +144,23 @@ class MainWindow(QtWidgets.QMainWindow):
             #print("hej")
             self.batteryCheck()
 
- 
+    def batteryUpdatevalue(self):
+        #print(self.odrv0)
+        #while self.odrv0 == None:
+         #   time.sleep(1)
+        #self.odrv0 = odrive.find_any() # Finds the Odrive
+        time.sleep(1)
+        #print(odrv0)
+        for n in range(0,1):
+            #while(0):            
+            vbusVoltage = self.odrv0.vbus_voltage
+            #vbusVoltage = 5
+            self.batteryVoltage.setText(str(vbusVoltage))
+            self.lcdNumber.setProperty("value",vbusVoltage)
+            #print("hej")            
+            time.sleep(1)
+        
+            #QApplication.processEvents() 
 
     def batteryCheck(self):
     # Pass the function to execute
@@ -148,34 +169,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.threadpool.start(worker)
    
     def movePosX(self):
-        while(True):
-            posX = self.posInX.value()
-            print(posX)
-            self.lcd_vel.setProperty("value",posX) 
-            try:
-                print("trying to move")
-                self.odrv0.axis1.controller.move_incremental(posX,1)
-            except:
-                pass
-            
+        posX = self.posInX.value()
+        self.lcd_vel.setProperty("value",posX) 
+        try:
+            self.odrv0.axis1.controller.move_incremental(posX,1)
+        except:
+            pass
         
-
     
-        
-def main():
-    global window
-    app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow()
-    
-    #global b 
-    #b = MainWindow()
-    #b= QtWidgets.QApplication.processEvents()
-    #window.show()       
-    sys.exit(app.exec_())
-       
-    
-
-if __name__ == '__main__':   
-    #while(True):
-     #   print("hej")     
-    main()
+app = QApplication([])
+window = MainWindow()
+app.exec_()
