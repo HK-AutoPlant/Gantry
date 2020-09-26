@@ -13,6 +13,7 @@ import sys
 import time
 import odrive
 import math
+import random
 
 b = 0
 window = 0
@@ -90,7 +91,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # timer for updating battery voltage
         self.batteryUpdateTimer = QTimer()
-        self.batteryUpdateTimer.setInterval(5000)
+        self.batteryUpdateTimer.setInterval(1500)
         self.batteryUpdateTimer.timeout.connect(self.batteryUpdatevalue)
         self.batteryUpdateTimer.start()
 
@@ -107,9 +108,19 @@ class MainWindow(QtWidgets.QMainWindow):
         #print("trying")
         try:
             #print(self.odrv0.vbus_voltage)
-            vbusVoltage = self.odrv0.vbus_voltage
+            # Estimated State Of Chare(SOC) 
+            # taken from https://www.energymatters.com.au/components/battery-voltage-discharge/
+            # Linear regressen y = k*x + m was made
+            vbusVoltage = random.uniform(11.5, 13) #self.odrv0.vbus_voltage
             self.batteryVoltage.setText(str(vbusVoltage))
             self.lcdNumber.setProperty("value",vbusVoltage)
+            chargeLevel = round(92.98507 * vbusVoltage - 1095.39005, 1) 
+            if chargeLevel > 100:
+                chargeLevel = 100
+            if chargeLevel < 0:
+                chargeLevel = 0
+            print(chargeLevel)
+            self.batteryChargeLevel.setProperty("value",chargeLevel)
         except:
             pass
 
