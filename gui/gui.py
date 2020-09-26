@@ -83,7 +83,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.pushButton_Right.clicked.connect(self.moveRight)
         self.pushButton_Left.clicked.connect(self.moveLeft)
         self.pushButton_Home.clicked.connect(self.moveHome)
-
+        
+        # pushButton for buffer
+        self.pushButton_BufferEmptied.clicked.connect(self.emptyBuffer)
+    
         self.timer = QTimer()
         self.timer.setInterval(100)
         self.timer.timeout.connect(self.limitVelocity_in_X)
@@ -93,7 +96,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.batteryUpdateTimer = QTimer()
         self.batteryUpdateTimer.setInterval(1500)
         self.batteryUpdateTimer.timeout.connect(self.batteryUpdatevalue)
-        self.batteryUpdateTimer.start()
+        #self.batteryUpdateTimer.start()
 
     def closedLoop(self):
         if self.closedLoopAxis1CheckBox.isChecked():
@@ -166,9 +169,21 @@ class MainWindow(QtWidgets.QMainWindow):
             self.odrv0.axis1.controller.move_incremental(posX,1)
         except:
             pass
-            
+   
+    def emptyBuffer(self):
+        #for n in range(1,5):
+            #str("self" +"." + frame_ + "n" + ".setStyleSheet('background-color:black')")
+        self.frame_1.setStyleSheet('background-color:black')
+        #time.sleep(1)
+        self.frame_2.setStyleSheet('background-color:black')
+        #time.sleep(1)
+        #self.frame_1.setStyleSheet('background-color:rgb(0, 255, 0)')
+        self.frame_3.setStyleSheet('background-color:black')
+        #time.sleep(1)
+        self.frame_1.setStyleSheet('background-color:rgb(0, 255, 0)')
+   
     def moveUp(self):        
-        self.lcdPos_Up.setProperty("value", round(self.lcdPos_Up.value() + 0.1 , 2))
+        self.lcdPos_Up.setProperty("value", round(self.lcdPos_Up.value() + 0.1 , 2))        
         try:
             self.odrv0.axis1.controller.move_incremental(0.1 , 1)
         except:
