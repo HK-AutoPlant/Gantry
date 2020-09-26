@@ -12,6 +12,7 @@ from PyQt5.QtCore import *
 import sys
 import time
 import odrive
+import math
 
 b = 0
 window = 0
@@ -68,14 +69,19 @@ class MainWindow(QtWidgets.QMainWindow):
         self.show()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
         self.pushButton.clicked.connect(self.pressed)
-        self.odrv0 = self.ConnectOdrive()
+        #self.odrv0 = self.ConnectOdrive()
        
         self.startWorkers()
-        self.odriveConnect.clicked.connect(self.startWorkers)
+        #self.odriveConnect.clicked.connect(self.startWorkers)
+        self.odriveConnect.clicked.connect(self.workerConnectOdrive)
         self.closedLoopAxis1CheckBox.clicked.connect(self.closedLoop)
-        #self.showVolt()
-        #self.velocity_in_X()
-       # self.batteryCheck() 
+        
+        # pushButtons for navigation
+        self.pushButton_Up.clicked.connect(self.moveUp)
+        self.pushButton_Down.clicked.connect(self.moveDown)
+        self.pushButton_Right.clicked.connect(self.moveRight)
+        self.pushButton_Left.clicked.connect(self.moveLeft)
+        self.pushButton_Home.clicked.connect(self.moveHome)
 
         self.timer = QTimer()
         self.timer.setInterval(100)
@@ -90,8 +96,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def closedLoop(self):
         if self.closedLoopAxis1CheckBox.isChecked():
+            print("trying to enter closed loop")
             try:            
                 self.odrv0.axis1.requested_state = 8
+                print("closedLoop set")
             except:
                 pass
 
@@ -105,62 +113,85 @@ class MainWindow(QtWidgets.QMainWindow):
         except:
             pass
 
-
     def limitVelocity_in_X(self):
         max_vel = self.velocityLimitX.value()  
         self.lcd_vel.setProperty("value",max_vel) 
             
-    def startWorkers(self):        
+    def startWorkers(self): 
+        pass
         # Pass the function to execute
-        worker   = Worker(self.batteryUpdatevalue)
-        
-        worker3  = Worker(self.movePosX)
-        if self.odriveConnect.isChecked():
-            worker2  = Worker(self.ConnectOdrive)
-            #worker2.signals.finished.connect(self.batteryUpdatevalue)
-            self.threadpool.start(worker2)
+        #worker   = Worker(self.batteryUpdatevalue)        
+        #worker3  = Worker(self.movePosX)
         # Execute
+        #self.threadpool.start(worker)
+        #self.threadpool.start(worker3)
+
+    def workerConnectOdrive(self):
+        worker = Worker(self.ConnectOdrive)
         self.threadpool.start(worker)
-        self.threadpool.start(worker3)
 
     def ConnectOdrive(self):
-        print("connecting odrive")
+        #print("connecting odrive")
+        self.odriveConnect.setText("connecting odrive")
         # connect odrive and return object for all other funciton.
         # This must be proteced by a Mutex!!!! or Signals!!
         odrv0 = odrive.find_any()
-        print("odrive connected")
+        #print("odrive connected")
+        self.odriveConnect.setText("odrive connected")
         return odrv0
 
     def pressed(self):        
         self.progressBar.setProperty("value",self.progressBar.value()+1)
         #print("1")
         self.batteryVoltage.setText("hejhej")
-        if(self.checkBox.isChecked()):
-            #print("hej")
-            self.batteryCheck()
 
- 
-
-    def batteryCheck(self):
-    # Pass the function to execute
-        worker  = Worker(self.batteryUpdatevalue)
-    # Execute
-        self.threadpool.start(worker)
    
     def movePosX(self):
-        while(True):
-            posX = self.posInX.value()
-            print(posX)
-            self.lcd_vel.setProperty("value",posX) 
-            try:
-                print("trying to move")
-                self.odrv0.axis1.controller.move_incremental(posX,1)
-            except:
-                pass
+        posX = self.posInX.value()
+        print(posX)
+        self.lcd_vel.setProperty("value",posX) 
+        try:
+            print("trying to move")
+            self.odrv0.axis1.controller.move_incremental(posX,1)
+        except:
+            pass
             
+    def moveUp(self):        
+        self.lcdPos_Up.setProperty("value", round(self.lcdPos_Up.value() + 0.1 , 2))
+        try:
+            self.odrv0.axis1.controller.move_incremental(0.1 , 1)
+        except:
+            pass
         
+    def moveDown(self):        
+        self.lcdPos_Up.setProperty("value", round(self.lcdPos_Up.value() - 0.1 , 2))
+        try:
+            self.odrv0.axis1.controller.move_incremental(-0.1 , 1)
+        except:
+            pass
 
+    def moveLeft(self):        
+        self.lcdPos_Left.setProperty("value", round(self.lcdPos_Left.value() - 0.1 , 2))
+        try:
+            self.odrv0.axis0.controller.move_incremental(-0.1 , 1)
+        except:
+            pass
+        
+    def moveRight(self):        
+        self.lcdPos_Left.setProperty("value", round(self.lcdPos_Left.value() + 0.1 , 2))
+        try:
+            self.odrv0.axis0.controller.move_incremental(0.1 , 1)
+        except:
+            pass
     
+    def moveHome(self):
+        self.lcdPos_Up.setProperty("value", 0)
+        self.lcdPos_Left.setProperty("value", 0)
+        try:
+            self.odrv0.axis0.controller.input_pos(0) 
+            self.odrv0.axis1.controller.input_pos(0)
+        except:
+            pass
         
 def main():
     global window
@@ -171,10 +202,8 @@ def main():
     #b = MainWindow()
     #b= QtWidgets.QApplication.processEvents()
     #window.show()       
-    sys.exit(app.exec_())
-       
+    sys.exit(app.exec_())    
     
-
 if __name__ == '__main__':   
     #while(True):
      #   print("hej")     
