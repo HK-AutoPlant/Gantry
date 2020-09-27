@@ -64,29 +64,15 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         #Load the UI Page
-        uic.loadUi('mainwindow.ui', self)
-        # Standrad ControlMode = Auto
-        self.controllerMode = "Auto"
+        uic.loadUi('mainwindow2.ui', self)
+        self.pushButton_Home.setIcon(QIcon("icons/home.png"))
+        self.pushButton_Left.setIcon(QIcon("icons/left.png"))
+        self.pushButton_Right.setIcon(QIcon("icons/right.png"))
+        self.pushButton_Up.setIcon(QIcon("icons/up.png"))
+        self.pushButton_Down.setIcon(QIcon("icons/down.png"))
 
-                # Initialize tab screen
-        self.tabs = QTabWidget()
-        self.tab1 = QWidget()
-        self.tab2 = QWidget()
-        # Add tabs
-        self.tabs.addTab(self.tab1,"Tab 1")
-        self.tabs.addTab(self.tab2,"Tab 2")
-        
-        # Create first tab
-        #self.tab1.layout = QVBoxLayout(self)
-        self.pushButton1 = QPushButton("PyQt5 button")
-        #self.tab1.layout.addWidget(self.pushButton1)
-        #self.tab1.setLayout(self.tab1.layout)
-        
-        # Add tabs to widget
-        #self.layout.addWidget(self.tabs)
-        #self.setLayout(self.layout)
-        #self.table_widget = MyTableWidget(self)
-        #self.setCentralWidget(self)
+        # Standrad ControlMode = Auto
+        self.controllerMode = "Auto"    
         
         self.threadpool = QThreadPool()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
@@ -112,16 +98,17 @@ class MainWindow(QtWidgets.QMainWindow):
         # pushButton for buffer
         self.pushButton_BufferEmptied.clicked.connect(self.emptyBuffer)
     
+        # TIMERS
         self.timer = QTimer()
         self.timer.setInterval(100)
         self.timer.timeout.connect(self.limitVelocity_in_X)
-        #self.timer.start()
+        self.timer.start()
 
         # timer for updating battery voltage
         self.batteryUpdateTimer = QTimer()
         self.batteryUpdateTimer.setInterval(1500)
         self.batteryUpdateTimer.timeout.connect(self.batteryUpdatevalue)
-        #self.batteryUpdateTimer.start()
+        self.batteryUpdateTimer.start()
 
 
     def controlMode(self):
@@ -254,39 +241,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.odrv0.axis1.controller.input_pos(0)
         except:
             pass
-
-class MyTableWidget(QWidget):
-    
-    def __init__(self, parent):
-        super(QWidget, self).__init__(parent)
-        self.layout = QVBoxLayout(self)
-        
-        # Initialize tab screen
-        self.tabs = QTabWidget()
-        self.tab1 = QWidget()
-        self.tab2 = QWidget()
-        self.tabs.resize(300,200)
-        
-        # Add tabs
-        self.tabs.addTab(self.tab1,"Tab 1")
-        self.tabs.addTab(self.tab2,"Tab 2")
-        
-        # Create first tab
-        self.tab1.layout = QVBoxLayout(self)
-        self.pushButton1 = QPushButton("PyQt5 button")
-        self.tab1.layout.addWidget(self.pushButton1)
-        self.tab1.setLayout(self.tab1.layout)
-        
-        # Add tabs to widget
-        self.layout.addWidget(self.tabs)
-        self.setLayout(self.layout)
-        
-    @pyqtSlot()
-    def on_click(self):
-        print("\n")
-        for currentQTableWidgetItem in self.tableWidget.selectedItems():
-            print(currentQTableWidgetItem.row(), currentQTableWidgetItem.column(), currentQTableWidgetItem.text())
-
 
 
 def main():

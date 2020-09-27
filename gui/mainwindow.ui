@@ -288,7 +288,7 @@
    <widget class="Line" name="line">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>30</x>
       <y>330</y>
       <width>241</width>
       <height>16</height>
@@ -463,22 +463,6 @@
      <string>Test To Empty Buffer</string>
     </property>
    </widget>
-   <widget class="QDialogButtonBox" name="buttonBox">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>960</y>
-      <width>192</width>
-      <height>46</height>
-     </rect>
-    </property>
-    <property name="standardButtons">
-     <set>QDialogButtonBox::Ok|QDialogButtonBox::Save</set>
-    </property>
-    <property name="centerButtons">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton_Auto_Manual">
     <property name="geometry">
      <rect>
@@ -491,6 +475,42 @@
     <property name="text">
      <string>Auto</string>
     </property>
+   </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>720</y>
+      <width>261</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Tab 1</string>
+     </attribute>
+     <widget class="QDialogButtonBox" name="buttonBox">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>60</y>
+        <width>192</width>
+        <height>46</height>
+       </rect>
+      </property>
+      <property name="standardButtons">
+       <set>QDialogButtonBox::Ok|QDialogButtonBox::Save</set>
+      </property>
+      <property name="centerButtons">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Tab 2</string>
+     </attribute>
+    </widget>
    </widget>
    <zorder>frame_big</zorder>
    <zorder>progressBar</zorder>
@@ -517,8 +537,8 @@
    <zorder>stepInmm</zorder>
    <zorder>batteryVoltage_4</zorder>
    <zorder>pushButton_BufferEmptied</zorder>
-   <zorder>buttonBox</zorder>
    <zorder>pushButton_Auto_Manual</zorder>
+   <zorder>tabWidget</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -526,9 +546,21 @@
      <x>0</x>
      <y>0</y>
      <width>935</width>
-     <height>42</height>
+     <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuMain">
+    <property name="title">
+     <string>Main</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+   </widget>
+   <addaction name="menuMain"/>
+   <addaction name="menuSettings"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
