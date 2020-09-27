@@ -65,10 +65,35 @@ class MainWindow(QtWidgets.QMainWindow):
 
         #Load the UI Page
         uic.loadUi('mainwindow.ui', self)
-        #self.show()
+        # Standrad ControlMode = Auto
+        self.controllerMode = "Auto"
+
+                # Initialize tab screen
+        self.tabs = QTabWidget()
+        self.tab1 = QWidget()
+        self.tab2 = QWidget()
+        # Add tabs
+        self.tabs.addTab(self.tab1,"Tab 1")
+        self.tabs.addTab(self.tab2,"Tab 2")
+        
+        # Create first tab
+        #self.tab1.layout = QVBoxLayout(self)
+        self.pushButton1 = QPushButton("PyQt5 button")
+        #self.tab1.layout.addWidget(self.pushButton1)
+        #self.tab1.setLayout(self.tab1.layout)
+        
+        # Add tabs to widget
+        #self.layout.addWidget(self.tabs)
+        #self.setLayout(self.layout)
+        #self.table_widget = MyTableWidget(self)
+        #self.setCentralWidget(self)
+        
         self.threadpool = QThreadPool()
-        self.show()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
+        self.show()
+        
+        self.pushButton_Auto_Manual.clicked.connect(self.controlMode)
+
         self.pushButton.clicked.connect(self.pressed)
         #self.odrv0 = self.ConnectOdrive()
        
@@ -90,13 +115,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.timer = QTimer()
         self.timer.setInterval(100)
         self.timer.timeout.connect(self.limitVelocity_in_X)
-        self.timer.start()
+        #self.timer.start()
 
         # timer for updating battery voltage
         self.batteryUpdateTimer = QTimer()
         self.batteryUpdateTimer.setInterval(1500)
         self.batteryUpdateTimer.timeout.connect(self.batteryUpdatevalue)
         #self.batteryUpdateTimer.start()
+
+
+    def controlMode(self):
+        if self.pushButton_Auto_Manual.text() == "Auto":
+            self.controllerMode = "Manual"
+            self.pushButton_Auto_Manual.setText("Manual")
+        else:
+            self.controllerMode = "Auto"
+            self.pushButton_Auto_Manual.setText("Auto")
 
     def closedLoop(self):
         if self.closedLoopAxis1CheckBox.isChecked():
@@ -142,31 +176,33 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def workerConnectOdrive(self):
         worker = Worker(self.ConnectOdrive)
+        #worker.autoDelete()
         self.threadpool.start(worker)
 
     def ConnectOdrive(self):
         #print("connecting odrive")
         self.odriveConnect.setText("connecting odrive")
+        self.odriveConnect.adjustSize()
         # connect odrive and return object for all other funciton.
         # This must be proteced by a Mutex!!!! or Signals!!
         odrv0 = odrive.find_any()
         #print("odrive connected")
         self.odriveConnect.setText("odrive connected")
+        self.odriveConnect.adjustSize()
         return odrv0
 
     def pressed(self):        
         self.progressBar.setProperty("value",self.progressBar.value()+1)
         #print("1")
         self.batteryVoltage.setText("hejhej")
-
    
-    def movePosX(self):
-        posX = self.posInX.value()
+    def movePosX(self,posX):
+        # use lambda function to accept second input
         print(posX)
         self.lcd_vel.setProperty("value",posX) 
         try:
             print("trying to move")
-            self.odrv0.axis1.controller.move_incremental(posX,1)
+            self.odrv0.axis1.controller.input_pos = posX
         except:
             pass
    
@@ -203,7 +239,7 @@ class MainWindow(QtWidgets.QMainWindow):
         except:
             pass
         
-    def moveRight(self):        
+    def moveRight(self):    
         self.lcdPos_Left.setProperty("value", round(self.lcdPos_Left.value() + 0.1 , 2))
         try:
             self.odrv0.axis0.controller.move_incremental(0.1 , 1)
@@ -218,7 +254,41 @@ class MainWindow(QtWidgets.QMainWindow):
             self.odrv0.axis1.controller.input_pos(0)
         except:
             pass
+
+class MyTableWidget(QWidget):
+    
+    def __init__(self, parent):
+        super(QWidget, self).__init__(parent)
+        self.layout = QVBoxLayout(self)
         
+        # Initialize tab screen
+        self.tabs = QTabWidget()
+        self.tab1 = QWidget()
+        self.tab2 = QWidget()
+        self.tabs.resize(300,200)
+        
+        # Add tabs
+        self.tabs.addTab(self.tab1,"Tab 1")
+        self.tabs.addTab(self.tab2,"Tab 2")
+        
+        # Create first tab
+        self.tab1.layout = QVBoxLayout(self)
+        self.pushButton1 = QPushButton("PyQt5 button")
+        self.tab1.layout.addWidget(self.pushButton1)
+        self.tab1.setLayout(self.tab1.layout)
+        
+        # Add tabs to widget
+        self.layout.addWidget(self.tabs)
+        self.setLayout(self.layout)
+        
+    @pyqtSlot()
+    def on_click(self):
+        print("\n")
+        for currentQTableWidgetItem in self.tableWidget.selectedItems():
+            print(currentQTableWidgetItem.row(), currentQTableWidgetItem.column(), currentQTableWidgetItem.text())
+
+
+
 def main():
     global window
     app = QtWidgets.QApplication(sys.argv)
