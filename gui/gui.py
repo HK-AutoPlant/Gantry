@@ -14,6 +14,7 @@ import time
 import odrive
 import math
 import random
+from TreeHive import TreeHive
 
 b = 0
 window = 0
@@ -132,7 +133,12 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         #Load the UI Page
-        uic.loadUi('mainwindow2.ui', self)
+        uic.loadUi('mainwindow2.ui', self)        
+        #self.tab_4 = TreeHive(x=30,y=30,iconsize = 20, CC = 25)
+        #self.tabWidget.addTab(self.tab_4, "Picking Status")
+        self.tab_5 = TreeHive(self.tab_5,x=30,y=30,iconsize = 20, CC = 25)
+        #self.widgetTest = QtWidgets.QWidget(self.tab_2)
+
         self.pushButton_Home.setIcon(QIcon("icons/home.png"))
         self.pushButton_Left.setIcon(QIcon("icons/left.png"))
         self.pushButton_Right.setIcon(QIcon("icons/right.png"))
@@ -181,6 +187,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # pushButton for buffer
         self.pushButton_BufferEmptied.clicked.connect(self.emptyBuffer)
+        
+        # pushButton for collecting trees
+        self.pushButton_collectTree.clicked.connect(self.collectingTrees)
+
 #---------------------------------------------------------------------------------------------    
 #---------------------------------------------------------------------------------------------
 
@@ -206,7 +216,15 @@ class MainWindow(QtWidgets.QMainWindow):
 #---------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------
 
-
+#---------------------------------------------------------------------------------------------
+#-------------------Functions--------------------------------------------------------------------
+    def collectingTrees(self):
+        for n in range(1,5):
+            for i in range(1,5):
+                self.tab_5.setGroupOfTreesToInProgress(n,i)
+                time.sleep(0.1)
+                self.tab_5.update()
+        
     def calibrateAxis(self, axis):
         try:
             if axis == 0:

@@ -183,11 +183,12 @@ class Ui_MainWindow(object):
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
-        self.quickWidget = QtQuickWidgets.QQuickWidget(self.tab_2)
-        self.quickWidget.setGeometry(QtCore.QRect(430, 190, 300, 200))
-        self.quickWidget.setResizeMode(QtQuickWidgets.QQuickWidget.SizeRootObjectToView)
-        self.quickWidget.setSource(QtCore.QUrl("http://localhost:8081/"))
-        self.quickWidget.setObjectName("quickWidget")
+        self.widgetTest = QtWidgets.QWidget(self.tab_2)
+        self.widgetTest.setGeometry(QtCore.QRect(390, 140, 301, 171))
+        self.widgetTest.setObjectName("widgetTest")
+        self.pushButton_2 = QtWidgets.QPushButton(self.widgetTest)
+        self.pushButton_2.setGeometry(QtCore.QRect(90, 30, 89, 25))
+        self.pushButton_2.setObjectName("pushButton_2")
         self.tabWidget.addTab(self.tab_2, "")
         self.tab_3 = QtWidgets.QWidget()
         self.tab_3.setObjectName("tab_3")
@@ -255,6 +256,7 @@ class Ui_MainWindow(object):
         self.pushButton_Reboot.setText(_translate("MainWindow", "Reboot Odrive"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Main"))
         self.label.setText(_translate("MainWindow", "SOC"))
+        self.pushButton_2.setText(_translate("MainWindow", "PushButton"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Status"))
         self.pushButton.setText(_translate("MainWindow", "PushButton"))
         self.pushButton_CalibrateAxis0.setText(_translate("MainWindow", "Calibrate Axis0"))
@@ -262,7 +264,6 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Settings"))
         self.menuMain.setTitle(_translate("MainWindow", "Main"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
-from PyQt5 import QtQuickWidgets
 
 
 if __name__ == "__main__":
