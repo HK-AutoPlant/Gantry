@@ -17,14 +17,14 @@ class TreeHive(QWidget):
         self.createTrees(x,y,iconsize,CC,rows,columns)
     
     def createTrees(self, x, y, iconsize, CC, rows, columns):
-        self.iconArray = numpy.full((rows,columns),QLabel(self))
+        self.iconArray = numpy.full((rows,columns),QLabel(self.tab_3))
         for i in range(self.iconArray.shape[1]):
             for j in range(self.iconArray.shape[0]):
-                self.iconArray[j,i]=QLabel(self)
+                self.iconArray[j,i]=QLabel(self.tab_3)
                 self.iconArray[j,i].setPixmap(QPixmap("images/pine-tree.png"))
                 self.iconArray[j,i].setGeometry(x + CC*i, y + CC*j, iconsize, iconsize)
                 self.iconArray[j,i].setScaledContents(True)
-        #self.show()
+        self.show()
 
     def setGroupOfTreesToInProgress(self, Pos, Row):
         x = self.translateGripperPosToCoordinates(Pos)
