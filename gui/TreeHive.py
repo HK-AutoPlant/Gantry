@@ -12,8 +12,8 @@ import numpy
 #and the second argument is Row (A row here is actually the column in the matrix of trees)
 
 class TreeHive(QWidget):
-    def __init__(self,x=50,y=50,iconsize=25,CC=30,rows=20,columns=35):
-        super().__init__()
+    def __init__(self,*args,x=50,y=50,iconsize=25,CC=30,rows=20,columns=35):
+        super(QWidget,self).__init__(*args)
         self.createTrees(x,y,iconsize,CC,rows,columns)
     
     def createTrees(self, x, y, iconsize, CC, rows, columns):
@@ -24,7 +24,7 @@ class TreeHive(QWidget):
                 self.iconArray[j,i].setPixmap(QPixmap("images/pine-tree.png"))
                 self.iconArray[j,i].setGeometry(x + CC*i, y + CC*j, iconsize, iconsize)
                 self.iconArray[j,i].setScaledContents(True)
-        #self.show()
+        
 
     def setGroupOfTreesToInProgress(self, Pos, Row):
         x = self.translateGripperPosToCoordinates(Pos)
