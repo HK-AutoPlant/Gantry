@@ -8,7 +8,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 #from pyqtgraph import PlotWidget
-#import pyqtgraph as pg
+import pyqtgraph as pg
 import sys
 import time
 import odrive
@@ -57,7 +57,6 @@ class WorkerSignals(QObject):
     result = pyqtSignal(object)
     progress = pyqtSignal(int)
 
-
 class Worker(QRunnable):
     '''
     Worker thread
@@ -101,7 +100,7 @@ class Worker(QRunnable):
             self.signals.result.emit(result)  # Return the result of the processing
         finally:
             self.signals.finished.emit()  # Done
-
+#----- old--------
 # class Worker22(QRunnable):
 #     '''
 #     Worker thread
@@ -138,6 +137,24 @@ class MainWindow(QtWidgets.QMainWindow):
         #self.tabWidget.addTab(self.tab_4, "Picking Status")
         self.tab_5 = TreeHive(self.tab_5,x=30,y=30,iconsize = 20, CC = 25)
         #self.widgetTest = QtWidgets.QWidget(self.tab_2)
+        # self.tabWidget.addTab(self.tab_5, "NEW")
+        # w = QWidget(self.tab_4)
+        # ## Create some widgets to be placed inside
+        # btn = QPushButton('press me')
+        # text = QLineEdit('enter text')
+        # listw = QListWidget()
+        # plot = pg.PlotWidget()
+        # self.plot([1,2,3,4,5,6,7,8,9,10], [30,32,34,32,33,31,29,32,35,45])
+
+        # ## Create a grid layout to manage the widgets size and position
+        # layout = QGridLayout()
+        # w.setLayout(layout)
+
+        # ## Add widgets to the layout in their proper positions
+        # layout.addWidget(btn, 0, 0)   # button goes in upper-left
+        # layout.addWidget(text, 1, 0)   # text edit goes in middle-left
+        # layout.addWidget(listw, 2, 0)  # list widget goes in bottom-left
+        # layout.addWidget(plot, 0, 1, 3, 1)  # plot goes on right side, spanning 3 rows
 
         self.pushButton_Home.setIcon(QIcon("icons/home.png"))
         self.pushButton_Left.setIcon(QIcon("icons/left.png"))
@@ -204,7 +221,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # timer for updating battery voltage
         self.batteryUpdateTimer = QTimer()
-        self.batteryUpdateTimer.setInterval(1500)
+        self.batteryUpdateTimer.setInterval(5000)
         self.batteryUpdateTimer.timeout.connect(self.batteryUpdatevalue)
         self.batteryUpdateTimer.start()
 
@@ -213,11 +230,56 @@ class MainWindow(QtWidgets.QMainWindow):
         self.errorCheckTimer.setInterval(1500)
         self.errorCheckTimer.timeout.connect(self.errorCheck)
         self.errorCheckTimer.start()
+        # Timer for Plotting Odrive data
+        self.plotOdriveTimer = QTimer()
+        self.plotOdriveTimer.setInterval(300)
+        self.plotOdriveTimer.timeout.connect(self.plotOdriveData)
+        self.plotOdriveTimer.start()
+        #self.collectData()
 #---------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------
+        self.axis0_encoder_pos_estimate     = [0]
+        # self.axis1.encoder.pos_estimate     = []
+        self.axis0_controller_pos_setpoint  = [0]
+        # self.axis1.controller.pos_setpoint  = []
+        self.plotAxisX = [0]        
+        # self.x = list(range(100))  # 100 time points
+        # self.y = [random.uniform(0,100) for _ in range(100)]  # 100 data points
+        # self.graphWidget.setBackground('w')
+        pen1 = pg.mkPen(color=(255, 0, 0))
+        pen2 = pg.mkPen(color=(0, 255, 0))
+        # self.data_line =  self.graphWidget.plot(self.x, self.y, pen=pen)
+        self.graphWidget.addLegend()
+        self.data_line  =  self.graphWidget.plot(self.plotAxisX, self.axis0_encoder_pos_estimate     , name="Estimated",pen=pen1)
+        self.data_line2 =  self.graphWidget.plot(self.plotAxisX, self.axis0_controller_pos_setpoint  , name="Setpoint",pen=pen2)
+        # self.plot(self.plotAxisX , self.odrv0.axis0.encoder.pos_estimate     , "Sensor1" , 'r')
 
 #---------------------------------------------------------------------------------------------
 #-------------------Functions--------------------------------------------------------------------
+    
+    def plotOdriveData(self): #update_plot_data
+        if hasattr(self, 'odrv0' ) == True:
+            # self.plotAxisX = self.plotAxisX[1:]  # Remove the first y element.
+            self.plotAxisX.append(self.plotAxisX[-1] + 1)  # Add a new value 1 higher than the last.       
+            # self.y = self.y[1:]  # Remove the first 
+            # self.axis0_encoder_pos_estimate.append( random.uniform(0,100))  # Add a new random value.
+            #self.axis0_encoder_pos_estimate.append(self.axis0_encoder_pos_estimate[-1])  # Add a new random value.
+            #self.axis0_encoder_pos_estimate.append(self.odrv0.axis0.encoder.pos_estimate)
+            pos = self.odrv0.axis0.encoder.pos_estimate
+            # pos = 1.2
+            pos2 = self.odrv0.axis0.controller.pos_setpoint
+            self.axis0_encoder_pos_estimate.append(pos)
+            self.axis0_controller_pos_setpoint.append(pos2)
+            #self.odrv0.axis0.controller.pos_setpoint(pos2)
+            print(self.axis0_encoder_pos_estimate)
+            self.data_line.setData(self.plotAxisX, self.axis0_encoder_pos_estimate)  # Update the data.
+            self.data_line2.setData(self.plotAxisX, self.axis0_controller_pos_setpoint)  # Update the data.
+    
+
+    def plot(self, X, Y):
+        # self.graphWidget.plot(X ,Y)
+        self.data_line.setData(X, Y)  # Update the data.
+
     def collectingTrees(self):
         for n in range(1,5):
             for i in range(1,5):
