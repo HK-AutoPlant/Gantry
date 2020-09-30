@@ -20,19 +20,19 @@ from PyQtGraphDataPlot import *
 b = 0
 window = 0
 b1 = 0
-# #
+# ---------------------------------------------------------------------------
+# --------------- Different Approach to Threads, more RTOS based! ----------
 # class WorkerThread(QtCore.QObject):
-#     signalExample = QtCore.pyqtSignal(str, int)
- 
+#     signalExample = QtCore.pyqtSignal(str, int) 
 #     def __init__(self):
-#         super().__init__()
- 
+#         super().__init__() 
 #     @QtCore.pyqtSlot()
 #     def run(self):
 #         while True:
 #             # Long running task ...
 #             self.signalExample.emit("leet", 1337)
 #             time.sleep(5)
+# ---------------------------------------------------------------------------
 
 class WorkerSignals(QObject):
     '''
@@ -102,79 +102,58 @@ class Worker(QRunnable):
         finally:
             self.signals.finished.emit()  # Done
 
-
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
-
         #Load the UI Page
-        uic.loadUi('mainwindow2.ui', self)        
-
+        uic.loadUi('mainwindow2.ui', self)
+        # Importing TreeHive into widget window        
         self.treeWidget.createTrees(20,20,20,25,20,35)
-        # ## Create a grid layout to manage the widgets size and position
-        # layout = QGridLayout()
-        # w.setLayout(layout)
-
-        # ## Add widgets to the layout in their proper positions
-        # layout.addWidget(btn, 0, 0)   # button goes in upper-left
-        # layout.addWidget(text, 1, 0)   # text edit goes in middle-left
-        # layout.addWidget(listw, 2, 0)  # list widget goes in bottom-left
-        # layout.addWidget(plot, 0, 1, 3, 1)  # plot goes on right side, spanning 3 rows
-
+        #Sets icon of the control buttons, can be made in QtCreator as well...
         self.pushButton_Home.setIcon(QIcon("icons/home.png"))
         self.pushButton_Left.setIcon(QIcon("icons/left.png"))
         self.pushButton_Right.setIcon(QIcon("icons/right.png"))
         self.pushButton_Up.setIcon(QIcon("icons/up.png"))
         self.pushButton_Down.setIcon(QIcon("icons/down.png"))
-       
-        self.startWorkers()
-        #self.odriveConnect.clicked.connect(self.startWorkers)
+        # Start worker threds
+        self.threadpool = QThreadPool()
+        print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
+        self.startWorkers()    
+        # Start Odrive connectiong as a thred to not lock the GUI!
         self.odriveConnect.clicked.connect(self.workerConnectOdrive)
-
+        # Set Axis motor intop close loop control
         self.closedLoopAxis0CheckBox.clicked.connect(lambda:self.closedLoop(0))
         self.closedLoopAxis1CheckBox.clicked.connect(lambda:self.closedLoop(1))       
-
+        # Standrad ControlMode = Auto
+        self.controllerMode = "Auto"          
+        # Open GUI window       
+        self.show()
 #---------------------------------------------------------------------------------------------
 #-------------------Push Buttons And Sliders--------------------------------------------------
 #---------------------------------------------------------------------------------------------
-        # Standrad ControlMode = Auto
-        self.controllerMode = "Auto"    
-        
-        self.threadpool = QThreadPool()
-        print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
-        self.show()
-        
+        # Change control mode between Auto and Manuals       
         self.pushButton_Auto_Manual.clicked.connect(self.controlMode)
-
-        self.pushButton.clicked.connect(self.pressed)
-        #self.odrv0 = self.ConnectOdrive()
         # pushButtons for navigation
         self.pushButton_Up.clicked.connect(self.moveUp)
         self.pushButton_Down.clicked.connect(self.moveDown)
         self.pushButton_Right.clicked.connect(self.moveRight)
         self.pushButton_Left.clicked.connect(self.moveLeft)
         self.pushButton_Home.clicked.connect(self.moveHome)
-
         # Slider for navigation
         self.posXSlider.valueChanged.connect(self.movePosX)
         # pushButton for Calibration
         self.pushButton_CalibrateAxis0.clicked.connect(lambda:self.calibrateAxis(0))
         self.pushButton_CalibrateAxis1.clicked.connect(lambda:self.calibrateAxis(1))
-
         # pushButton for odrive
         self.settingsButtons.accepted.connect(self.saveOdriveSettings)
         self.settingsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.resetErrorOdrive)
         self.pushButton_Reboot.clicked.connect(self.rebootOdrive)
-
         # pushButton for buffer
-        self.pushButton_BufferEmptied.clicked.connect(self.emptyBuffer)
-        
+        self.pushButton_BufferEmptied.clicked.connect(self.emptyBuffer)        
         # pushButton for collecting trees
         self.pushButton_GoToPosition.clicked.connect(lambda: self.goToPosition(int(self.comboBox_TreePos.currentText()),int(self.comboBox_TreeRow.currentText())))
-
 #---------------------------------------------------------------------------------------------    
-#---------------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------------------
 #-------------------TIMERS--------------------------------------------------------------------
@@ -201,15 +180,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plotOdriveTimer.timeout.connect(self.plotOdriveData)
         self.plotOdriveTimer.start()
         #self.collectData()
-#---------------------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------------------
-        self.axis0_encoder_pos_estimate     = [0]
-        # self.axis1.encoder.pos_estimate     = []
-        self.axis0_controller_pos_setpoint  = [0]
-        # self.axis1.controller.pos_setpoint  = []
-        self.axis0_controller_vel_setpoint = [0]
-        self.axis0_encoder_vel_estimate = [0]
-        self.plotAxisX = [0]        
+#---------------- End Timers -----------------------------------------------------------------
+
+#-------------------Plotting------------------------------------------------------------------
+        # Plot data for Axis0
+        self.axis0_encoder_pos_estimate     = [0]        
+        self.axis0_controller_pos_setpoint  = [0]        
+        self.axis0_controller_vel_setpoint  = [0]
+        self.axis0_encoder_vel_estimate     = [0]            
+        # Plot data for Axis1  
+        self.axis1_encoder_pos_estimate     = [0]
+        self.axis1_controller_pos_setpoint  = [0]
+        self.axis1_controller_vel_setpoint  = [0]
+        self.axis1_encoder_vel_estimate     = [0]  
+        # Common data
+        self.plotAxisX = [0]  # X-axis => samples
+        # Plot Styling
         # self.graphWidget.setBackground('w')
         pen1 = pg.mkPen(color=(255, 0, 0), width=1)
         pen2 = pg.mkPen(color=(0, 255, 0), width=3)
@@ -220,50 +206,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphWidget_2.addLegend()
         self.data_line  =  self.graphWidget.plot(self.plotAxisX, self.axis0_encoder_pos_estimate     , name="Estimated",pen=pen1)
         self.data_line2 =  self.graphWidget.plot(self.plotAxisX, self.axis0_controller_pos_setpoint  , name="Setpoint",pen=pen2)
-        self.data_line3 =  self.graphWidget_2.plot(self.plotAxisX, self.axis0_encoder_vel_estimate  , name="velocity estimate",pen=pen3)
-        self.data_line4 =  self.graphWidget_2.plot(self.plotAxisX, self.axis0_controller_vel_setpoint  , name="velocity setpoint",pen=pen4)
+        self.data_line3 =  self.graphWidget_2.plot(self.plotAxisX, self.axis0_encoder_vel_estimate   , name="velocity estimate",pen=pen3)
+        self.data_line4 =  self.graphWidget_2.plot(self.plotAxisX, self.axis0_controller_vel_setpoint, name="velocity setpoint",pen=pen4)
         # self.plot(self.plotAxisX , self.odrv0.axis0.encoder.pos_estimate     , "Sensor1" , 'r')
         self.pushButton_clearPlot.clicked.connect(self.clearPlot)
         self.checkBox_axis0Setpoint.clicked.connect(lambda:self.showDataOnPlot(0))
         self.checkBox_axis0Estimated.clicked.connect(lambda:self.showDataOnPlot(1))
-        
-
-#---------------------------------------------------------------------------------------------
-#-------------------Functions--------------------------------------------------------------------
-
-    def mapFromPosAndRowToSetPoints(self,pos,row): 
-        xOffset_mm = 0
-        yOffset_mm = 0
-        plantXCC_mm = 35.1
-        plantYCC_mm = 30
-        trayWidth_mm = 352
-        xOffsetBetweenRows_mm = 17.55
-        if pos == 1:
-            x_mm=xOffset_mm
-        elif pos == 2:
-            x_mm = xOffset_mm + plantXCC_mm
-        elif pos == 3:
-            x_mm = xOffset_mm + trayWidth_mm
-        else: # 4
-            x_mm = xOffset_mm + trayWidth_mm + plantXCC_mm
-        if not row % 2:# For even row number. Jackpot has an zigg zagg pattern
-            x_mm = x_mm + xOffsetBetweenRows_mm
-        
-        y_mm = yOffset_mm + row*plantYCC_mm - plantYCC_mm + math.floor(row/8)*6
-        mmToRevolutions = 1/(25*math.pi)
-        x_revolutions = x_mm * mmToRevolutions
-        y_revolutions = y_mm * mmToRevolutions
-        return x_revolutions, y_revolutions
-
-    def goToPosition(self,pos,row):
-        self.treeWidget.setGroupOfTreesToInProgress(pos,row)
-        x,y = self.mapFromPosAndRowToSetPoints(pos,row)
-        string = "X coordinate: {}, Y coordinate: {}".format(x,y)
-        
-        self.odrv0.axis0.controller.input_pos = x
-        self.odrv0.axis1.controller.input_pos = y
-        print(string)
-
+#------------ Functions for plotting ---------------------------------------------------------
     def showDataOnPlot(self,id):
         #for id in range(0 ,len(self.graphWidget.getPlotItem().items)):
         if (self.checkBox_axis0Estimated.isChecked()):  
@@ -305,7 +254,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.axis0_controller_vel_setpoint.append(vel2)
             #self.odrv0.axis0.controller.pos_setpoint(pos2)
             #print(self.axis0_encoder_pos_estimate)
-            self.data_line.setData(self.plotAxisX, self.axis0_encoder_pos_estimate)  # Update the data.
+            self.data_line.setData(self.plotAxisX , self.axis0_encoder_pos_estimate)  # Update the data.
             self.data_line2.setData(self.plotAxisX, self.axis0_controller_pos_setpoint)  # Update the data.
             self.data_line3.setData(self.plotAxisX, self.axis0_encoder_vel_estimate)
             self.data_line4.setData(self.plotAxisX, self.axis0_controller_vel_setpoint)
@@ -313,6 +262,42 @@ class MainWindow(QtWidgets.QMainWindow):
     def plot(self, X, Y):
         # self.graphWidget.plot(X ,Y)
         self.data_line.setData(X, Y)  # Update the data.
+#---------------- END Plotting ---------------------------------------------------------------
+
+#-------------------- Other Functions --------------------------------------------------------
+
+    def mapFromPosAndRowToSetPoints(self,pos,row): 
+        xOffset_mm = 0
+        yOffset_mm = 0
+        plantXCC_mm = 35.1
+        plantYCC_mm = 30
+        trayWidth_mm = 352
+        xOffsetBetweenRows_mm = 17.55
+        if pos == 1:
+            x_mm=xOffset_mm
+        elif pos == 2:
+            x_mm = xOffset_mm + plantXCC_mm
+        elif pos == 3:
+            x_mm = xOffset_mm + trayWidth_mm
+        else: # 4
+            x_mm = xOffset_mm + trayWidth_mm + plantXCC_mm
+        if not row % 2:# For even row number. Jackpot has an zigg zagg pattern
+            x_mm = x_mm + xOffsetBetweenRows_mm
+        
+        y_mm = yOffset_mm + row*plantYCC_mm - plantYCC_mm + math.floor(row/8)*6
+        mmToRevolutions = 1/(25*math.pi)
+        x_revolutions = x_mm * mmToRevolutions
+        y_revolutions = y_mm * mmToRevolutions
+        return x_revolutions, y_revolutions
+
+    def goToPosition(self,pos,row):
+        self.treeWidget.setGroupOfTreesToInProgress(pos,row)
+        x,y = self.mapFromPosAndRowToSetPoints(pos,row)
+        string = "X coordinate: {}, Y coordinate: {}".format(x,y)
+        
+        self.odrv0.axis0.controller.input_pos = x
+        self.odrv0.axis1.controller.input_pos = y
+        print(string)
 
     def collectingTrees(self):
         for n in range(1,5):
@@ -320,7 +305,48 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.tab_5.setGroupOfTreesToInProgress(n,i)
                 time.sleep(0.1)
                 self.tab_5.update()
-        
+            
+    def startWorkers(self): 
+        pass
+        # Pass the function to execute
+        #worker   = Worker(self.batteryUpdatevalue)        
+        #worker3  = Worker(self.movePosX)
+        # Execute
+        #self.threadpool.start(worker)
+        #self.threadpool.start(worker3)
+
+    def progress_fn(self,n):
+        print(n)
+
+# ------------------- Functions for Connecting Odrive ----------------------------------------
+    def odrv0_object(self, s):
+        #print(s)
+        self.odrv0 = s
+        return s
+
+    def workerConnectOdrive(self):
+        worker = Worker(self.ConnectOdrive)
+        worker.signals.result.connect(self.odrv0_object)
+        #self.odrv0 = worker.signals.result
+        #worker.signals.finished.connect(self.thread_complete)
+        #worker.signals.progress.connect(self.progress_fn)
+        #worker.setAutoDelete(True)
+        #worker.autoDelete()
+        self.threadpool.start(worker)
+
+    def ConnectOdrive(self):
+        #print("connecting odrive")
+        self.odriveConnect.setText("connecting odrive")
+        self.odriveConnect.adjustSize()
+        # connect odrive and return object for all other funciton.
+        # This must be proteced by a Mutex!!!! or Signals!!
+        odrv0 = odrive.find_any()
+        #print("odrive connected")
+        self.odriveConnect.setText("odrive connected")
+        self.odriveConnect.adjustSize()
+        return odrv0
+
+# ------------------- Functions for Odrive such as Error and settings ------------------------
     def calibrateAxis(self, axis):
         try:
             if axis == 0:
@@ -364,19 +390,6 @@ class MainWindow(QtWidgets.QMainWindow):
             pass
         
         #self.settingsButtons
-
-    def keyPressEvent(self, event):
-        #https://doc.qt.io/qtforpython/PySide2/QtCore/Qt.html
-        if event.key() == Qt.Key_W:            
-            self.moveUp()
-        elif event.key() == Qt.Key_A:
-            self.moveLeft()
-        elif event.key() == Qt.Key_S:
-            self.moveDown()
-        elif event.key() == Qt.Key_D:
-            self.moveRight()
-        #elif event.key() == Qt.Key_Space:
-         #   self.moveHome()
 
     def controlMode(self):
         if self.pushButton_Auto_Manual.text() == "Auto":
@@ -433,6 +446,8 @@ class MainWindow(QtWidgets.QMainWindow):
         except:
             pass
 
+# ------------------- Functions for Odrive control parameters --------------------------------
+    # Should Probalby be event base, such as "upon change value"
     def limitVelocity_in_X(self):
         max_vel = self.velocityLimitX.value()
         vel_gain = self.gainVelController.value() 
@@ -443,54 +458,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.lcd_vel.setProperty("value",self.odrv0.axis1.controller.config.vel_limit)
             self.odrv0.axis0.controller.config.vel_gain  = vel_gain
         except:
-            print("set limits not completed")
-        
-    def startWorkers(self): 
-        pass
-        # Pass the function to execute
-        #worker   = Worker(self.batteryUpdatevalue)        
-        #worker3  = Worker(self.movePosX)
-        # Execute
-        #self.threadpool.start(worker)
-        #self.threadpool.start(worker3)
-
-    def progress_fn(self,n):
-        print(n)
-
-    # Functions For Connecting Odrive
-    def odrv0_object(self, s):
-        #print(s)
-        self.odrv0 = s
-        return s
-
-    def workerConnectOdrive(self):
-        worker = Worker(self.ConnectOdrive)
-        worker.signals.result.connect(self.odrv0_object)
-        #self.odrv0 = worker.signals.result
-        #worker.signals.finished.connect(self.thread_complete)
-        #worker.signals.progress.connect(self.progress_fn)
-        #worker.setAutoDelete(True)
-        #worker.autoDelete()
-        self.threadpool.start(worker)
-
-    def ConnectOdrive(self):
-        #print("connecting odrive")
-        self.odriveConnect.setText("connecting odrive")
-        self.odriveConnect.adjustSize()
-        # connect odrive and return object for all other funciton.
-        # This must be proteced by a Mutex!!!! or Signals!!
-        odrv0 = odrive.find_any()
-        #print("odrive connected")
-        self.odriveConnect.setText("odrive connected")
-        self.odriveConnect.adjustSize()
-        return odrv0
-
-    def pressed(self):        
-        self.progressBar.setProperty("value",self.progressBar.value()+1)
-        #print("1")
-        self.batteryVoltage.setText("hejhej")
-   
-   # Functions For Moving The Axis
+            pass
+            # print("set limits not completed")
+     
+#-------------------- Functions For Moving The Axis ------------------------------------------
     def movePosX(self):
         posX = 2*self.posXSlider.value() /100.0
         # use lambda function to accept second input
@@ -554,6 +525,19 @@ class MainWindow(QtWidgets.QMainWindow):
             self.odrv0.axis1.controller.input_pos(0)
         except:
             pass
+ 
+    def keyPressEvent(self, event):
+        #https://doc.qt.io/qtforpython/PySide2/QtCore/Qt.html
+        if event.key() == Qt.Key_W:            
+            self.moveUp()
+        elif event.key() == Qt.Key_A:
+            self.moveLeft()
+        elif event.key() == Qt.Key_S:
+            self.moveDown()
+        elif event.key() == Qt.Key_D:
+            self.moveRight()
+        #elif event.key() == Qt.Key_Space:
+         #   self.moveHome()
 
 
 def main():

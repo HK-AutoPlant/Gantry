@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>976</width>
-    <height>682</height>
+    <width>970</width>
+    <height>704</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
      </font>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -557,19 +557,6 @@
      <attribute name="title">
       <string>Settings</string>
      </attribute>
-     <widget class="QProgressBar" name="progressBar">
-      <property name="geometry">
-       <rect>
-        <x>540</x>
-        <y>200</y>
-        <width>95</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="value">
-       <number>24</number>
-      </property>
-     </widget>
      <widget class="QSlider" name="velocityLimitX">
       <property name="geometry">
        <rect>
@@ -597,19 +584,6 @@
         <width>221</width>
         <height>101</height>
        </rect>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton">
-      <property name="geometry">
-       <rect>
-        <x>520</x>
-        <y>240</y>
-        <width>141</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>PushButton</string>
       </property>
      </widget>
      <widget class="QDialogButtonBox" name="settingsButtons_setings">
@@ -1149,8 +1123,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>976</width>
-     <height>22</height>
+     <width>970</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMain">
