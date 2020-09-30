@@ -14,8 +14,8 @@ import numpy
 class TreeHive(QWidget):
     def __init__(self,*args,x=50,y=50,iconsize=25,CC=30,rows=20,columns=35):
         super(QWidget,self).__init__(*args)
-        self.createTrees(x,y,iconsize,CC,rows,columns)
-    
+        #self.createTrees(x,y,iconsize,CC,rows,columns)
+        self.iconArray = numpy.full((100,100),QLabel(self))
     def createTrees(self, x, y, iconsize, CC, rows, columns):
         self.iconArray = numpy.full((rows,columns),QLabel(self))
         for i in range(self.iconArray.shape[1]):

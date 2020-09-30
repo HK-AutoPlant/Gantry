@@ -15,6 +15,7 @@ import odrive
 import math
 import random
 from TreeHive import TreeHive
+from PyQtGraphDataPlot import *
 
 b = 0
 window = 0
@@ -100,30 +101,6 @@ class Worker(QRunnable):
             self.signals.result.emit(result)  # Return the result of the processing
         finally:
             self.signals.finished.emit()  # Done
-#----- old--------
-# class Worker22(QRunnable):
-#     '''
-#     Worker thread
-#     Inherits from QRunnable to handler worker thread setup, signals and wrap-up.
-#     :param callback: The function callback to run on this worker thread. Supplied args and 
-#                      kwargs will be passed through to the runner.
-#     :type callback: function
-#     :param args: Arguments to pass to the callback function
-#     :param kwargs: Keywords to pass to the callback function
-#     '''
-#         def __init__(self, fn, *args, **kwargs):
-#         super(Worker, self).__init__()
-#         # Store constructor arguments (re-used for processing)
-#         self.fn = fn
-#         self.args = args
-#         self.kwargs = kwargs
-
-#     @pyqtSlot()
-#     def run(self):
-#         '''
-#         Initialise the runner function with passed args, kwargs.
-#         '''
-#         self.fn(*self.args, **self.kwargs)
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -133,19 +110,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         #Load the UI Page
         uic.loadUi('mainwindow2.ui', self)        
-        #self.tab_4 = TreeHive(x=30,y=30,iconsize = 20, CC = 25)
-        #self.tabWidget.addTab(self.tab_4, "Picking Status")
-        self.tab_5 = TreeHive(self.tab_5,x=30,y=30,iconsize = 20, CC = 25)
-        #self.widgetTest = QtWidgets.QWidget(self.tab_2)
-        # self.tabWidget.addTab(self.tab_5, "NEW")
-        # w = QWidget(self.tab_4)
-        # ## Create some widgets to be placed inside
-        # btn = QPushButton('press me')
-        # text = QLineEdit('enter text')
-        # listw = QListWidget()
-        # plot = pg.PlotWidget()
-        # self.plot([1,2,3,4,5,6,7,8,9,10], [30,32,34,32,33,31,29,32,35,45])
 
+        self.treeWidget.createTrees(20,20,20,25,20,35)
         # ## Create a grid layout to manage the widgets size and position
         # layout = QGridLayout()
         # w.setLayout(layout)
@@ -161,7 +127,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.pushButton_Right.setIcon(QIcon("icons/right.png"))
         self.pushButton_Up.setIcon(QIcon("icons/up.png"))
         self.pushButton_Down.setIcon(QIcon("icons/down.png"))
+       
+        self.startWorkers()
+        #self.odriveConnect.clicked.connect(self.startWorkers)
+        self.odriveConnect.clicked.connect(self.workerConnectOdrive)
 
+        self.closedLoopAxis0CheckBox.clicked.connect(lambda:self.closedLoop(0))
+        self.closedLoopAxis1CheckBox.clicked.connect(lambda:self.closedLoop(1))       
+
+#---------------------------------------------------------------------------------------------
+#-------------------Push Buttons And Sliders--------------------------------------------------
+#---------------------------------------------------------------------------------------------
         # Standrad ControlMode = Auto
         self.controllerMode = "Auto"    
         
@@ -173,17 +149,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.pushButton.clicked.connect(self.pressed)
         #self.odrv0 = self.ConnectOdrive()
-       
-        self.startWorkers()
-        #self.odriveConnect.clicked.connect(self.startWorkers)
-        self.odriveConnect.clicked.connect(self.workerConnectOdrive)
-        self.closedLoopAxis0CheckBox.clicked.connect(lambda:self.closedLoop(0))
-        self.closedLoopAxis1CheckBox.clicked.connect(lambda:self.closedLoop(1))
-        
-
-#---------------------------------------------------------------------------------------------
-#-------------------Push Buttons And Sliders--------------------------------------------------
-#---------------------------------------------------------------------------------------------
         # pushButtons for navigation
         self.pushButton_Up.clicked.connect(self.moveUp)
         self.pushButton_Down.clicked.connect(self.moveDown)
@@ -206,7 +171,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.pushButton_BufferEmptied.clicked.connect(self.emptyBuffer)
         
         # pushButton for collecting trees
-        self.pushButton_collectTree.clicked.connect(self.collectingTrees)
+        self.pushButton_GoToPosition.clicked.connect(lambda: self.goToPosition(int(self.comboBox_TreePos.currentText()),int(self.comboBox_TreeRow.currentText())))
 
 #---------------------------------------------------------------------------------------------    
 #---------------------------------------------------------------------------------------------
@@ -232,7 +197,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.errorCheckTimer.start()
         # Timer for Plotting Odrive data
         self.plotOdriveTimer = QTimer()
-        self.plotOdriveTimer.setInterval(300)
+        self.plotOdriveTimer.setInterval(100)
         self.plotOdriveTimer.timeout.connect(self.plotOdriveData)
         self.plotOdriveTimer.start()
         #self.collectData()
@@ -242,21 +207,85 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.axis1.encoder.pos_estimate     = []
         self.axis0_controller_pos_setpoint  = [0]
         # self.axis1.controller.pos_setpoint  = []
+        self.axis0_controller_vel_setpoint = [0]
+        self.axis0_encoder_vel_estimate = [0]
         self.plotAxisX = [0]        
-        # self.x = list(range(100))  # 100 time points
-        # self.y = [random.uniform(0,100) for _ in range(100)]  # 100 data points
         # self.graphWidget.setBackground('w')
-        pen1 = pg.mkPen(color=(255, 0, 0))
-        pen2 = pg.mkPen(color=(0, 255, 0))
+        pen1 = pg.mkPen(color=(255, 0, 0), width=1)
+        pen2 = pg.mkPen(color=(0, 255, 0), width=3)
+        pen3 = pg.mkPen(color=(255, 0, 0), width=1)
+        pen4 = pg.mkPen(color=(0, 255, 0), width=1)
         # self.data_line =  self.graphWidget.plot(self.x, self.y, pen=pen)
         self.graphWidget.addLegend()
+        self.graphWidget_2.addLegend()
         self.data_line  =  self.graphWidget.plot(self.plotAxisX, self.axis0_encoder_pos_estimate     , name="Estimated",pen=pen1)
         self.data_line2 =  self.graphWidget.plot(self.plotAxisX, self.axis0_controller_pos_setpoint  , name="Setpoint",pen=pen2)
+        self.data_line3 =  self.graphWidget_2.plot(self.plotAxisX, self.axis0_encoder_vel_estimate  , name="velocity estimate",pen=pen3)
+        self.data_line4 =  self.graphWidget_2.plot(self.plotAxisX, self.axis0_controller_vel_setpoint  , name="velocity setpoint",pen=pen4)
         # self.plot(self.plotAxisX , self.odrv0.axis0.encoder.pos_estimate     , "Sensor1" , 'r')
+        self.pushButton_clearPlot.clicked.connect(self.clearPlot)
+        self.checkBox_axis0Setpoint.clicked.connect(lambda:self.showDataOnPlot(0))
+        self.checkBox_axis0Estimated.clicked.connect(lambda:self.showDataOnPlot(1))
+        
 
 #---------------------------------------------------------------------------------------------
 #-------------------Functions--------------------------------------------------------------------
-    
+
+    def mapFromPosAndRowToSetPoints(self,pos,row): 
+        xOffset_mm = 0
+        yOffset_mm = 0
+        plantXCC_mm = 35.1
+        plantYCC_mm = 30
+        trayWidth_mm = 352
+        xOffsetBetweenRows_mm = 17.55
+        if pos == 1:
+            x_mm=xOffset_mm
+        elif pos == 2:
+            x_mm = xOffset_mm + plantXCC_mm
+        elif pos == 3:
+            x_mm = xOffset_mm + trayWidth_mm
+        else: # 4
+            x_mm = xOffset_mm + trayWidth_mm + plantXCC_mm
+        if not row % 2:# For even row number. Jackpot has an zigg zagg pattern
+            x_mm = x_mm + xOffsetBetweenRows_mm
+        
+        y_mm = yOffset_mm + row*plantYCC_mm - plantYCC_mm + math.floor(row/8)*6
+        mmToRevolutions = 1/(25*math.pi)
+        x_revolutions = x_mm * mmToRevolutions
+        y_revolutions = y_mm * mmToRevolutions
+        return x_revolutions, y_revolutions
+
+    def goToPosition(self,pos,row):
+        self.treeWidget.setGroupOfTreesToInProgress(pos,row)
+        x,y = self.mapFromPosAndRowToSetPoints(pos,row)
+        string = "X coordinate: {}, Y coordinate: {}".format(x,y)
+        
+        self.odrv0.axis0.controller.input_pos = x
+        self.odrv0.axis1.controller.input_pos = y
+        print(string)
+
+    def showDataOnPlot(self,id):
+        #for id in range(0 ,len(self.graphWidget.getPlotItem().items)):
+        if (self.checkBox_axis0Estimated.isChecked()):  
+            print("Axis "+str(id) +"Checked")          
+            self.graphWidget.getPlotItem().items[0].setVisible(True)
+
+        if (self.checkBox_axis0Estimated.isChecked()) == False:        
+            print("Axis"+str(id) +"NOT Checked")  
+            self.graphWidget.getPlotItem().items[0].setVisible(False)
+
+        if self.checkBox_axis0Setpoint.isChecked() :
+            print("Axis 1 Checked")  
+            self.graphWidget.getPlotItem().items[1].setVisible(True)
+
+        if self.checkBox_axis0Setpoint.isChecked()  == False:
+            print("Axis 1 NOT Checked")  
+            self.graphWidget.getPlotItem().items[1].setVisible(False)
+
+    def clearPlot(self):
+        self.graphWidget.getPlotItem().items[0].setVisible(False)
+        # self.graphWidget.clear()
+
     def plotOdriveData(self): #update_plot_data
         if hasattr(self, 'odrv0' ) == True:
             # self.plotAxisX = self.plotAxisX[1:]  # Remove the first y element.
@@ -266,16 +295,21 @@ class MainWindow(QtWidgets.QMainWindow):
             #self.axis0_encoder_pos_estimate.append(self.axis0_encoder_pos_estimate[-1])  # Add a new random value.
             #self.axis0_encoder_pos_estimate.append(self.odrv0.axis0.encoder.pos_estimate)
             pos = self.odrv0.axis0.encoder.pos_estimate
-            # pos = 1.2
             pos2 = self.odrv0.axis0.controller.pos_setpoint
+            vel = self.odrv0.axis0.encoder.vel_estimate
+            vel2 = self.odrv0.axis0.controller.vel_setpoint
             self.axis0_encoder_pos_estimate.append(pos)
             self.axis0_controller_pos_setpoint.append(pos2)
+            self.axis0_encoder_vel_estimate.append(vel)
+            #print(self.odrv0.axis0.controller.vel_setpoint)
+            self.axis0_controller_vel_setpoint.append(vel2)
             #self.odrv0.axis0.controller.pos_setpoint(pos2)
-            print(self.axis0_encoder_pos_estimate)
+            #print(self.axis0_encoder_pos_estimate)
             self.data_line.setData(self.plotAxisX, self.axis0_encoder_pos_estimate)  # Update the data.
             self.data_line2.setData(self.plotAxisX, self.axis0_controller_pos_setpoint)  # Update the data.
+            self.data_line3.setData(self.plotAxisX, self.axis0_encoder_vel_estimate)
+            self.data_line4.setData(self.plotAxisX, self.axis0_controller_vel_setpoint)
     
-
     def plot(self, X, Y):
         # self.graphWidget.plot(X ,Y)
         self.data_line.setData(X, Y)  # Update the data.
@@ -400,13 +434,16 @@ class MainWindow(QtWidgets.QMainWindow):
             pass
 
     def limitVelocity_in_X(self):
-        max_vel = self.velocityLimitX.value()  
+        max_vel = self.velocityLimitX.value()
+        vel_gain = self.gainVelController.value() 
         #self.lcd_vel.setProperty("value",max_vel)
         try:
+            self.odrv0.axis0.controller.config.pos_gain = self.gainPosController.value()
             self.odrv0.axis1.controller.config.vel_limit = max_vel 
             self.lcd_vel.setProperty("value",self.odrv0.axis1.controller.config.vel_limit)
+            self.odrv0.axis0.controller.config.vel_gain  = vel_gain
         except:
-            pass
+            print("set limits not completed")
         
     def startWorkers(self): 
         pass
