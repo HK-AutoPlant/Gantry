@@ -17,6 +17,10 @@ import random
 from TreeHive import TreeHive
 from PyQtGraphDataPlot import *
 
+from PyQt5 import QtWebEngineWidgets
+from PyQt5 import QtWebEngineCore
+from PyQt5.QtWebEngineWidgets import QWebEngineSettings
+
 b = 0
 window = 0
 b1 = 0
@@ -126,7 +130,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.closedLoopAxis0CheckBox.clicked.connect(lambda:self.closedLoop(0))
         self.closedLoopAxis1CheckBox.clicked.connect(lambda:self.closedLoop(1))       
         # Standrad ControlMode = Auto
-        self.controllerMode = "Auto"          
+        self.controllerMode = "Auto"      
+        # Webcam video feed
+        QWebEngineSettings.globalSettings().setAttribute(QWebEngineSettings.PluginsEnabled,True)        
+        self.webWidget.setUrl(QUrl("http://localhost:8081"))
+        # self.webWidget.setUrl(QUrl("https://www.youtube.com/watch?v=Zje_ihjZdLM2"))
         # Open GUI window       
         self.show()
 #---------------------------------------------------------------------------------------------
