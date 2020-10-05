@@ -142,6 +142,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.pushButton_Home.clicked.connect(self.moveHome)
         # Slider for navigation
         self.posXSlider.valueChanged.connect(self.movePosX)
+        # Sliders for maximum speed
+        self.velocityLimitX.valueChanged.connect(self.odriveVelocityLimit)
         # pushButton for Calibration
         self.pushButton_CalibrateAxis0.clicked.connect(lambda:self.calibrateAxis(0))
         self.pushButton_CalibrateAxis1.clicked.connect(lambda:self.calibrateAxis(1))
@@ -153,6 +155,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.pushButton_BufferEmptied.clicked.connect(self.emptyBuffer)        
         # pushButton for collecting trees
         self.pushButton_GoToPosition.clicked.connect(lambda: self.goToPosition(int(self.comboBox_TreePos.currentText()),int(self.comboBox_TreeRow.currentText())))
+
+        self.comboBox_CheckParameter.currentIndexChanged.connect(lambda: self.checkParameter(self.comboBox_CheckParameter.currentText()))
+        self.pushButton_calibrateEncodeOffsetAxis0.clicked.connect(lambda:self.calibrateEncoder(0))
+        self.pushButton_calibrateEncodeOffsetAxis1.clicked.connect(lambda:self.calibrateEncoder(1))
 #---------------------------------------------------------------------------------------------    
 
 #---------------------------------------------------------------------------------------------
@@ -160,15 +166,13 @@ class MainWindow(QtWidgets.QMainWindow):
         # timer for handling slider to set Velocity Limits
         self.timer = QTimer()
         self.timer.setInterval(100)
-        self.timer.timeout.connect(self.limitVelocity_in_X)
-        self.timer.start()
-
+        #self.timer.timeout.connect(self.limitVelocity_in_X)
+        # self.timer.start()
         # timer for updating battery voltage
         self.batteryUpdateTimer = QTimer()
         self.batteryUpdateTimer.setInterval(5000)
         self.batteryUpdateTimer.timeout.connect(self.batteryUpdatevalue)
         self.batteryUpdateTimer.start()
-
         # Timer for Error check
         self.errorCheckTimer = QTimer()
         self.errorCheckTimer.setInterval(1500)
@@ -343,10 +347,17 @@ class MainWindow(QtWidgets.QMainWindow):
         odrv0 = odrive.find_any()
         #print("odrive connected")
         self.odriveConnect.setText("odrive connected")
-        self.odriveConnect.adjustSize()
+        self.odriveConnect.adjustSize()        
         return odrv0
 
 # ------------------- Functions for Odrive such as Error and settings ------------------------
+    def calibrateEncoder(self, axis):
+        if hasattr(self, 'odrv0' ) == True:
+            if axis == 0:
+                self.odrv0.axis0.requested_state = 7 # encoder offset 
+            elif axis == 1:
+                self.odrv0.axis1.requested_state = 7 # encoder offset 
+
     def calibrateAxis(self, axis):
         try:
             if axis == 0:
@@ -448,15 +459,30 @@ class MainWindow(QtWidgets.QMainWindow):
 
 # ------------------- Functions for Odrive control parameters --------------------------------
     # Should Probalby be event base, such as "upon change value"
-    def limitVelocity_in_X(self):
+    def checkParameter(self, input):
+       if hasattr(self, 'odrv0' ) == True:
+           #----------- Axis0 --------------
+            if input == "Check current limit Axis0":
+                showValue = self.odrv0.axis0.motor.config.current_lim
+            elif input == "Check velocity limit Axis0":
+                showValue = self.odrv0.axis0.controller.config.vel_limit
+            #----------- Axis1 --------------
+            elif input == "Check velocity limit Axis1":
+                showValue = self.odrv0.axis1.controller.config.vel_limit
+
+            self.lcd_checkParameter.setProperty("value",showValue)
+            self.comboBox_CheckParameter.adjustSize()    
+
+    def odriveVelocityLimit(self):
         max_vel = self.velocityLimitX.value()
         vel_gain = self.gainVelController.value() 
-        #self.lcd_vel.setProperty("value",max_vel)
+        self.lcd_vel.setProperty("value",max_vel)
         try:
-            self.odrv0.axis0.controller.config.pos_gain = self.gainPosController.value()
+            pass
+            # self.odrv0.axis0.controller.config.pos_gain = self.gainPosController.value()
             self.odrv0.axis1.controller.config.vel_limit = max_vel 
             self.lcd_vel.setProperty("value",self.odrv0.axis1.controller.config.vel_limit)
-            self.odrv0.axis0.controller.config.vel_gain  = vel_gain
+            # self.odrv0.axis0.controller.config.vel_gain  = vel_gain
         except:
             pass
             # print("set limits not completed")
