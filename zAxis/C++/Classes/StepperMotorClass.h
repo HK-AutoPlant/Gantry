@@ -18,10 +18,10 @@ class stepperMotor
     void holdingTorque(bool state);
 
     void status();
+
     int maxDistance = 100;
     int limitSwitchOffset = 10;
-    int upperPosition = 30;
-    int lowerPosition = 80;
+
   private:
 
     uint8_t _stepPin;
@@ -38,6 +38,7 @@ class stepperMotor
     int _distanceToSteps(int distance);
     void _moveCW();
     void _moveCCW();
+    bool _withinBoundaries();
 
     A4988 _A4988;
     limitSwitch _limitSwitch;
