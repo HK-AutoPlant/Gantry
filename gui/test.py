@@ -94,7 +94,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.pushButton.clicked.connect(self.pressed)
         self.odrv0 = self.ConnectOdrive()
        
-        self.startWorkers()
+        # self.startWorkers()
         #self.odriveConnect.clicked.connect(self.startWorkers)
         #self.showVolt()
         #self.velocity_in_X()
@@ -119,14 +119,14 @@ class MainWindow(QtWidgets.QMainWindow):
         # Pass the function to execute
         worker   = Worker(self.batteryUpdatevalue)
         
-        worker3  = Worker(self.movePosX)
+       # worker3  = Worker(self.movePosX)
         if self.odriveConnect.isChecked():
             worker2  = Worker(self.ConnectOdrive)
             #worker2.signals.finished.connect(self.batteryUpdatevalue)
             self.threadpool.start(worker2)
         # Execute
         self.threadpool.start(worker)
-        self.threadpool.start(worker3)
+        # self.threadpool.start(worker3)
 
     def ConnectOdrive(self):
         print("connecting odrive")
@@ -177,6 +177,20 @@ class MainWindow(QtWidgets.QMainWindow):
             pass
         
     
-app = QApplication([])
-window = MainWindow()
-app.exec_()
+
+def main():
+    global window
+    app = QtWidgets.QApplication(sys.argv)
+    window = MainWindow()
+    
+    #global b 
+    #b = MainWindow()
+    #b= QtWidgets.QApplication.processEvents()
+    #window.show()       
+    sys.exit(app.exec_())    
+    
+if __name__ == '__main__':   
+    #while(True):
+     #   print("hej")     
+    main()
+

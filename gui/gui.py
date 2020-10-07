@@ -19,24 +19,11 @@ from PyQtGraphDataPlot import *
 
 from PyQt5 import QtWebEngineWidgets
 from PyQt5 import QtWebEngineCore
-from PyQt5.QtWebEngineWidgets import QWebEngineSettings
+# from PyQt5.QtWebEngineWidgets import QWebEngineSettings
 
 b = 0
 window = 0
 b1 = 0
-# ---------------------------------------------------------------------------
-# --------------- Different Approach to Threads, more RTOS based! ----------
-# class WorkerThread(QtCore.QObject):
-#     signalExample = QtCore.pyqtSignal(str, int) 
-#     def __init__(self):
-#         super().__init__() 
-#     @QtCore.pyqtSlot()
-#     def run(self):
-#         while True:
-#             # Long running task ...
-#             self.signalExample.emit("leet", 1337)
-#             time.sleep(5)
-# ---------------------------------------------------------------------------
 
 class WorkerSignals(QObject):
     '''
@@ -132,8 +119,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # Standrad ControlMode = Auto
         self.controllerMode = "Auto"      
         # Webcam video feed
-        QWebEngineSettings.globalSettings().setAttribute(QWebEngineSettings.PluginsEnabled,True)        
-        self.webWidget.setUrl(QUrl("http://localhost:8081"))
+        # QWebEngineSettings.globalSettings().setAttribute(QWebEngineSettings.PluginsEnabled,True)        
+        # self.webWidget.setUrl(QUrl("http://localhost:8081"))
         # self.webWidget.setUrl(QUrl("https://www.youtube.com/watch?v=Zje_ihjZdLM2"))
         # Open GUI window       
         self.show()
@@ -151,7 +138,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # Slider for navigation
         self.posXSlider.valueChanged.connect(self.movePosX)
         # Sliders for maximum speed
-        self.velocityLimitX.valueChanged.connect(self.odriveVelocityLimit)
+        self.velocityLimitX.valueChanged.connect(lambda:self.odriveVelocityLimit(1))
+        self.velocityLimitY.valueChanged.connect(lambda:self.odriveVelocityLimit(0))
         # pushButton for Calibration
         self.pushButton_CalibrateAxis0.clicked.connect(lambda:self.calibrateAxis(0))
         self.pushButton_CalibrateAxis1.clicked.connect(lambda:self.calibrateAxis(1))
@@ -481,15 +469,20 @@ class MainWindow(QtWidgets.QMainWindow):
             self.lcd_checkParameter.setProperty("value",showValue)
             self.comboBox_CheckParameter.adjustSize()    
 
-    def odriveVelocityLimit(self):
-        max_vel = self.velocityLimitX.value()
+    def odriveVelocityLimit(self,axis):
+        max_velX = self.velocityLimitX.value()
+        max_velY = self.velocityLimitY.value()
         vel_gain = self.gainVelController.value() 
-        self.lcd_vel.setProperty("value",max_vel)
+        self.lcd_velX.setProperty("value",max_velX)
         try:
             pass
             # self.odrv0.axis0.controller.config.pos_gain = self.gainPosController.value()
-            self.odrv0.axis1.controller.config.vel_limit = max_vel 
-            self.lcd_vel.setProperty("value",self.odrv0.axis1.controller.config.vel_limit)
+            if axis == 1:
+                self.odrv0.axis1.controller.config.vel_limit = max_velX 
+                self.lcd_velX.setProperty("value",self.odrv0.axis1.controller.config.vel_limit)
+            elif axis == 0:
+                self.odrv0.axis0.controller.config.vel_limit = max_velY 
+                self.lcd_velY.setProperty("value",self.odrv0.axis0.controller.config.vel_limit)
             # self.odrv0.axis0.controller.config.vel_gain  = vel_gain
         except:
             pass
@@ -589,3 +582,19 @@ if __name__ == '__main__':
     #while(True):
      #   print("hej")     
     main()
+
+
+
+# ---------------------------------------------------------------------------
+# --------------- Different Approach to Threads, more RTOS based! ----------
+# class WorkerThread(QtCore.QObject):
+#     signalExample = QtCore.pyqtSignal(str, int) 
+#     def __init__(self):
+#         super().__init__() 
+#     @QtCore.pyqtSlot()
+#     def run(self):
+#         while True:
+#             # Long running task ...
+#             self.signalExample.emit("leet", 1337)
+#             time.sleep(5)
+# ---------------------------------------------------------------------------

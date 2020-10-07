@@ -23,7 +23,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -583,13 +583,13 @@
          <enum>Qt::Vertical</enum>
         </property>
        </widget>
-       <widget class="QLCDNumber" name="lcd_vel">
+       <widget class="QLCDNumber" name="lcd_velX">
         <property name="geometry">
          <rect>
-          <x>500</x>
-          <y>60</y>
-          <width>221</width>
-          <height>101</height>
+          <x>590</x>
+          <y>130</y>
+          <width>121</width>
+          <height>51</height>
          </rect>
         </property>
        </widget>
@@ -712,6 +712,61 @@
         </property>
         <property name="text">
          <string>Encoder Cal A1</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="velocityLimitY">
+        <property name="geometry">
+         <rect>
+          <x>750</x>
+          <y>200</y>
+          <width>30</width>
+          <height>151</height>
+         </rect>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>25</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+       <widget class="QLCDNumber" name="lcd_velY">
+        <property name="geometry">
+         <rect>
+          <x>740</x>
+          <y>130</y>
+          <width>121</width>
+          <height>51</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_6">
+        <property name="geometry">
+         <rect>
+          <x>660</x>
+          <y>370</y>
+          <width>67</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Axis1</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_7">
+        <property name="geometry">
+         <rect>
+          <x>750</x>
+          <y>370</y>
+          <width>67</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Axis0</string>
         </property>
        </widget>
       </widget>
