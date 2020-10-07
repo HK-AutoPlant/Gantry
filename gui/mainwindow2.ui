@@ -23,7 +23,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -1148,7 +1148,7 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
-         <widget class="QWebEngineView" name="webWidget" native="true"/>
+         <widget class="QWidget" name="webWidget" native="true"/>
         </item>
        </layout>
       </widget>
@@ -1191,12 +1191,6 @@
    <class>TreeHive</class>
    <extends>QWidget</extends>
    <header>TreeHive</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>QWebEngineView</class>
-   <extends>QWidget</extends>
-   <header>QWebEngineView</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
