@@ -16,12 +16,12 @@ void stepperMotor::initialize()
 
 void stepperMotor::moveUp()
 {
-
+  moveDistance(-(_currentPosition - limitSwitchOffset));
 }
 
 void stepperMotor::moveDown()
 {
-
+  moveDistance(maxDistance);
 }
 
 
@@ -36,9 +36,17 @@ void stepperMotor::moveDistance(int distance)
 
   for(int i = 0; i < _numberOfSteps; i++)
   {
-    _A4988.step();
     distance >= 0 ? _currentPosition+= _mmPerStep : _currentPosition-= _mmPerStep;
+    if(_withinBoundaries())
+    {
+      _A4988.step();
+    } else
+    {
+      distance -= _mmPerStep;
+      break;
+    }
   }
+
   _A4988.enableMotor(false);
 }
 
@@ -64,6 +72,17 @@ int stepperMotor::_distanceToSteps(int distance)
   return (int)distance/_mmPerStep;
 }
 
+bool stepperMotor::_withinBoundaries()
+{
+  if(_currentPosition >  (float)maxDistance) // Implement a stop if it hits the liitswitch Aswell!
+  {
+    return 0;
+  }else
+  {
+    return 1;
+  }
+}
+
 void stepperMotor::status()
 {
   Serial.println("----- Current Status -----");
@@ -77,17 +96,11 @@ void stepperMotor::status()
   Serial.print("\t");
   Serial.print(limitSwitchOffset);
   Serial.println(" mm.");
-  Serial.print("Upper Position:");
-  Serial.print("\t");
-  Serial.print("\t");
-  Serial.print("\t");
-  Serial.print(upperPosition);
-  Serial.println(" mm.");
   Serial.print("Lower Position:");
   Serial.print("\t");
   Serial.print("\t");
   Serial.print("\t");
-  Serial.print(lowerPosition);
+  Serial.print(maxDistance);
   Serial.println(" mm.");
   Serial.print("Maximum allowed position:");
   Serial.print("\t");

@@ -14,7 +14,7 @@ class A4988
     uint8_t _stepPin;
     uint8_t _dirPin;
     uint8_t _enablePin;
-    float pulseDelay = 800;
+    float pulseDelay = 1000;//400;
 };
 
 #endif
