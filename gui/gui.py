@@ -18,7 +18,7 @@ from TreeHive import TreeHive
 from PyQtGraphDataPlot import *
 
 # from PyQt5 import QtWebEngineWidgets
-from PyQt5 import QtWebEngineCore
+# from PyQt5 import QtWebEngineCore
 # from PyQt5.QtWebEngineWidgets import QWebEngineSettings
 
 b = 0
