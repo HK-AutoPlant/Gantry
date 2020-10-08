@@ -122,7 +122,11 @@ class MainWindow(QtWidgets.QMainWindow):
         # QWebEngineSettings.globalSettings().setAttribute(QWebEngineSettings.PluginsEnabled,True)        
         # self.webWidget.setUrl(QUrl("http://localhost:8081"))
         # self.webWidget.setUrl(QUrl("https://www.youtube.com/watch?v=Zje_ihjZdLM2"))
-        # Open GUI window       
+        # Open GUI window    
+        # screen_resolution = self.desktop().screenGeometry()
+        # width, height = screen_resolution.width(), screen_resolution.height()
+        # self.setMaximumWidth(width)
+        # self.setMaximumHeight(height)   
         self.show()
 #---------------------------------------------------------------------------------------------
 #-------------------Push Buttons And Sliders--------------------------------------------------
@@ -570,7 +574,14 @@ class MainWindow(QtWidgets.QMainWindow):
 def main():
     global window
     app = QtWidgets.QApplication(sys.argv)
+    screen_resolution = app.desktop().screenGeometry()
+    width, height = screen_resolution.width(), screen_resolution.height()
+    print(width)
     window = MainWindow()
+    window.setMaximumWidth(width)
+    window.setMaximumHeight(height)
+    window.setMinimumWidth(width)
+    window.setMinimumHeight(height)
     
     #global b 
     #b = MainWindow()
