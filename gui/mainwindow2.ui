@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>683</width>
-    <height>458</height>
+    <width>868</width>
+    <height>687</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,15 +15,21 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="1" column="0">
+    <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
+      <property name="maximumSize">
+       <size>
+        <width>1072</width>
+        <height>717</height>
+       </size>
+      </property>
       <property name="font">
        <font>
         <pointsize>10</pointsize>
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -518,224 +524,262 @@
        <attribute name="title">
         <string>Settings</string>
        </attribute>
-       <widget class="QProgressBar" name="progressBar">
-        <property name="geometry">
-         <rect>
-          <x>540</x>
-          <y>200</y>
-          <width>95</width>
-          <height>25</height>
-         </rect>
-        </property>
-        <property name="value">
-         <number>24</number>
-        </property>
-       </widget>
-       <widget class="QSlider" name="velocityLimitX">
-        <property name="geometry">
-         <rect>
-          <x>680</x>
-          <y>200</y>
-          <width>30</width>
-          <height>151</height>
-         </rect>
-        </property>
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>25</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-       </widget>
-       <widget class="QLCDNumber" name="lcd_velX">
-        <property name="geometry">
-         <rect>
-          <x>590</x>
-          <y>130</y>
-          <width>121</width>
-          <height>51</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton">
-        <property name="geometry">
-         <rect>
-          <x>520</x>
-          <y>240</y>
-          <width>141</width>
-          <height>25</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>PushButton</string>
-        </property>
-       </widget>
-       <widget class="QDialogButtonBox" name="settingsButtons_setings">
-        <property name="geometry">
-         <rect>
-          <x>120</x>
-          <y>140</y>
-          <width>192</width>
-          <height>46</height>
-         </rect>
-        </property>
-        <property name="standardButtons">
-         <set>QDialogButtonBox::Reset|QDialogButtonBox::Save</set>
-        </property>
-        <property name="centerButtons">
-         <bool>true</bool>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_CalibrateAxis0">
-        <property name="geometry">
-         <rect>
-          <x>68</x>
-          <y>240</y>
-          <width>101</width>
-          <height>25</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Calibrate Axis0</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_CalibrateAxis1">
-        <property name="geometry">
-         <rect>
-          <x>190</x>
-          <y>240</y>
-          <width>101</width>
-          <height>25</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Calibrate Axis1</string>
-        </property>
-       </widget>
-       <widget class="QLCDNumber" name="lcd_checkParameter">
-        <property name="geometry">
-         <rect>
-          <x>60</x>
-          <y>330</y>
-          <width>221</width>
-          <height>101</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="comboBox_CheckParameter">
-        <property name="geometry">
-         <rect>
-          <x>80</x>
-          <y>450</y>
-          <width>86</width>
-          <height>25</height>
-         </rect>
-        </property>
-        <item>
-         <property name="text">
-          <string>New Item</string>
-         </property>
+       <layout class="QGridLayout" name="gridLayout_10">
+        <item row="0" column="0">
+         <widget class="QWidget" name="widget" native="true">
+          <layout class="QGridLayout" name="gridLayout_8">
+           <item row="0" column="0" colspan="2">
+            <widget class="QDialogButtonBox" name="settingsButtons_setings">
+             <property name="maximumSize">
+              <size>
+               <width>192</width>
+               <height>46</height>
+              </size>
+             </property>
+             <property name="standardButtons">
+              <set>QDialogButtonBox::Reset|QDialogButtonBox::Save</set>
+             </property>
+             <property name="centerButtons">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="pushButton_CalibrateAxis0">
+             <property name="maximumSize">
+              <size>
+               <width>101</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Calibrate Axis0</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="pushButton_CalibrateAxis1">
+             <property name="maximumSize">
+              <size>
+               <width>101</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Calibrate Axis1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis0">
+             <property name="maximumSize">
+              <size>
+               <width>121</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Encoder Cal A0</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis1">
+             <property name="maximumSize">
+              <size>
+               <width>121</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Encoder Cal A1</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
-        <item>
-         <property name="text">
-          <string>Check velocity limit Axis1</string>
-         </property>
+        <item row="0" column="1" rowspan="2">
+         <widget class="QWidget" name="widget" native="true">
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="1" column="0">
+            <widget class="QSlider" name="velocityLimitX">
+             <property name="maximumSize">
+              <size>
+               <width>30</width>
+               <height>151</height>
+              </size>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>25</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLCDNumber" name="lcd_velX">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>121</width>
+               <height>51</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_7">
+             <property name="maximumSize">
+              <size>
+               <width>67</width>
+               <height>17</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Axis0</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLCDNumber" name="lcd_velY">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>121</width>
+               <height>51</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="maximumSize">
+              <size>
+               <width>67</width>
+               <height>17</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Axis1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QSlider" name="velocityLimitY">
+             <property name="maximumSize">
+              <size>
+               <width>30</width>
+               <height>151</height>
+              </size>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>25</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
-        <item>
-         <property name="text">
-          <string>Check current limit Axis0</string>
-         </property>
+        <item row="1" column="0">
+         <widget class="QWidget" name="widget" native="true">
+          <layout class="QGridLayout" name="gridLayout_9">
+           <item row="0" column="1">
+            <widget class="QProgressBar" name="progressBar">
+             <property name="maximumSize">
+              <size>
+               <width>95</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="value">
+              <number>24</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="pushButton">
+             <property name="maximumSize">
+              <size>
+               <width>141</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLCDNumber" name="lcd_checkParameter">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>161</width>
+               <height>71</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QComboBox" name="comboBox_CheckParameter">
+             <property name="maximumSize">
+              <size>
+               <width>86</width>
+               <height>25</height>
+              </size>
+             </property>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Check velocity limit Axis1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Check current limit Axis0</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Check velocity limit Axis0</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
-        <item>
-         <property name="text">
-          <string>Check velocity limit Axis0</string>
-         </property>
-        </item>
-       </widget>
-       <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis0">
-        <property name="geometry">
-         <rect>
-          <x>38</x>
-          <y>280</y>
-          <width>121</width>
-          <height>25</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Encoder Cal A0</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis1">
-        <property name="geometry">
-         <rect>
-          <x>190</x>
-          <y>280</y>
-          <width>121</width>
-          <height>25</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Encoder Cal A1</string>
-        </property>
-       </widget>
-       <widget class="QSlider" name="velocityLimitY">
-        <property name="geometry">
-         <rect>
-          <x>750</x>
-          <y>200</y>
-          <width>30</width>
-          <height>151</height>
-         </rect>
-        </property>
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>25</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-       </widget>
-       <widget class="QLCDNumber" name="lcd_velY">
-        <property name="geometry">
-         <rect>
-          <x>740</x>
-          <y>130</y>
-          <width>121</width>
-          <height>51</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_6">
-        <property name="geometry">
-         <rect>
-          <x>660</x>
-          <y>370</y>
-          <width>67</width>
-          <height>17</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Axis1</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_7">
-        <property name="geometry">
-         <rect>
-          <x>750</x>
-          <y>370</y>
-          <width>67</width>
-          <height>17</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Axis0</string>
-        </property>
-       </widget>
+       </layout>
       </widget>
       <widget class="QWidget" name="tab_4">
        <attribute name="title">
@@ -1128,7 +1172,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>683</width>
+     <width>868</width>
      <height>21</height>
     </rect>
    </property>
