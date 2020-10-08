@@ -128,6 +128,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.setMaximumWidth(width)
         # self.setMaximumHeight(height)   
         self.show()
+        self.showMaximized()
 #---------------------------------------------------------------------------------------------
 #-------------------Push Buttons And Sliders--------------------------------------------------
 #---------------------------------------------------------------------------------------------
@@ -578,10 +579,10 @@ def main():
     width, height = screen_resolution.width(), screen_resolution.height()
     print(width)
     window = MainWindow()
-    window.setMaximumWidth(width)
-    window.setMaximumHeight(height)
-    window.setMinimumWidth(width)
-    window.setMinimumHeight(height)
+    # window.setMaximumWidth(width)
+    # window.setMaximumHeight(height)
+    # window.setMinimumWidth(width)
+    # window.setMinimumHeight(height)
     
     #global b 
     #b = MainWindow()
