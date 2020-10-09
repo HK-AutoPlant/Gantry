@@ -16,7 +16,11 @@ import math
 import random
 from TreeHive import TreeHive
 from PyQtGraphDataPlot import *
-#from bl import readXboxInput
+try:
+    from bl import xboxOne
+    print("imported")
+except Exception as e :
+    print(e)
 
 # from PyQt5 import QtWebEngineWidgets
 # from PyQt5 import QtWebEngineCore
@@ -102,6 +106,11 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi('mainwindow2.ui', self)
         # Importing TreeHive into widget window        
         self.treeWidget.createTrees(20,20,20,25,20,35)
+        try:
+            self.readXboxInput = xboxOne()
+            print("xbox created")
+        except :
+            pass
         #Sets icon of the control buttons, can be made in QtCreator as well...
         self.pushButton_Home.setIcon(QIcon("icons/home.png"))
         self.pushButton_Left.setIcon(QIcon("icons/left.png"))
@@ -130,6 +139,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.setMaximumHeight(height)   
         self.show()
         self.showMaximized()
+        
 #---------------------------------------------------------------------------------------------
 #-------------------Push Buttons And Sliders--------------------------------------------------
 #---------------------------------------------------------------------------------------------
@@ -312,17 +322,31 @@ class MainWindow(QtWidgets.QMainWindow):
                 time.sleep(0.1)
                 self.tab_5.update()
             
-    def startWorkers(self): 
-        pass
+    def startWorkers(self):
+        try:
+            worker = Worker(self.readXboxInput.readXboxInput)
+            worker.signals.result.connect(self.xboxMove)
+            worker.signals.finished.connect(self.startWorkers)
+            # worker.signals.progress.connect(self.progress_fn)
+            self.threadpool.start(worker)
+        except :
+            pass 
+        # pass
         # Pass the function to execute
-        #worker   = Worker(self.batteryUpdatevalue)        
+                
         #worker3  = Worker(self.movePosX)
         # Execute
-        #self.threadpool.start(worker)
+        
         #self.threadpool.start(worker3)
 
     def progress_fn(self,n):
         print(n)
+
+    def xboxMove(self,key):
+        # print("hhejeje")
+        print(key)
+        # self.startWorkers()
+
 
 # ------------------- Functions for Connecting Odrive ----------------------------------------
     def odrv0_object(self, s):

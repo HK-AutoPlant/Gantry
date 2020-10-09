@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>683</width>
+    <width>689</width>
     <height>458</height>
    </rect>
   </property>
@@ -35,7 +35,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -74,6 +74,12 @@
         </item>
         <item row="9" column="0">
          <widget class="QPushButton" name="pushButton_Left">
+          <property name="minimumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -92,6 +98,12 @@
         </item>
         <item row="9" column="2">
          <widget class="QPushButton" name="pushButton_Right">
+          <property name="minimumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -130,6 +142,12 @@
         </item>
         <item row="10" column="1" rowspan="2">
          <widget class="QPushButton" name="pushButton_Down">
+          <property name="minimumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -165,6 +183,12 @@
         </item>
         <item row="8" column="1">
          <widget class="QPushButton" name="pushButton_Up">
+          <property name="minimumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -194,6 +218,12 @@
         </item>
         <item row="9" column="1">
          <widget class="QPushButton" name="pushButton_Home">
+          <property name="minimumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -501,6 +531,12 @@
         </item>
         <item row="2" column="0">
          <widget class="QFrame" name="frame">
+          <property name="maximumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
           <property name="styleSheet">
            <string notr="true">border-radius: 15px;background-color:rgb(138, 226, 52);
 
@@ -1205,7 +1241,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>683</width>
+     <width>689</width>
      <height>21</height>
     </rect>
    </property>
