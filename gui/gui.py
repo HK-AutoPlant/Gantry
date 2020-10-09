@@ -127,7 +127,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.closedLoopAxis0CheckBox.clicked.connect(lambda:self.closedLoop(0))
         self.closedLoopAxis1CheckBox.clicked.connect(lambda:self.closedLoop(1))       
         # Standrad ControlMode = Auto
-        self.controllerMode = "Auto"      
+        self.controllerMode = "Manual"      
         # Webcam video feed
         # QWebEngineSettings.globalSettings().setAttribute(QWebEngineSettings.PluginsEnabled,True)        
         # self.webWidget.setUrl(QUrl("http://localhost:8081"))
@@ -346,7 +346,37 @@ class MainWindow(QtWidgets.QMainWindow):
         # print("hhejeje")
         print(key)
         # self.startWorkers()
+# ------------------- Functions for autonomous mode ------------------------------------------
+    def checkIfInPos(self):
+        setpointX = self.odrv0.axis0.controller.pos_setpoint
+        positionX = self.odrv0.axis0.encoder.pos_estimate
+        errorX = abs(setpointX - positionX)
+        tolerance = 0.01
+        if errorX < tolerance:
+            xInPos = True
+        else:
+            xInPos = False
+        setpointY = self.odrv0.axis1.controller.pos_setpoint
+        positionY = self.odrv0.axis1.encoder.pos_estimate
+        errorY = abs(setpointY - positionY)
+        if errorY < tolerance:
+            yInPos = True
+        else: 
+            yInPos = False
+        #text = "xInPos: {}, yInPos: {}, xInPos and yInPos: {}".format(xInPos,yInPos, xInPos and yInPos)
+        print("errorX: " + str(errorX) + " errorY: " + str(errorY))
+        return (xInPos and yInPos)
 
+    def auto(self):
+        if self.controllerMode == "Auto":
+            self.goToPosition(4,20)
+        else: 
+            self.goToPosition(1,1)
+        # while self.controllerMode == "Auto":
+        #     self.goToPosition(1,1)
+        #     while not self.checkIfInPos():
+        #         pass
+        #     self.goToPosition(4,4)
 
 # ------------------- Functions for Connecting Odrive ----------------------------------------
     def odrv0_object(self, s):

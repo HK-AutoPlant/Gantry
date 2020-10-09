@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>689</width>
-    <height>458</height>
+    <width>721</width>
+    <height>463</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -167,7 +167,7 @@
         <item row="0" column="2" colspan="3">
          <widget class="QPushButton" name="pushButton_Auto_Manual">
           <property name="text">
-           <string>Auto</string>
+           <string>Manual</string>
           </property>
          </widget>
         </item>
@@ -1241,8 +1241,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>689</width>
-     <height>21</height>
+     <width>721</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMain">
