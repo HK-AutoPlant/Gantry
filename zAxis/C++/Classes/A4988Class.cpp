@@ -2,9 +2,6 @@
 #include "A4988Class.h"
 
 #define CLOCKWISE 1
-#define COUNTERCLOCKWISE 0
-#define ON 1
-#define OFF 0
 
 A4988::A4988(uint8_t stepPin, uint8_t dirPin, uint8_t enablePin)
 {

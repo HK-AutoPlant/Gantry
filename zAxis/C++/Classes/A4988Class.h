@@ -1,6 +1,8 @@
 #ifndef A4988Class_h
 #define A4988Class_h
 
+#include "Arduino.h"
+
 class A4988
 {
   public:
@@ -14,7 +16,7 @@ class A4988
     uint8_t _stepPin;
     uint8_t _dirPin;
     uint8_t _enablePin;
-    float pulseDelay = 1000;//400;
+    float pulseDelay = 600; // [us]
 };
 
 #endif

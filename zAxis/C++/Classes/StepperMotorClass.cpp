@@ -57,6 +57,7 @@ void stepperMotor::home()
   while(_limitSwitch.isPressed() == false)
     _A4988.step();
 
+  delay(100);  
   _currentPosition = 0;
 
   moveDistance(limitSwitchOffset);
