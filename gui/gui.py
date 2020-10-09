@@ -284,7 +284,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def mapFromPosAndRowToSetPoints(self,pos,row): 
         xOffset_mm = 0
-        yOffset_mm = 0
+        yOffset_mm = 400
         plantXCC_mm = 35.1
         plantYCC_mm = 30
         trayWidth_mm = 352
@@ -363,20 +363,51 @@ class MainWindow(QtWidgets.QMainWindow):
             yInPos = True
         else: 
             yInPos = False
-        #text = "xInPos: {}, yInPos: {}, xInPos and yInPos: {}".format(xInPos,yInPos, xInPos and yInPos)
-        print("errorX: " + str(errorX) + " errorY: " + str(errorY))
         return (xInPos and yInPos)
 
+    def goToStart(self):
+        mmToRevolutions = 1/(25*math.pi)
+        self.odrv0.axis1.controller.input_pos = 50*mmToRevolutions
+        print("going to start of column")
+    def goToBuffer(self):
+        mmToRevolutions = 1/(25*math.pi)
+        self.odrv0.axis1.controller.input_pos = 0
+        self.odrv0.axis1.controller.input_pos = 2.5
+
     def auto(self):    
-        if self.controllerMode == "Auto":
-            self.goToPosition(4,20)
-        else: 
-            self.goToPosition(1,1)
+        # if self.controllerMode == "Auto":
+        #     self.goToPosition(4,20)
+        # else: 
+        #     self.goToPosition(1,1)
+        pos = 1
+        row = 1
+        self.goToBuffer()
         while self.controllerMode == "Auto":
-            self.goToPosition(1,1)
+            self.goToPosition(pos,row)
             while not self.checkIfInPos():
                 pass
-            self.goToPosition(4,4)
+            print("moving Z down...")
+            time.sleep(1)
+            print("Gripping plants...")
+            time.sleep(1)
+            print("Moving Z up...")
+            time.sleep(1)
+            print("Trees are correctly gripped")
+            self.goToStart()
+            while not self.checkIfInPos():
+                pass
+            time.sleep(3)
+            self.goToBuffer()
+            while not self.checkIfInPos():
+                pass
+            print("dropping plants into buffer")
+            time.sleep(3)
+            if pos == 4:
+                pos = 1
+                row = row + 1
+            else:
+                pos = pos + 1
+
 
     def startAuto(self):
         worker = Worker(self.auto)
