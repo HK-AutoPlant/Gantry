@@ -367,16 +367,21 @@ class MainWindow(QtWidgets.QMainWindow):
         print("errorX: " + str(errorX) + " errorY: " + str(errorY))
         return (xInPos and yInPos)
 
-    def auto(self):
+    def auto(self):    
         if self.controllerMode == "Auto":
             self.goToPosition(4,20)
         else: 
             self.goToPosition(1,1)
-        # while self.controllerMode == "Auto":
-        #     self.goToPosition(1,1)
-        #     while not self.checkIfInPos():
-        #         pass
-        #     self.goToPosition(4,4)
+        while self.controllerMode == "Auto":
+            self.goToPosition(1,1)
+            while not self.checkIfInPos():
+                pass
+            self.goToPosition(4,4)
+
+    def startAuto(self):
+        worker = Worker(self.auto)
+        self.threadpool.start(worker)
+        # worker.signals.result.connect(self.xboxMove)
 
 # ------------------- Functions for Connecting Odrive ----------------------------------------
     def odrv0_object(self, s):
@@ -463,8 +468,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.controllerMode = "Manual"
             self.pushButton_Auto_Manual.setText("Manual")
         else:
-            self.controllerMode = "Auto"
-            self.pushButton_Auto_Manual.setText("Auto")
+            if hasattr(self, 'odrv0' ) == True:
+                self.startAuto()
+                self.controllerMode = "Auto"
+                self.pushButton_Auto_Manual.setText("Auto")
 
     def closedLoop(self, axis):
         try:  

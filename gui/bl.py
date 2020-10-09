@@ -40,60 +40,70 @@ class xboxOne:
                 if event.value == 1:
                     if event.code == aBtn:
                         self.key_axis = "A"
-                        print("A")
+                        # print("A")
+                        return self.key_axis
                     elif event.code == bBtn:
-                        print("B")
+                        self.key_axis = "B"
+                        # print("B")
                     elif event.code == playpause:
-                        print("Play/Pause")
+                        self.key_axis = "A"
+                        # print("Play/Pause")
                     elif event.code == up:
-                        print("up")
+                        self.key_axis = "A"
+                        # print("up")
                     elif event.code == down:
-                        print("down")
+                        self.key_axis = "A"
+                        # print("down")
                     elif event.code == left:
-                        print("left")
+                        self.key_axis = "A"
+                        # print("left")
                     elif event.code == right:
-                        print("right")
+                        self.key_axis = "A"
+                        # print("right")
                     elif event.code == yBtn:
-                        print("Y")
+                        self.key_axis = "Y"
+                        # print("Y")
                     elif event.code == xBtn:
-                        print("X")
+                        self.key_axis = "X"
+                        # print("X")
+                # return self.key_axis
             elif event.type == ecodes.EV_ABS:
                 absevent = categorize(event)
                 #print(absevent.event)
-                print(ecodes.bytype[absevent.event.type][absevent.event.code], absevent.event.value)
+                # print(ecodes.bytype[absevent.event.type][absevent.event.code], absevent.event.value)
                 a = (ecodes.bytype[absevent.event.type][absevent.event.code], absevent.event.value)           
                 #print(a[1])
                 if a[0] == "ABS_BRAKE":
                     self.key_axis ="Brake"
                     self.value    = a[1]
-                    print("Brake")
+                    # print("Brake")
 
                 elif a[0] == "ABS_GAS":
                     self.key_axis ="Gas"
                     self.value    = a[1]
-                    print("Gas")
+                    # print("Gas")
 
                 elif a[0] == "ABS_HAT0X" and a[1] == -1:
                     self.key_axis ="Hat0 Left"
                     self.value    = a[1]
-                    print("Hat0 Left")
+                    # print("Hat0 Left")
 
                 elif a[0] == "ABS_HAT0X" and a[1] == 1:
                     self.key_axis ="Hat0 Right"
                     self.value    = a[1]                    
-                    print("Hat0 Right")
+                    # print("Hat0 Right")
 
                 elif a[0] == "ABS_HAT0Y" and a[1] == -1:
                     self.key_axis ="Hat0 UP"
                     self.value    = a[1]
-                    print("Hat0 UP")
+                    # print("Hat0 UP")
 
                 elif a[0] == "ABS_HAT0Y" and a[1] == 1:
                     self.key_axis ="Brake"
                     self.value    = a[1]
-                    print("Hat0 Down")
+                    # print("Hat0 Down")
 
             #print(key_axis)
             
-            return self.key_axis, self.value
+            # return self.key_axis, self.value
 #readXboxInput()
