@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>721</width>
-    <height>463</height>
+    <width>1000</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -42,36 +42,6 @@
         <string>Main</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_5">
-        <item row="0" column="0" colspan="2">
-         <widget class="QLabel" name="batteryVoltage">
-          <property name="text">
-           <string>TextLabel</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="8" rowspan="6">
-         <widget class="QLCDNumber" name="lcdPosX"/>
-        </item>
-        <item row="11" column="4" colspan="3">
-         <widget class="QLabel" name="batteryVoltage_2">
-          <property name="text">
-           <string>Up_Down</string>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="3" rowspan="3" colspan="4">
-         <widget class="QLCDNumber" name="lcdPos_Left"/>
-        </item>
-        <item row="12" column="1">
-         <widget class="QDoubleSpinBox" name="stepInTurns">
-          <property name="minimum">
-           <double>0.100000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.100000000000000</double>
-          </property>
-         </widget>
-        </item>
         <item row="9" column="0">
          <widget class="QPushButton" name="pushButton_Left">
           <property name="minimumSize">
@@ -89,31 +59,34 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="2">
+        <item row="11" column="0">
+         <widget class="QDoubleSpinBox" name="stepInTurns">
+          <property name="minimum">
+           <double>0.100000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.100000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="2" rowspan="2">
+         <widget class="QLCDNumber" name="lcdPos_Left"/>
+        </item>
+        <item row="2" column="0">
          <widget class="QCheckBox" name="closedLoopAxis0CheckBox">
           <property name="text">
            <string>Closed Loop Axis 0</string>
           </property>
          </widget>
         </item>
-        <item row="9" column="2">
-         <widget class="QPushButton" name="pushButton_Right">
-          <property name="minimumSize">
-           <size>
-            <width>32</width>
-            <height>32</height>
-           </size>
-          </property>
+        <item row="0" column="0" colspan="2">
+         <widget class="QLabel" name="batteryVoltage">
           <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>right.png</normaloff>right.png</iconset>
+           <string>TextLabel</string>
           </property>
          </widget>
         </item>
-        <item row="13" column="0" colspan="8">
+        <item row="17" column="0" colspan="9">
          <widget class="QScrollBar" name="posXSlider">
           <property name="maximum">
            <number>100</number>
@@ -126,21 +99,36 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="3">
-         <widget class="QLabel" name="errorAxis0">
-          <property name="text">
-           <string>Error Axis0</string>
+        <item row="2" column="2">
+         <widget class="QDialogButtonBox" name="settingsButtons">
+          <property name="maximumSize">
+           <size>
+            <width>180</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="standardButtons">
+           <set>QDialogButtonBox::Reset|QDialogButtonBox::Save</set>
+          </property>
+          <property name="centerButtons">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QCheckBox" name="odriveConnect">
+        <item row="5" column="0" rowspan="2" colspan="2">
+         <widget class="QLCDNumber" name="lcdPos_Up"/>
+        </item>
+        <item row="4" column="2">
+         <widget class="QLabel" name="batteryVoltage_2">
           <property name="text">
-           <string>odriveConnect</string>
+           <string>Up_Down</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
-        <item row="10" column="1" rowspan="2">
+        <item row="10" column="1">
          <widget class="QPushButton" name="pushButton_Down">
           <property name="minimumSize">
            <size>
@@ -157,27 +145,10 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="2">
+        <item row="3" column="0">
          <widget class="QCheckBox" name="closedLoopAxis1CheckBox">
           <property name="text">
            <string>Closed Loop Axis 1</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2" colspan="3">
-         <widget class="QPushButton" name="pushButton_Auto_Manual">
-          <property name="text">
-           <string>Manual</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0" rowspan="3" colspan="3">
-         <widget class="QLCDNumber" name="lcdPos_Up"/>
-        </item>
-        <item row="6" column="3" colspan="3">
-         <widget class="QLabel" name="batteryVoltage_3">
-          <property name="text">
-           <string>Left_Right</string>
           </property>
          </widget>
         </item>
@@ -198,21 +169,34 @@
           </property>
          </widget>
         </item>
-        <item row="7" column="6" colspan="2">
-         <widget class="QPushButton" name="pushButton_Reboot">
+        <item row="0" column="2" colspan="2">
+         <widget class="QPushButton" name="pushButton_Auto_Manual">
           <property name="text">
-           <string>Reboot Odrive</string>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>right.png</normaloff>right.png</iconset>
+           <string>Manual</string>
           </property>
          </widget>
         </item>
-        <item row="12" column="2" colspan="2">
-         <widget class="QLabel" name="batteryVoltage_4">
+        <item row="3" column="1">
+         <widget class="QLabel" name="errorAxis1">
           <property name="text">
-           <string>Step In turns</string>
+           <string>Error Axis1</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="3" colspan="2">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Z-Axis</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QCheckBox" name="odriveConnect">
+          <property name="text">
+           <string>odriveConnect</string>
           </property>
          </widget>
         </item>
@@ -233,22 +217,98 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="3">
-         <widget class="QLabel" name="errorAxis1">
+        <item row="9" column="2">
+         <widget class="QPushButton" name="pushButton_Right">
+          <property name="minimumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
           <property name="text">
-           <string>Error Axis1</string>
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>right.png</normaloff>right.png</iconset>
           </property>
          </widget>
         </item>
-        <item row="6" column="6" colspan="2">
-         <widget class="QDialogButtonBox" name="settingsButtons">
-          <property name="standardButtons">
-           <set>QDialogButtonBox::Reset|QDialogButtonBox::Save</set>
-          </property>
-          <property name="centerButtons">
-           <bool>true</bool>
+        <item row="2" column="1">
+         <widget class="QLabel" name="errorAxis0">
+          <property name="text">
+           <string>Error Axis0</string>
           </property>
          </widget>
+        </item>
+        <item row="11" column="1">
+         <widget class="QLabel" name="batteryVoltage_4">
+          <property name="text">
+           <string>Step In turns</string>
+          </property>
+         </widget>
+        </item>
+        <item row="11" column="4">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>mm</string>
+          </property>
+         </widget>
+        </item>
+        <item row="11" column="3">
+         <widget class="QDoubleSpinBox" name="zAxisStepInmm">
+          <property name="minimum">
+           <double>1.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="batteryVoltage_3">
+          <property name="text">
+           <string>Left_Right</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QPushButton" name="pushButton_Reboot">
+          <property name="text">
+           <string>Reboot Odrive</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>right.png</normaloff>right.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="3" rowspan="2" colspan="3">
+         <widget class="QLCDNumber" name="lcd_zAxis"/>
+        </item>
+        <item row="8" column="3" colspan="3">
+         <widget class="QPushButton" name="pushButton_zUp">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="3" colspan="3">
+         <widget class="QPushButton" name="pushButton_zHome">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="3" colspan="3">
+         <widget class="QPushButton" name="pushButton_zDown">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="6" rowspan="2" colspan="3">
+         <widget class="QLCDNumber" name="lcd_vel"/>
         </item>
        </layout>
       </widget>
@@ -567,74 +627,84 @@
         <string>Settings</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_10">
-        <item row="0" column="0">
+        <item row="1" column="0">
          <widget class="QWidget" name="widget" native="true">
-          <layout class="QGridLayout" name="gridLayout_8">
-           <item row="0" column="0" colspan="2">
-            <widget class="QDialogButtonBox" name="settingsButtons_setings">
+          <property name="maximumSize">
+           <size>
+            <width>2500</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_9">
+           <item row="0" column="1">
+            <widget class="QProgressBar" name="progressBar">
              <property name="maximumSize">
               <size>
-               <width>192</width>
-               <height>46</height>
-              </size>
-             </property>
-             <property name="standardButtons">
-              <set>QDialogButtonBox::Reset|QDialogButtonBox::Save</set>
-             </property>
-             <property name="centerButtons">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis0">
-             <property name="maximumSize">
-              <size>
-               <width>121</width>
+               <width>95</width>
                <height>25</height>
               </size>
              </property>
-             <property name="text">
-              <string>Encoder Cal A0</string>
+             <property name="value">
+              <number>24</number>
              </property>
             </widget>
            </item>
-           <item row="3" column="1">
-            <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis1">
-             <property name="maximumSize">
+           <item row="0" column="0">
+            <widget class="QLCDNumber" name="lcd_checkParameter">
+             <property name="minimumSize">
               <size>
-               <width>121</width>
-               <height>25</height>
+               <width>100</width>
+               <height>50</height>
               </size>
              </property>
-             <property name="text">
-              <string>Encoder Cal A1</string>
+             <property name="maximumSize">
+              <size>
+               <width>161</width>
+               <height>71</height>
+              </size>
              </property>
             </widget>
            </item>
            <item row="2" column="0">
-            <widget class="QPushButton" name="pushButton_CalibrateAxis0">
+            <widget class="QComboBox" name="comboBox_CheckParameter">
              <property name="maximumSize">
               <size>
-               <width>101</width>
+               <width>86</width>
                <height>25</height>
               </size>
              </property>
-             <property name="text">
-              <string>Calibrate Axis0</string>
-             </property>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Check velocity limit Axis1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Check current limit Axis0</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Check velocity limit Axis0</string>
+              </property>
+             </item>
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QPushButton" name="pushButton_CalibrateAxis1">
+            <widget class="QPushButton" name="pushButton">
              <property name="maximumSize">
               <size>
-               <width>101</width>
+               <width>141</width>
                <height>25</height>
               </size>
              </property>
              <property name="text">
-              <string>Calibrate Axis1</string>
+              <string>PushButton</string>
              </property>
             </widget>
            </item>
@@ -743,84 +813,74 @@
           </layout>
          </widget>
         </item>
-        <item row="1" column="0">
+        <item row="0" column="0">
          <widget class="QWidget" name="widget" native="true">
-          <property name="maximumSize">
-           <size>
-            <width>2500</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_9">
-           <item row="0" column="1">
-            <widget class="QProgressBar" name="progressBar">
-             <property name="maximumSize">
-              <size>
-               <width>95</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="value">
-              <number>24</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLCDNumber" name="lcd_checkParameter">
-             <property name="minimumSize">
-              <size>
-               <width>100</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>161</width>
-               <height>71</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QComboBox" name="comboBox_CheckParameter">
-             <property name="maximumSize">
-              <size>
-               <width>86</width>
-               <height>25</height>
-              </size>
-             </property>
-             <item>
-              <property name="text">
-               <string>New Item</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Check velocity limit Axis1</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Check current limit Axis0</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Check velocity limit Axis0</string>
-              </property>
-             </item>
-            </widget>
-           </item>
+          <layout class="QGridLayout" name="gridLayout_8">
            <item row="2" column="1">
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="pushButton_CalibrateAxis1">
              <property name="maximumSize">
               <size>
-               <width>141</width>
+               <width>101</width>
                <height>25</height>
               </size>
              </property>
              <property name="text">
-              <string>PushButton</string>
+              <string>Calibrate Axis1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis1">
+             <property name="maximumSize">
+              <size>
+               <width>121</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Encoder Cal A1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QDialogButtonBox" name="settingsButtons_setings">
+             <property name="maximumSize">
+              <size>
+               <width>192</width>
+               <height>46</height>
+              </size>
+             </property>
+             <property name="standardButtons">
+              <set>QDialogButtonBox::Reset|QDialogButtonBox::Save</set>
+             </property>
+             <property name="centerButtons">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="pushButton_CalibrateAxis0">
+             <property name="maximumSize">
+              <size>
+               <width>101</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Calibrate Axis0</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis0">
+             <property name="maximumSize">
+              <size>
+               <width>121</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Encoder Cal A0</string>
              </property>
             </widget>
            </item>
@@ -1241,7 +1301,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>721</width>
+     <width>1000</width>
      <height>22</height>
     </rect>
    </property>
@@ -1249,6 +1309,7 @@
     <property name="title">
      <string>Main</string>
     </property>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
@@ -1259,6 +1320,11 @@
    <addaction name="menuSettings"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -1275,5 +1341,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionQuit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>499</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

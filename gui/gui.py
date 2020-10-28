@@ -3,6 +3,10 @@
 #while (1):
 	#app.exec()
 	
+
+import sys
+sys.path.append("../zAxis/Python") # Adds higher directory to python modules path.
+
 from PyQt5 import QtWidgets, uic , QtCore  
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -16,11 +20,15 @@ import math
 import random
 from TreeHive import TreeHive
 from PyQtGraphDataPlot import *
+##----- Gamepad Controller library -----------------
 try:
     from bl import xboxOne
     print("imported")
 except Exception as e :
     print(e)
+
+#---- Arduino Stepper Motor Control ------
+from SC import usbCommunication
 
 # from PyQt5 import QtWebEngineWidgets
 # from PyQt5 import QtWebEngineCore
@@ -106,6 +114,14 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi('mainwindow2.ui', self)
         # Importing TreeHive into widget window        
         self.treeWidget.createTrees(20,20,20,25,20,35)
+        # Arduino Stepper Motor 
+        try:
+            BAUD_RATE = 115200
+            zAxisUsbPort = '/dev/ttyUSB0'
+            self.zAxis = usbCommunication(zAxisUsbPort, BAUD_RATE)
+        except Exception as e:
+            print(e)        
+        # For using an Xbox One Controller
         try:
             self.readXboxInput = xboxOne()
             print("xbox created")
@@ -117,6 +133,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.pushButton_Right.setIcon(QIcon("icons/right.png"))
         self.pushButton_Up.setIcon(QIcon("icons/up.png"))
         self.pushButton_Down.setIcon(QIcon("icons/down.png"))
+        self.pushButton_zUp.setIcon(QIcon("icons/up.png"))
+        self.pushButton_zDown.setIcon(QIcon("icons/down.png"))
+        self.pushButton_zHome.setIcon(QIcon("icons/home.png"))
         # Start worker threds
         self.threadpool = QThreadPool()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
@@ -163,14 +182,19 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settingsButtons.accepted.connect(self.saveOdriveSettings)
         self.settingsButtons.button(QDialogButtonBox.Reset).clicked.connect(self.resetErrorOdrive)
         self.pushButton_Reboot.clicked.connect(self.rebootOdrive)
+        self.pushButton_calibrateEncodeOffsetAxis0.clicked.connect(lambda:self.calibrateEncoder(0))
+        self.pushButton_calibrateEncodeOffsetAxis1.clicked.connect(lambda:self.calibrateEncoder(1))
+        self.comboBox_CheckParameter.currentIndexChanged.connect(lambda: self.checkParameter(self.comboBox_CheckParameter.currentText())) # checking various parameters in the oDrive
+        # pushButton for zAxis movement
+        self.pushButton_zDown.clicked.connect(lambda: self.movezAxis("Down",self.zAxisStepInmm.value()))
+        self.pushButton_zUp.clicked.connect(lambda: self.movezAxis("Up",self.zAxisStepInmm.value()))
+        self.pushButton_zHome.clicked.connect(lambda: self.movezAxis("Home",0))
         # pushButton for buffer
         self.pushButton_BufferEmptied.clicked.connect(self.emptyBuffer)        
         # pushButton for collecting trees
         self.pushButton_GoToPosition.clicked.connect(lambda: self.goToPosition(int(self.comboBox_TreePos.currentText()),int(self.comboBox_TreeRow.currentText())))
 
-        self.comboBox_CheckParameter.currentIndexChanged.connect(lambda: self.checkParameter(self.comboBox_CheckParameter.currentText()))
-        self.pushButton_calibrateEncodeOffsetAxis0.clicked.connect(lambda:self.calibrateEncoder(0))
-        self.pushButton_calibrateEncodeOffsetAxis1.clicked.connect(lambda:self.calibrateEncoder(1))
+        
 #---------------------------------------------------------------------------------------------    
 
 #---------------------------------------------------------------------------------------------
@@ -253,27 +277,30 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def plotOdriveData(self): #update_plot_data
         if hasattr(self, 'odrv0' ) == True:
-            # self.plotAxisX = self.plotAxisX[1:]  # Remove the first y element.
-            self.plotAxisX.append(self.plotAxisX[-1] + 1)  # Add a new value 1 higher than the last.       
-            # self.y = self.y[1:]  # Remove the first 
-            # self.axis0_encoder_pos_estimate.append( random.uniform(0,100))  # Add a new random value.
-            #self.axis0_encoder_pos_estimate.append(self.axis0_encoder_pos_estimate[-1])  # Add a new random value.
-            #self.axis0_encoder_pos_estimate.append(self.odrv0.axis0.encoder.pos_estimate)
-            pos = self.odrv0.axis0.encoder.pos_estimate
-            pos2 = self.odrv0.axis0.controller.pos_setpoint
-            vel = self.odrv0.axis0.encoder.vel_estimate
-            vel2 = self.odrv0.axis0.controller.vel_setpoint
-            self.axis0_encoder_pos_estimate.append(pos)
-            self.axis0_controller_pos_setpoint.append(pos2)
-            self.axis0_encoder_vel_estimate.append(vel)
-            #print(self.odrv0.axis0.controller.vel_setpoint)
-            self.axis0_controller_vel_setpoint.append(vel2)
-            #self.odrv0.axis0.controller.pos_setpoint(pos2)
-            #print(self.axis0_encoder_pos_estimate)
-            self.data_line.setData(self.plotAxisX , self.axis0_encoder_pos_estimate)  # Update the data.
-            self.data_line2.setData(self.plotAxisX, self.axis0_controller_pos_setpoint)  # Update the data.
-            self.data_line3.setData(self.plotAxisX, self.axis0_encoder_vel_estimate)
-            self.data_line4.setData(self.plotAxisX, self.axis0_controller_vel_setpoint)
+            try:
+                # self.plotAxisX = self.plotAxisX[1:]  # Remove the first y element.
+                self.plotAxisX.append(self.plotAxisX[-1] + 1)  # Add a new value 1 higher than the last.       
+                # self.y = self.y[1:]  # Remove the first 
+                # self.axis0_encoder_pos_estimate.append( random.uniform(0,100))  # Add a new random value.
+                #self.axis0_encoder_pos_estimate.append(self.axis0_encoder_pos_estimate[-1])  # Add a new random value.
+                #self.axis0_encoder_pos_estimate.append(self.odrv0.axis0.encoder.pos_estimate)
+                pos = self.odrv0.axis0.encoder.pos_estimate
+                pos2 = self.odrv0.axis0.controller.pos_setpoint
+                vel = self.odrv0.axis0.encoder.vel_estimate
+                vel2 = self.odrv0.axis0.controller.vel_setpoint
+                self.axis0_encoder_pos_estimate.append(pos)
+                self.axis0_controller_pos_setpoint.append(pos2)
+                self.axis0_encoder_vel_estimate.append(vel)
+                #print(self.odrv0.axis0.controller.vel_setpoint)
+                self.axis0_controller_vel_setpoint.append(vel2)
+                #self.odrv0.axis0.controller.pos_setpoint(pos2)
+                #print(self.axis0_encoder_pos_estimate)
+                self.data_line.setData(self.plotAxisX , self.axis0_encoder_pos_estimate)  # Update the data.
+                self.data_line2.setData(self.plotAxisX, self.axis0_controller_pos_setpoint)  # Update the data.
+                self.data_line3.setData(self.plotAxisX, self.axis0_encoder_vel_estimate)
+                self.data_line4.setData(self.plotAxisX, self.axis0_controller_vel_setpoint)
+            except:
+                pass
     
     def plot(self, X, Y):
         # self.graphWidget.plot(X ,Y)
@@ -284,7 +311,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def mapFromPosAndRowToSetPoints(self,pos,row): 
         xOffset_mm = 0
-        yOffset_mm = 400
+        yOffset_mm = 100
         plantXCC_mm = 35.1
         plantYCC_mm = 30
         trayWidth_mm = 352
@@ -369,10 +396,11 @@ class MainWindow(QtWidgets.QMainWindow):
         mmToRevolutions = 1/(25*math.pi)
         self.odrv0.axis1.controller.input_pos = 50*mmToRevolutions
         print("going to start of column")
+
     def goToBuffer(self):
         mmToRevolutions = 1/(25*math.pi)
         self.odrv0.axis1.controller.input_pos = 0
-        self.odrv0.axis1.controller.input_pos = 2.5
+        self.odrv0.axis0.controller.input_pos = 2.5
 
     def auto(self):    
         # if self.controllerMode == "Auto":
@@ -381,33 +409,46 @@ class MainWindow(QtWidgets.QMainWindow):
         #     self.goToPosition(1,1)
         pos = 1
         row = 1
+        sleepTime = 0.1
         self.goToBuffer()
         while self.controllerMode == "Auto":
-            self.goToPosition(pos,row)
+            self.goToPosition(pos,row)# go to desired position
             while not self.checkIfInPos():
                 pass
             print("moving Z down...")
-            time.sleep(1)
+            self.movezAxis("Down",40) # Move down
+            time.sleep(6*sleepTime)
             print("Gripping plants...")
-            time.sleep(1)
+            time.sleep(4*sleepTime)
             print("Moving Z up...")
-            time.sleep(1)
+            self.movezAxis("Up",40) # Move up
+            time.sleep(6*sleepTime)
             print("Trees are correctly gripped")
             self.goToStart()
             while not self.checkIfInPos():
                 pass
-            time.sleep(3)
+            time.sleep(3*sleepTime)
             self.goToBuffer()
             while not self.checkIfInPos():
                 pass
             print("dropping plants into buffer")
-            time.sleep(3)
+            self.movezAxis("Down",10) # Move down
+            time.sleep(3*sleepTime)
+            self.movezAxis("Up",10) # Move up
+            time.sleep(5*sleepTime)
             if pos == 4:
                 pos = 1
-                row = row + 1
+                if row == 35:
+                    print("Done picking all plants")
+                    self.controllerMode == "Manual"
+
+                row = row + 1                  
             else:
                 pos = pos + 1
 
+
+
+                
 
     def startAuto(self):
         worker = Worker(self.auto)
@@ -664,13 +705,36 @@ class MainWindow(QtWidgets.QMainWindow):
         #elif event.key() == Qt.Key_Space:
          #   self.moveHome()
 
+#-------------------- Functions For Moving The Axis ------------------------------
+    def movezAxis(self, direction, length):
+        try:
+            if direction == "Down":
+                self.zAxis.sendMessage("z"+str(length))
+                self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() - length))              
+                #print(direction + (str(length)))
+            elif direction == "Up":
+                self.zAxis.sendMessage("z-"+str(length))
+                self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() + length))  
+                #print(direction + (str(length)))
+            elif direction == "Home":
+                self.zAxis.sendMessage(direction)
+                # self.lcd_zAxis.setProperty("value",self.lcd_zAxis.value())
+        except Exception as ex:
+            print(ex)
+            # print("Arduino for zAxis not regonized, check connection, port and baud rate!")
+
+        # except:
+        #     print("Arduino for zAxis not regonized, check connection, port and baud rate!")
+
+
+
 
 def main():
     global window
     app = QtWidgets.QApplication(sys.argv)
-    screen_resolution = app.desktop().screenGeometry()
-    width, height = screen_resolution.width(), screen_resolution.height()
-    print(width)
+    #screen_resolution = app.desktop().screenGeometry()
+    #width, height = screen_resolution.width(), screen_resolution.height()
+    #print(width)
     window = MainWindow()
     # window.setMaximumWidth(width)
     # window.setMaximumHeight(height)
