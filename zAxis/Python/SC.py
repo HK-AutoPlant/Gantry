@@ -3,9 +3,11 @@
 import serial
 import time
 
-BAUD_RATE = 115200
-
 #'/dev/ttyACM0'
+# -- Commands --
+#   z100    Moves the carriage down 100 mm
+#   z-100   Moves the carriage up 100 mm
+#   Home    Moves the carriage to the home position
 
 class usbCommunication():
     def __init__(self, port, baudRate):
