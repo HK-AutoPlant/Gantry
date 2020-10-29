@@ -27,7 +27,7 @@
     </size>
    </property>
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="1" column="0">
+    <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="font">
        <font>
@@ -627,91 +627,7 @@
         <string>Settings</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_10">
-        <item row="1" column="0">
-         <widget class="QWidget" name="widget" native="true">
-          <property name="maximumSize">
-           <size>
-            <width>2500</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_9">
-           <item row="0" column="1">
-            <widget class="QProgressBar" name="progressBar">
-             <property name="maximumSize">
-              <size>
-               <width>95</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="value">
-              <number>24</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLCDNumber" name="lcd_checkParameter">
-             <property name="minimumSize">
-              <size>
-               <width>100</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>161</width>
-               <height>71</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QComboBox" name="comboBox_CheckParameter">
-             <property name="maximumSize">
-              <size>
-               <width>86</width>
-               <height>25</height>
-              </size>
-             </property>
-             <item>
-              <property name="text">
-               <string>New Item</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Check velocity limit Axis1</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Check current limit Axis0</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Check velocity limit Axis0</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QPushButton" name="pushButton">
-             <property name="maximumSize">
-              <size>
-               <width>141</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>PushButton</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="0" column="1" rowspan="2">
+        <item row="0" column="2" rowspan="2">
          <widget class="QWidget" name="widget" native="true">
           <layout class="QGridLayout" name="gridLayout_7">
            <item row="2" column="2">
@@ -813,11 +729,95 @@
           </layout>
          </widget>
         </item>
+        <item row="1" column="0">
+         <widget class="QWidget" name="widget" native="true">
+          <property name="maximumSize">
+           <size>
+            <width>2500</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_9">
+           <item row="0" column="1">
+            <widget class="QProgressBar" name="progressBar">
+             <property name="maximumSize">
+              <size>
+               <width>95</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="value">
+              <number>24</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLCDNumber" name="lcd_checkParameter">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>161</width>
+               <height>71</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QComboBox" name="comboBox_CheckParameter">
+             <property name="maximumSize">
+              <size>
+               <width>86</width>
+               <height>25</height>
+              </size>
+             </property>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Check velocity limit Axis1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Check current limit Axis0</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Check velocity limit Axis0</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="pushButton">
+             <property name="maximumSize">
+              <size>
+               <width>141</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
         <item row="0" column="0">
          <widget class="QWidget" name="widget" native="true">
           <layout class="QGridLayout" name="gridLayout_8">
-           <item row="2" column="1">
-            <widget class="QPushButton" name="pushButton_CalibrateAxis1">
+           <item row="2" column="0">
+            <widget class="QPushButton" name="pushButton_CalibrateAxis0">
              <property name="maximumSize">
               <size>
                <width>101</width>
@@ -825,11 +825,11 @@
               </size>
              </property>
              <property name="text">
-              <string>Calibrate Axis1</string>
+              <string>Calibrate Axis0</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="1">
+           <item row="3" column="2">
             <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis1">
              <property name="maximumSize">
               <size>
@@ -858,19 +858,6 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QPushButton" name="pushButton_CalibrateAxis0">
-             <property name="maximumSize">
-              <size>
-               <width>101</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Calibrate Axis0</string>
-             </property>
-            </widget>
-           </item>
            <item row="3" column="0">
             <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis0">
              <property name="maximumSize">
@@ -881,6 +868,19 @@
              </property>
              <property name="text">
               <string>Encoder Cal A0</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pushButton_CalibrateAxis1">
+             <property name="maximumSize">
+              <size>
+               <width>101</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Calibrate Axis1</string>
              </property>
             </widget>
            </item>

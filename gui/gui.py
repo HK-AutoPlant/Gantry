@@ -29,6 +29,10 @@ except Exception as e :
 
 #---- Arduino Stepper Motor Control ------
 from SC import usbCommunication
+#----------------- MQTT--------------------
+import paho.mqtt.client as paho
+broker = "127.0.0.1"
+broker_port = 1883
 
 # from PyQt5 import QtWebEngineWidgets
 # from PyQt5 import QtWebEngineCore
@@ -114,10 +118,12 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi('mainwindow2.ui', self)
         # Importing TreeHive into widget window        
         self.treeWidget.createTrees(20,20,20,25,20,35)
+        # Create paho Mqtt object
+        self.client = paho.Client("Autoplant1") #create client object
         # Arduino Stepper Motor 
         try:
             BAUD_RATE = 115200
-            zAxisUsbPort = '/dev/ttyUSB0'
+            zAxisUsbPort = '/dev/ttyUSB1'
             self.zAxis = usbCommunication(zAxisUsbPort, BAUD_RATE)
         except Exception as e:
             print(e)        
@@ -351,20 +357,16 @@ class MainWindow(QtWidgets.QMainWindow):
             
     def startWorkers(self):
         try:
+            worker_mqtt = Worker(self.mqttInitiate)
+            self.threadpool.start(worker_mqtt)
             worker = Worker(self.readXboxInput.readXboxInput)
             worker.signals.result.connect(self.xboxMove)
             worker.signals.finished.connect(self.startWorkers)
             # worker.signals.progress.connect(self.progress_fn)
             self.threadpool.start(worker)
-        except :
-            pass 
+        except Exception as exp:
+            print(exp) 
         # pass
-        # Pass the function to execute
-                
-        #worker3  = Worker(self.movePosX)
-        # Execute
-        
-        #self.threadpool.start(worker3)
 
     def progress_fn(self,n):
         print(n)
@@ -373,6 +375,15 @@ class MainWindow(QtWidgets.QMainWindow):
         # print("hhejeje")
         print(key)
         # self.startWorkers()
+
+    def mqttInitiate(self):
+        try:
+            self.client.connect(broker,broker_port)#connect
+            self.client.loop_start() #start loop to process received messages
+        except Exception as exp:
+            print(exp)
+
+
 # ------------------- Functions for autonomous mode ------------------------------------------
     def checkIfInPos(self):
         setpointX = self.odrv0.axis0.controller.pos_setpoint
@@ -589,6 +600,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 chargeLevel = 0
             #print(chargeLevel)
             self.batteryChargeLevel.setProperty("value",chargeLevel)
+            # publish to mqtt
+            if hasattr(self, 'client' ) == True:
+                self.client.publish("oDrive/batteryVoltage",chargeLevel)#publish
         except:
             pass
 
