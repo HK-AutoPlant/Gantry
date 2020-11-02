@@ -217,7 +217,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.batteryUpdateTimer.start()
         # Timer for Error check
         self.errorCheckTimer = QTimer()
-        self.errorCheckTimer.setInterval(1500)
+        self.errorCheckTimer.setInterval(500)
         self.errorCheckTimer.timeout.connect(self.errorCheck)
         self.errorCheckTimer.start()
         # Timer for Plotting Odrive data
@@ -418,10 +418,6 @@ class MainWindow(QtWidgets.QMainWindow):
             pass
 
     def auto(self):    
-        # if self.controllerMode == "Auto":
-        #     self.goToPosition(4,20)
-        # else: 
-        #     self.goToPosition(1,1)
         pos = 1
         row = 1
         sleepTime = 0.1
@@ -463,11 +459,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 row = row + 1                  
             else:
                 pos = pos + 1
-
-
-
-                
-
+               
     def startAuto(self):
         worker = Worker(self.auto)
         self.threadpool.start(worker)
@@ -525,8 +517,25 @@ class MainWindow(QtWidgets.QMainWindow):
             self.errorAxis0.setText(str(error_Axis0))
             self.errorAxis1.setText(str(error_Axis1))
             self.errorAxis0.adjustSize()
-            self.errorAxis1.adjustSize()
+            self.errorAxis1.adjustSize() 
+             # calling to check endstopps, 200ms Timer is ok
+            self.checkEndstops()          
         except:
+            pass
+
+    def checkEndstops(self):
+        try:            
+            if self.odrv0.axis0.min_endstop.endstop_state == True:                
+                self.endStop_Axis0_Min.setStyleSheet('background-color:red')
+            else:
+                self.endStop_Axis0_Min.setStyleSheet('background-color:rgb(0, 255, 0)')
+
+            if self.odrv0.axis1.min_endstop.endstop_state == True:
+                self.endStop_Axis1_Min.setStyleSheet('background-color:red')
+            else:
+                self.endStop_Axis1_Min.setStyleSheet('background-color:rgb(0, 255, 0)')
+
+        except Exception as ex:
             pass
 
     def rebootOdrive(self):

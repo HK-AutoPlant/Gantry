@@ -27,7 +27,7 @@
     </size>
    </property>
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
+    <item row="0" column="1">
      <widget class="QTabWidget" name="tabWidget">
       <property name="font">
        <font>
@@ -42,40 +42,51 @@
         <string>Main</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_5">
-        <item row="9" column="0">
-         <widget class="QPushButton" name="pushButton_Left">
-          <property name="minimumSize">
-           <size>
-            <width>32</width>
-            <height>32</height>
-           </size>
+        <item row="5" column="0" rowspan="2" colspan="2">
+         <widget class="QLCDNumber" name="lcdPos_Up"/>
+        </item>
+        <item row="4" column="3" colspan="2">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Z-Axis</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="3">
+         <widget class="QDoubleSpinBox" name="zAxisStepInmm">
+          <property name="minimum">
+           <double>1.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="3" colspan="3">
+         <widget class="QPushButton" name="pushButton_zUp">
           <property name="text">
            <string/>
           </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>left.png</normaloff>left.png</iconset>
-          </property>
          </widget>
         </item>
-        <item row="11" column="0">
-         <widget class="QDoubleSpinBox" name="stepInTurns">
-          <property name="minimum">
-           <double>0.100000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.100000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="2" rowspan="2">
-         <widget class="QLCDNumber" name="lcdPos_Left"/>
-        </item>
-        <item row="2" column="0">
-         <widget class="QCheckBox" name="closedLoopAxis0CheckBox">
+        <item row="2" column="1">
+         <widget class="QLabel" name="errorAxis0">
           <property name="text">
-           <string>Closed Loop Axis 0</string>
+           <string>Error Axis0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="1">
+         <widget class="QLabel" name="batteryVoltage_4">
+          <property name="text">
+           <string>Step In turns</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="3" colspan="3">
+         <widget class="QPushButton" name="pushButton_zHome">
+          <property name="text">
+           <string/>
           </property>
          </widget>
         </item>
@@ -86,18 +97,15 @@
           </property>
          </widget>
         </item>
-        <item row="17" column="0" colspan="9">
-         <widget class="QScrollBar" name="posXSlider">
-          <property name="maximum">
-           <number>100</number>
-          </property>
-          <property name="value">
-           <number>50</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+        <item row="1" column="0">
+         <widget class="QCheckBox" name="odriveConnect">
+          <property name="text">
+           <string>odriveConnect</string>
           </property>
          </widget>
+        </item>
+        <item row="5" column="2" rowspan="2">
+         <widget class="QLCDNumber" name="lcdPos_Left"/>
         </item>
         <item row="2" column="2">
          <widget class="QDialogButtonBox" name="settingsButtons">
@@ -115,21 +123,25 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="0" rowspan="2" colspan="2">
-         <widget class="QLCDNumber" name="lcdPos_Up"/>
-        </item>
-        <item row="4" column="2">
-         <widget class="QLabel" name="batteryVoltage_2">
+        <item row="4" column="0">
+         <widget class="QLabel" name="batteryVoltage_3">
           <property name="text">
-           <string>Up_Down</string>
+           <string>Left_Right</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
-        <item row="10" column="1">
-         <widget class="QPushButton" name="pushButton_Down">
+        <item row="9" column="3" colspan="3">
+         <widget class="QPushButton" name="pushButton_zDown">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="2">
+         <widget class="QPushButton" name="pushButton_Right">
           <property name="minimumSize">
            <size>
             <width>32</width>
@@ -141,19 +153,22 @@
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>down.png</normaloff>down.png</iconset>
+            <normaloff>right.png</normaloff>right.png</iconset>
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
-         <widget class="QCheckBox" name="closedLoopAxis1CheckBox">
+        <item row="9" column="6" rowspan="2" colspan="3">
+         <widget class="QLCDNumber" name="lcd_vel"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QCheckBox" name="closedLoopAxis0CheckBox">
           <property name="text">
-           <string>Closed Loop Axis 1</string>
+           <string>Closed Loop Axis 0</string>
           </property>
          </widget>
         </item>
         <item row="8" column="1">
-         <widget class="QPushButton" name="pushButton_Up">
+         <widget class="QPushButton" name="pushButton_Home">
           <property name="minimumSize">
            <size>
             <width>32</width>
@@ -165,7 +180,17 @@
           </property>
           <property name="icon">
            <iconset>
-            <normaloff>up.png</normaloff>up.png</iconset>
+            <normaloff>home.png</normaloff>home.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="0">
+         <widget class="QDoubleSpinBox" name="stepInTurns">
+          <property name="minimum">
+           <double>0.100000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.100000000000000</double>
           </property>
          </widget>
         </item>
@@ -183,95 +208,6 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="3" colspan="2">
-         <widget class="QLabel" name="label_8">
-          <property name="text">
-           <string>Z-Axis</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QCheckBox" name="odriveConnect">
-          <property name="text">
-           <string>odriveConnect</string>
-          </property>
-         </widget>
-        </item>
-        <item row="9" column="1">
-         <widget class="QPushButton" name="pushButton_Home">
-          <property name="minimumSize">
-           <size>
-            <width>32</width>
-            <height>32</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>home.png</normaloff>home.png</iconset>
-          </property>
-         </widget>
-        </item>
-        <item row="9" column="2">
-         <widget class="QPushButton" name="pushButton_Right">
-          <property name="minimumSize">
-           <size>
-            <width>32</width>
-            <height>32</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>right.png</normaloff>right.png</iconset>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="errorAxis0">
-          <property name="text">
-           <string>Error Axis0</string>
-          </property>
-         </widget>
-        </item>
-        <item row="11" column="1">
-         <widget class="QLabel" name="batteryVoltage_4">
-          <property name="text">
-           <string>Step In turns</string>
-          </property>
-         </widget>
-        </item>
-        <item row="11" column="4">
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>mm</string>
-          </property>
-         </widget>
-        </item>
-        <item row="11" column="3">
-         <widget class="QDoubleSpinBox" name="zAxisStepInmm">
-          <property name="minimum">
-           <double>1.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="batteryVoltage_3">
-          <property name="text">
-           <string>Left_Right</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="3" column="2">
          <widget class="QPushButton" name="pushButton_Reboot">
           <property name="text">
@@ -283,32 +219,176 @@
           </property>
          </widget>
         </item>
+        <item row="3" column="0">
+         <widget class="QCheckBox" name="closedLoopAxis1CheckBox">
+          <property name="text">
+           <string>Closed Loop Axis 1</string>
+          </property>
+         </widget>
+        </item>
+        <item row="16" column="0" colspan="9">
+         <widget class="QScrollBar" name="posXSlider">
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="value">
+           <number>50</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="1">
+         <widget class="QPushButton" name="pushButton_Down">
+          <property name="minimumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>down.png</normaloff>down.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QPushButton" name="pushButton_Left">
+          <property name="minimumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>left.png</normaloff>left.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <widget class="QLabel" name="batteryVoltage_2">
+          <property name="text">
+           <string>Up_Down</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
         <item row="5" column="3" rowspan="2" colspan="3">
          <widget class="QLCDNumber" name="lcd_zAxis"/>
         </item>
-        <item row="8" column="3" colspan="3">
-         <widget class="QPushButton" name="pushButton_zUp">
+        <item row="7" column="1">
+         <widget class="QPushButton" name="pushButton_Up">
+          <property name="minimumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
           <property name="text">
            <string/>
           </property>
-         </widget>
-        </item>
-        <item row="9" column="3" colspan="3">
-         <widget class="QPushButton" name="pushButton_zHome">
-          <property name="text">
-           <string/>
+          <property name="icon">
+           <iconset>
+            <normaloff>up.png</normaloff>up.png</iconset>
           </property>
          </widget>
         </item>
-        <item row="10" column="3" colspan="3">
-         <widget class="QPushButton" name="pushButton_zDown">
+        <item row="10" column="4">
+         <widget class="QLabel" name="label_9">
           <property name="text">
-           <string/>
+           <string>mm</string>
           </property>
          </widget>
         </item>
-        <item row="10" column="6" rowspan="2" colspan="3">
-         <widget class="QLCDNumber" name="lcd_vel"/>
+        <item row="3" column="3">
+         <widget class="QFrame" name="endStop_Axis1_Min">
+          <property name="styleSheet">
+           <string notr="true">background-color:rgb(0, 255, 0)</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Axis1 Min</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="4">
+         <widget class="QFrame" name="endStop_Axis1_Max">
+          <property name="styleSheet">
+           <string notr="true">background-color:rgb(0, 255, 0)</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="5">
+         <widget class="QFrame" name="endStop_Axis0_Min">
+          <property name="styleSheet">
+           <string notr="true">background-color:rgb(0, 255, 0)</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="6">
+         <widget class="QFrame" name="endStop_Axis0_Max">
+          <property name="styleSheet">
+           <string notr="true">background-color:rgb(0, 255, 0)</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="5">
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>Axis0 Min</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="6">
+         <widget class="QLabel" name="label_13">
+          <property name="text">
+           <string>Axis0 Max</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="4">
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>Axis1 Max</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
