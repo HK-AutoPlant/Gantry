@@ -407,11 +407,15 @@ class MainWindow(QtWidgets.QMainWindow):
         mmToRevolutions = 1/(25*math.pi)
         self.odrv0.axis1.controller.input_pos = 50*mmToRevolutions
         print("going to start of column")
+        while not self.checkIfInPos():
+            pass
 
     def goToBuffer(self):
         mmToRevolutions = 1/(25*math.pi)
         self.odrv0.axis1.controller.input_pos = 0
         self.odrv0.axis0.controller.input_pos = 2.5
+        while not self.checkIfInPos():
+            pass
 
     def auto(self):    
         # if self.controllerMode == "Auto":
@@ -423,25 +427,28 @@ class MainWindow(QtWidgets.QMainWindow):
         sleepTime = 0.1
         self.goToBuffer()
         while self.controllerMode == "Auto":
+            
             self.goToPosition(pos,row)# go to desired position
             while not self.checkIfInPos():
                 pass
+
             print("moving Z down...")
             self.movezAxis("Down",40) # Move down
             time.sleep(6*sleepTime)
+
             print("Gripping plants...")
             time.sleep(4*sleepTime)
+
             print("Moving Z up...")
             self.movezAxis("Up",40) # Move up
             time.sleep(6*sleepTime)
+
             print("Trees are correctly gripped")
+
             self.goToStart()
-            while not self.checkIfInPos():
-                pass
             time.sleep(3*sleepTime)
+            
             self.goToBuffer()
-            while not self.checkIfInPos():
-                pass
             print("dropping plants into buffer")
             self.movezAxis("Down",10) # Move down
             time.sleep(3*sleepTime)
