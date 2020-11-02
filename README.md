@@ -5,3 +5,5 @@
 * pip install pyqt5
 * pip install pyqt5-tools
 * pip install pyqtgraph
+* pip install odrive
+* pip install paho-mqtt
