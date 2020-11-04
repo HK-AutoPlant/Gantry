@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>700</height>
+    <width>986</width>
+    <height>663</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1000</width>
-    <height>700</height>
+    <width>1800</width>
+    <height>1000</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -22,12 +22,12 @@
   <widget class="QWidget" name="centralwidget">
    <property name="maximumSize">
     <size>
-     <width>1000</width>
-     <height>720</height>
+     <width>1800</width>
+     <height>1000</height>
     </size>
    </property>
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="1">
+    <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="font">
        <font>
@@ -35,7 +35,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -896,32 +896,6 @@
         <item row="0" column="0">
          <widget class="QWidget" name="widget" native="true">
           <layout class="QGridLayout" name="gridLayout_8">
-           <item row="2" column="0">
-            <widget class="QPushButton" name="pushButton_CalibrateAxis0">
-             <property name="maximumSize">
-              <size>
-               <width>101</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Calibrate Axis0</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis1">
-             <property name="maximumSize">
-              <size>
-               <width>121</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Encoder Cal A1</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="0">
             <widget class="QDialogButtonBox" name="settingsButtons_setings">
              <property name="maximumSize">
@@ -938,20 +912,7 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis0">
-             <property name="maximumSize">
-              <size>
-               <width>121</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Encoder Cal A0</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
+           <item row="1" column="0">
             <widget class="QPushButton" name="pushButton_CalibrateAxis1">
              <property name="maximumSize">
               <size>
@@ -961,6 +922,45 @@
              </property>
              <property name="text">
               <string>Calibrate Axis1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="pushButton_CalibrateAxis0">
+             <property name="maximumSize">
+              <size>
+               <width>101</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Calibrate Axis0</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis1">
+             <property name="maximumSize">
+              <size>
+               <width>121</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Encoder Cal A1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis0">
+             <property name="maximumSize">
+              <size>
+               <width>121</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Encoder Cal A0</string>
              </property>
             </widget>
            </item>
@@ -1362,16 +1362,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_7">
-       <attribute name="title">
-        <string>Page2</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
-         <widget class="QWidget" name="webWidget" native="true"/>
-        </item>
-       </layout>
-      </widget>
      </widget>
     </item>
    </layout>
@@ -1381,7 +1371,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1000</width>
+     <width>986</width>
      <height>22</height>
     </rect>
    </property>

@@ -112,18 +112,23 @@ class Worker(QRunnable):
 
 class MainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self,resWidth,resHeight, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         #Load the UI Page
         uic.loadUi('mainwindow2.ui', self)
         # Importing TreeHive into widget window        
-        self.treeWidget.createTrees(20,20,20,25,20,35)
+        #x=50,y=50,iconsize=25,CC=30,rows=20,columns=35):
+        ratio = resHeight/resWidth
+        cc = 1.3*ratio*resHeight/(19+2*0.8)
+        iconSize = ratio*cc
+        print(self.treeWidget))
+        self.treeWidget.createTrees(0,0,iconSize,cc,20,35)
         # Create paho Mqtt object
         self.client = paho.Client("Autoplant1") #create client object
         # Arduino Stepper Motor 
         try:
             BAUD_RATE = 115200
-            zAxisUsbPort = '/dev/ttyUSB1'
+            zAxisUsbPort = '/dev/ttyUSB0'
             self.zAxis = usbCommunication(zAxisUsbPort, BAUD_RATE)
         except Exception as e:
             print(e)        
@@ -157,13 +162,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # QWebEngineSettings.globalSettings().setAttribute(QWebEngineSettings.PluginsEnabled,True)        
         # self.webWidget.setUrl(QUrl("http://localhost:8081"))
         # self.webWidget.setUrl(QUrl("https://www.youtube.com/watch?v=Zje_ihjZdLM2"))
-        # Open GUI window    
-        # screen_resolution = self.desktop().screenGeometry()
-        # width, height = screen_resolution.width(), screen_resolution.height()
-        # self.setMaximumWidth(width)
-        # self.setMaximumHeight(height)   
+        # Open GUI window     
         self.show()
         self.showMaximized()
+        
         
 #---------------------------------------------------------------------------------------------
 #-------------------Push Buttons And Sliders--------------------------------------------------
@@ -541,6 +543,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def rebootOdrive(self):
         try:
             self.odrv0.reboot()
+            self.closedLoopAxis0CheckBox.stateChanged(1)
         except:
             pass
         
@@ -550,6 +553,7 @@ class MainWindow(QtWidgets.QMainWindow):
             #self.odrv0.reboot()
             self.odrv0.axis0.clear_errors()
             self.odrv0.axis1.clear_errors()
+            self.closedLoopAxis0CheckBox.stateChanged(1)
         except:
             pass
 
@@ -762,10 +766,11 @@ class MainWindow(QtWidgets.QMainWindow):
 def main():
     global window
     app = QtWidgets.QApplication(sys.argv)
-    #screen_resolution = app.desktop().screenGeometry()
-    #width, height = screen_resolution.width(), screen_resolution.height()
-    #print(width)
-    window = MainWindow()
+    screen_resolution = app.desktop().screenGeometry()
+    width, height = screen_resolution.width(), screen_resolution.height()
+    print(width)
+    print(height)
+    window = MainWindow(width,height)
     # window.setMaximumWidth(width)
     # window.setMaximumHeight(height)
     # window.setMinimumWidth(width)
