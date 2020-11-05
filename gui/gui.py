@@ -121,7 +121,7 @@ class MainWindow(QtWidgets.QMainWindow):
         ratio = resHeight/resWidth
         cc = 1.3*ratio*resHeight/(19+2*0.8)
         iconSize = ratio*cc
-        print(self.treeWidget))
+        # print(self.treeWidget))
         self.treeWidget.createTrees(0,0,iconSize,cc,20,35)
         # Create paho Mqtt object
         self.client = paho.Client("Autoplant1") #create client object
@@ -202,7 +202,11 @@ class MainWindow(QtWidgets.QMainWindow):
         # pushButton for collecting trees
         self.pushButton_GoToPosition.clicked.connect(lambda: self.goToPosition(int(self.comboBox_TreePos.currentText()),int(self.comboBox_TreeRow.currentText())))
 
-        
+        self.comboBox_CheckParameter.currentIndexChanged.connect(lambda: self.checkParameter(self.comboBox_CheckParameter.currentText()))
+        self.pushButton_calibrateEncodeOffsetAxis0.clicked.connect(lambda:self.calibrateEncoder(0))
+        self.pushButton_calibrateEncodeOffsetAxis1.clicked.connect(lambda:self.calibrateEncoder(1))
+
+        #self.actionquit.triggered.connect(sys.exit(self) )
 #---------------------------------------------------------------------------------------------    
 
 #---------------------------------------------------------------------------------------------
@@ -376,6 +380,16 @@ class MainWindow(QtWidgets.QMainWindow):
     def xboxMove(self,key):
         # print("hhejeje")
         print(key)
+        if key[0] == "Down":
+            self.moveDown()
+        elif key[0] == "Up":
+            self.moveUp()
+        elif key[0] == "Right":
+            self.moveRight()
+        elif key[0] == "Left":
+            self.moveLeft()
+        elif key[0] == "A":
+            self.moveHome()
         # self.startWorkers()
 
     def mqttInitiate(self):
@@ -488,8 +502,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.odriveConnect.setText("connecting odrive")
         self.odriveConnect.adjustSize()
         # connect odrive and return object for all other funciton.
-        # This must be proteced by a Mutex!!!! or Signals!!
-        odrv0 = odrive.find_any()
+        try:
+            odrv0 = odrive.find_any()
+        except Exception as ex:
+            print(ex)
         #print("odrive connected")
         self.odriveConnect.setText("odrive connected")
         self.odriveConnect.adjustSize()        

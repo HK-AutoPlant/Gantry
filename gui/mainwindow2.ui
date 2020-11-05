@@ -197,7 +197,7 @@
         <item row="0" column="2" colspan="2">
          <widget class="QPushButton" name="pushButton_Auto_Manual">
           <property name="text">
-           <string>Manual</string>
+           <string>Auto</string>
           </property>
          </widget>
         </item>

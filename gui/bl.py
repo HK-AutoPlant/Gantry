@@ -10,7 +10,7 @@ down = 114
 left = 165
 right = 163
 playpause = 164
-key_axis = ""
+key_axis = []
 value = 0
 class xboxOne:
     def __init__(self):
@@ -35,13 +35,15 @@ class xboxOne:
     def readXboxInput(self):
         # key_axis = ""
         for event in gamepad.read_loop():
+            self.key_axis = []
+            self.value = 0
             if event.type == ecodes.EV_KEY:
                 # print(ecodes)
                 if event.value == 1:
                     if event.code == aBtn:
                         self.key_axis = "A"
                         # print("A")
-                        return self.key_axis
+                        # return self.key_axis
                     elif event.code == bBtn:
                         self.key_axis = "B"
                         # print("B")
@@ -66,43 +68,46 @@ class xboxOne:
                     elif event.code == xBtn:
                         self.key_axis = "X"
                         # print("X")
-                # return self.key_axis
+                    return self.key_axis
             elif event.type == ecodes.EV_ABS:
-                absevent = categorize(event)
-                #print(absevent.event)
-                # print(ecodes.bytype[absevent.event.type][absevent.event.code], absevent.event.value)
-                a = (ecodes.bytype[absevent.event.type][absevent.event.code], absevent.event.value)           
-                #print(a[1])
-                if a[0] == "ABS_BRAKE":
-                    self.key_axis ="Brake"
-                    self.value    = a[1]
-                    # print("Brake")
+                if not event.value == 0:
+                    absevent = categorize(event)
+                    #print(absevent.event)
+                    print(ecodes.bytype[absevent.event.type][absevent.event.code], absevent.event.value)
+                    a = (ecodes.bytype[absevent.event.type][absevent.event.code], absevent.event.value)           
+                    #print(a[1])
+                    if a[0] == "ABS_BRAKE":
+                        self.key_axis ="Brake"
+                        self.value    = a[1]
+                        # print("Brake")
 
-                elif a[0] == "ABS_GAS":
-                    self.key_axis ="Gas"
-                    self.value    = a[1]
-                    # print("Gas")
+                    elif a[0] == "ABS_GAS":
+                        self.key_axis ="Gas"
+                        self.value    = a[1]
+                        # print("Gas")
 
-                elif a[0] == "ABS_HAT0X" and a[1] == -1:
-                    self.key_axis ="Hat0 Left"
-                    self.value    = a[1]
-                    # print("Hat0 Left")
+                    elif a[0] == "ABS_HAT0X" and a[1] == -1:
+                        self.key_axis ="Left"
+                        self.value    = a[1]
+                        # print("Hat0 Left")
 
-                elif a[0] == "ABS_HAT0X" and a[1] == 1:
-                    self.key_axis ="Hat0 Right"
-                    self.value    = a[1]                    
-                    # print("Hat0 Right")
+                    elif a[0] == "ABS_HAT0X" and a[1] == 1:
+                        self.key_axis ="Right"
+                        self.value    = a[1]                    
+                        # print("Hat0 Right")
 
-                elif a[0] == "ABS_HAT0Y" and a[1] == -1:
-                    self.key_axis ="Hat0 UP"
-                    self.value    = a[1]
-                    # print("Hat0 UP")
+                    elif a[0] == "ABS_HAT0Y" and a[1] == -1:
+                        self.key_axis ="Up"
+                        self.value    = a[1]
+                        # print("Hat0 UP")
 
-                elif a[0] == "ABS_HAT0Y" and a[1] == 1:
-                    self.key_axis ="Brake"
-                    self.value    = a[1]
-                    # print("Hat0 Down")
-
+                    elif a[0] == "ABS_HAT0Y" and a[1] == 1:
+                        self.key_axis ="Down"
+                        self.value    = a[1]
+                        # print("Hat0 Down")
+                    
+                    if not self.key_axis == []:
+                        return self.key_axis, self.value
             #print(key_axis)
             
             # return self.key_axis, self.value
