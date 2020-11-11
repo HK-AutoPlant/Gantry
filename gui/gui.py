@@ -773,7 +773,7 @@ class MainWindow(QtWidgets.QMainWindow):
             elif direction == "Home":                
                 self.zAxis.sendMessage(direction)
                 self.lcd_zAxis.setProperty("value",-10)
-                print("Homing Z")
+                print("Homeing Z")
         #except Exception as ex:
             #print(ex)
             # print("Arduino for zAxis not regonized, check connection, port and baud rate!")
