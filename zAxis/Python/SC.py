@@ -11,7 +11,7 @@ import time
 
 class usbCommunication():
     def __init__(self, port, baudRate):
-        self.message = None;
+        self.message = None
         self.ser = serial.Serial(port, baudRate, timeout=1)
 
 	#Input: #z100 for z 100mm down. z-100 for 100mm up

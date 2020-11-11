@@ -126,9 +126,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # Create paho Mqtt object
         self.client = paho.Client("Autoplant1") #create client object
         # Arduino Stepper Motor 
+        # files_and_directories = os.listdir("/dev")
         try:
             BAUD_RATE = 115200
-            zAxisUsbPort = '/dev/ttyUSB0'
+            zAxisUsbPort = '/dev/ttyUSB1'
             self.zAxis = usbCommunication(zAxisUsbPort, BAUD_RATE)
         except Exception as e:
             print(e)        
@@ -157,7 +158,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.closedLoopAxis0CheckBox.clicked.connect(lambda:self.closedLoop(0))
         self.closedLoopAxis1CheckBox.clicked.connect(lambda:self.closedLoop(1))       
         # Standrad ControlMode = Auto
-        self.controllerMode = "Manual"      
+        self.controllerMode = "Manual" 
+        time.sleep(2)
+        self.movezAxis("Home", 0)
+        
         # Webcam video feed
         # QWebEngineSettings.globalSettings().setAttribute(QWebEngineSettings.PluginsEnabled,True)        
         # self.webWidget.setUrl(QUrl("http://localhost:8081"))
@@ -228,7 +232,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.errorCheckTimer.start()
         # Timer for Plotting Odrive data
         self.plotOdriveTimer = QTimer()
-        self.plotOdriveTimer.setInterval(100)
+        self.plotOdriveTimer.setInterval(200)
         self.plotOdriveTimer.timeout.connect(self.plotOdriveData)
         self.plotOdriveTimer.start()
         #self.collectData()
@@ -296,10 +300,10 @@ class MainWindow(QtWidgets.QMainWindow):
                 # self.axis0_encoder_pos_estimate.append( random.uniform(0,100))  # Add a new random value.
                 #self.axis0_encoder_pos_estimate.append(self.axis0_encoder_pos_estimate[-1])  # Add a new random value.
                 #self.axis0_encoder_pos_estimate.append(self.odrv0.axis0.encoder.pos_estimate)
-                pos = self.odrv0.axis0.encoder.pos_estimate
-                pos2 = self.odrv0.axis0.controller.pos_setpoint
-                vel = self.odrv0.axis0.encoder.vel_estimate
-                vel2 = self.odrv0.axis0.controller.vel_setpoint
+                pos = self.odrv0.axis1.encoder.pos_estimate
+                pos2 = self.odrv0.axis1.controller.pos_setpoint
+                vel = self.odrv0.axis1.encoder.vel_estimate
+                vel2 = self.odrv0.axis1.controller.vel_setpoint
                 self.axis0_encoder_pos_estimate.append(pos)
                 self.axis0_controller_pos_setpoint.append(pos2)
                 self.axis0_encoder_vel_estimate.append(vel)
@@ -755,9 +759,9 @@ class MainWindow(QtWidgets.QMainWindow):
         #elif event.key() == Qt.Key_Space:
          #   self.moveHome()
 
-#-------------------- Functions For Moving The Axis ------------------------------
+#-------------------- Functions For Moving The Z-Axis ------------------------------
     def movezAxis(self, direction, length):
-        try:
+        if hasattr(self, 'zAxis' ) == True:
             if direction == "Down":
                 self.zAxis.sendMessage("z"+str(length))
                 self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() - length))              
@@ -766,11 +770,12 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.zAxis.sendMessage("z-"+str(length))
                 self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() + length))  
                 #print(direction + (str(length)))
-            elif direction == "Home":
+            elif direction == "Home":                
                 self.zAxis.sendMessage(direction)
-                # self.lcd_zAxis.setProperty("value",self.lcd_zAxis.value())
-        except Exception as ex:
-            print(ex)
+                self.lcd_zAxis.setProperty("value",-10)
+                print("Homing Z")
+        #except Exception as ex:
+            #print(ex)
             # print("Arduino for zAxis not regonized, check connection, port and baud rate!")
 
         # except:
