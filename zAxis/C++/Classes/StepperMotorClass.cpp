@@ -16,12 +16,12 @@ void stepperMotor::initialize()
 
 void stepperMotor::moveUp()
 {
-  moveDistance(-(_currentPosition - limitSwitchOffset));
+  moveDistance(-((int)_currentPosition - limitSwitchOffset));
 }
 
 void stepperMotor::moveDown()
 {
-  moveDistance(maxDistance);
+  moveDistance(maxDistance - (int)_currentPosition);
 }
 
 
@@ -36,15 +36,7 @@ void stepperMotor::moveDistance(int distance)
 
   for(int i = 0; i < _numberOfSteps; i++)
   {
-    distance >= 0 ? _currentPosition+= _mmPerStep : _currentPosition-= _mmPerStep;
-    if(_withinBoundaries())
-    {
       _A4988.step();
-    } else
-    {
-      distance -= _mmPerStep;
-      break;
-    }
   }
 
   _A4988.enableMotor(false);
@@ -55,12 +47,20 @@ void stepperMotor::home()
   _moveCCW();
   _A4988.enableMotor(true);
   while(_limitSwitch.isPressed() == false)
-    _A4988.step();
-
-  delay(100);  
+    {
+      _A4988.step();
+    }
+  _A4988.enableMotor(false);
   _currentPosition = 0;
+  delay(500);
 
   moveDistance(limitSwitchOffset);
+}
+
+
+void stepperMotor::_updateCurrentPosition(int distance)
+{
+   _currentPosition+= distance;
 }
 
 void stepperMotor::holdingTorque(bool state)
@@ -75,8 +75,9 @@ int stepperMotor::_distanceToSteps(int distance)
 
 bool stepperMotor::_withinBoundaries()
 {
-  if(_currentPosition >  (float)maxDistance) // Implement a stop if it hits the liitswitch Aswell!
+  if(_currentPosition > (float)maxDistance) // Implement a stop if it hits the liitswitch Aswell!
   {
+    _currentPosition = (float)maxDistance;
     return 0;
   }else
   {

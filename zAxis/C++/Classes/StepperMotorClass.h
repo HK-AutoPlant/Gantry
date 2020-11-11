@@ -21,6 +21,7 @@ class stepperMotor
 
     int maxDistance = 100;
     int limitSwitchOffset = 10;
+    
 
   private:
 
@@ -36,9 +37,11 @@ class stepperMotor
     int _numberOfSteps;
 
     int _distanceToSteps(int distance);
+    void _updateCurrentPosition(int distance);
     void _moveCW();
     void _moveCCW();
     bool _withinBoundaries();
+
 
     A4988 _A4988;
     limitSwitch _limitSwitch;
