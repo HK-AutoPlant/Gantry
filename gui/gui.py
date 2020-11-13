@@ -5,6 +5,7 @@
 	
 
 import sys
+import os
 sys.path.append("../zAxis/Python") # Adds higher directory to python modules path.
 
 from PyQt5 import QtWidgets, uic , QtCore  
@@ -126,10 +127,12 @@ class MainWindow(QtWidgets.QMainWindow):
         # Create paho Mqtt object
         self.client = paho.Client("Autoplant1") #create client object
         # Arduino Stepper Motor 
-        # files_and_directories = os.listdir("/dev")
+        # files_and_directories = os.listdir("/dev/ttyUSB*")
         try:
+            Device_id = os.listdir("/dev/ttyUSB*")
+            zAxisUsbPort = Device_id
             BAUD_RATE = 115200
-            zAxisUsbPort = '/dev/ttyUSB1'
+            # zAxisUsbPort = '/dev/ttyUSB0'
             self.zAxis = usbCommunication(zAxisUsbPort, BAUD_RATE)
         except Exception as e:
             print(e)        
@@ -409,7 +412,7 @@ class MainWindow(QtWidgets.QMainWindow):
         setpointX = self.odrv0.axis0.controller.pos_setpoint
         positionX = self.odrv0.axis0.encoder.pos_estimate
         errorX = abs(setpointX - positionX)
-        tolerance = 0.01
+        tolerance = 0.1
         if errorX < tolerance:
             xInPos = True
         else:
@@ -556,6 +559,16 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.endStop_Axis1_Min.setStyleSheet('background-color:red')
             else:
                 self.endStop_Axis1_Min.setStyleSheet('background-color:rgb(0, 255, 0)')
+            
+            if self.odrv0.axis0.max_endstop.endstop_state == True:                
+                self.endStop_Axis0_Max.setStyleSheet('background-color:red')
+            else:
+                self.endStop_Axis0_Max.setStyleSheet('background-color:rgb(0, 255, 0)')
+
+            if self.odrv0.axis1.max_endstop.endstop_state == True:
+                self.endStop_Axis1_Max.setStyleSheet('background-color:red')
+            else:
+                self.endStop_Axis1_Max.setStyleSheet('background-color:rgb(0, 255, 0)')
 
         except Exception as ex:
             pass
@@ -568,7 +581,7 @@ class MainWindow(QtWidgets.QMainWindow):
             pass
         
     def resetErrorOdrive(self):
-        print("Rebooting Odrive")
+        print("Resetting Odrive")
         try:
             #self.odrv0.reboot()
             self.odrv0.axis0.clear_errors()
@@ -741,8 +754,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.lcdPos_Up.setProperty("value", 0)
         self.lcdPos_Left.setProperty("value", 0)
         try:
-            self.odrv0.axis0.controller.input_pos(0) 
-            self.odrv0.axis1.controller.input_pos(0)
+            self.odrv0.axis0.controller.input_pos = 0
+            self.odrv0.axis1.controller.input_pos = 0
         except:
             pass
  
@@ -761,21 +774,22 @@ class MainWindow(QtWidgets.QMainWindow):
 
 #-------------------- Functions For Moving The Z-Axis ------------------------------
     def movezAxis(self, direction, length):
-        if hasattr(self, 'zAxis' ) == True:
-            if direction == "Down":
-                self.zAxis.sendMessage("z"+str(length))
-                self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() - length))              
-                #print(direction + (str(length)))
-            elif direction == "Up":
-                self.zAxis.sendMessage("z-"+str(length))
-                self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() + length))  
-                #print(direction + (str(length)))
-            elif direction == "Home":                
-                self.zAxis.sendMessage(direction)
-                self.lcd_zAxis.setProperty("value",-10)
-                print("Homeing Z")
-        #except Exception as ex:
-            #print(ex)
+        try:
+            if hasattr(self, 'zAxis' ) == True:
+                if direction == "Down":
+                    self.zAxis.sendMessage("z"+str(length))
+                    self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() - length))              
+                    #print(direction + (str(length)))
+                elif direction == "Up":
+                    self.zAxis.sendMessage("z-"+str(length))
+                    self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() + length))  
+                    #print(direction + (str(length)))
+                elif direction == "Home":                
+                    self.zAxis.sendMessage(direction)
+                    self.lcd_zAxis.setProperty("value",-10)
+                    print("Homeing Z")
+        except Exception as ex:
+            print(ex)
             # print("Arduino for zAxis not regonized, check connection, port and baud rate!")
 
         # except:
