@@ -17,7 +17,7 @@ class usbCommunication():
 	#Input: #z100 for z 100mm down. z-100 for 100mm up
 	# Homing: send "home"
     def sendMessage(self, msg):
-        self.ser.write(msg.encode('utf-8')) 
+        self.ser.write(msg.encode('utf-8'))
 
 	#Output: Confirms whats has been sent
 	# if input NOT understood it reports that aswell
@@ -25,6 +25,10 @@ class usbCommunication():
         self.message = self.ser.readline().decode('utf-8').rstrip()
         print(self.message)
 
+    def returnMessage(self):
+        self.message = self.ser.readline().decode('utf-8').rstrip()
+        return self.message
+        
     def messageRecieved(self):
         if(self.ser.in_waiting > 0):
             return True
