@@ -28,6 +28,9 @@ try:
 except Exception as e :
     print(e)
 
+#---- Port recognition ------
+from portRecognition import findArduinoPort
+
 #---- Arduino Stepper Motor Control ------
 from SC import usbCommunication
 #----------------- MQTT--------------------
@@ -129,8 +132,11 @@ class MainWindow(QtWidgets.QMainWindow):
         # Arduino Stepper Motor 
         # files_and_directories = os.listdir("/dev/ttyUSB*")
         try:
-            Device_id = os.listdir("/dev/ttyUSB*")
-            zAxisUsbPort = Device_id
+            zAxisSerialNumber = "AB0K1I4L" #zAxis serial number. 
+            zAxisUsbPort = findArduinoPort(zAxisSerialNumber)
+
+            #Device_id = os.listdir("/dev/ttyUSB*")
+            #zAxisUsbPort = Device_id
             BAUD_RATE = 115200
             # zAxisUsbPort = '/dev/ttyUSB0'
             self.zAxis = usbCommunication(zAxisUsbPort, BAUD_RATE)
