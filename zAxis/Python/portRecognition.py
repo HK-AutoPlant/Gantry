@@ -1,5 +1,5 @@
 import serial.tools.list_ports
-from SC import usbCommunication
+#from SC import usbCommunication
 
 def findSerialNumber():
     for pInfo in serial.tools.list_ports.comports():
@@ -17,11 +17,11 @@ def findArduinoPort(serial_number):
 
 
 #ArduinoSerialNumber = findSerialNumber();
-ArduinoPort = findArduinoPort("AB0JQ2O9");
+#ArduinoPort = findArduinoPort("AB0K1I4L");
 
 
-test = usbCommunication(ArduinoPort, 115200);
+#test = usbCommunication(ArduinoPort, 115200);
 
-while(True):
-     msg = input("Input Command: ")
-     test.sendMessage(msg)
+#while(True):
+ #    msg = input("Input Command: ")
+  #   test.sendMessage(msg)
