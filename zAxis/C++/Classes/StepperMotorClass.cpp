@@ -33,10 +33,17 @@ void stepperMotor::moveDistance(int distance)
   _numberOfSteps = _distanceToSteps(abs(distance));
 
   _A4988.enableMotor(true);
-
   for(int i = 0; i < _numberOfSteps; i++)
   {
-      _A4988.step();
+    _updateCurrentPosition(distance);
+      if(_withinBoundaries())
+      {
+        _A4988.step();
+      }
+      else
+      {
+        break;
+      }
   }
 
   _A4988.enableMotor(false);
@@ -60,7 +67,7 @@ void stepperMotor::home()
 
 void stepperMotor::_updateCurrentPosition(int distance)
 {
-   _currentPosition+= distance;
+   distance >= 0 ? _currentPosition+= _mmPerStep : _currentPosition -= _mmPerStep;
 }
 
 void stepperMotor::holdingTorque(bool state)
@@ -75,12 +82,16 @@ int stepperMotor::_distanceToSteps(int distance)
 
 bool stepperMotor::_withinBoundaries()
 {
-  if(_currentPosition > (float)maxDistance) // Implement a stop if it hits the liitswitch Aswell!
+  if(_currentPosition >= (float)maxDistance)
   {
-    _currentPosition = (float)maxDistance;
+    _currentPosition = (float)maxDistance; // Resolves an issue that the machine takes one step to much
     return 0;
-  }else
+  }else if(_limitSwitch.isPressed() && _dir == COUNTERCLOCKWISE)
   {
+    _currentPosition = 0.0;
+    return 0;
+  }
+  else{
     return 1;
   }
 }
@@ -113,9 +124,11 @@ void stepperMotor::status()
 void stepperMotor::_moveCW()
 {
   _A4988.direction(CLOCKWISE);
+  _dir = CLOCKWISE;
 }
 
 void stepperMotor::_moveCCW()
 {
-  _A4988.direction(!CLOCKWISE);
+  _A4988.direction(COUNTERCLOCKWISE);
+  _dir = COUNTERCLOCKWISE;
 }

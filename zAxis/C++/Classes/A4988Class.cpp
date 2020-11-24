@@ -32,7 +32,7 @@ void A4988::step()
 
 void A4988::direction(bool dir)
 {
-  dir == CLOCKWISE ? digitalWrite(_dirPin, HIGH) : digitalWrite(_dirPin, LOW);
+  dir == CLOCKWISE ? digitalWrite(_dirPin, LOW) : digitalWrite(_dirPin, HIGH);
 }
 
 void A4988::enableMotor(bool state)

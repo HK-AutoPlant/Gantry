@@ -21,7 +21,8 @@ class stepperMotor
 
     int maxDistance = 100;
     int limitSwitchOffset = 10;
-    
+    uint16_t stepsPerRev = 200;
+    uint8_t mmPerRev = 2;
 
   private:
 
@@ -31,10 +32,9 @@ class stepperMotor
     uint8_t _limitSwitchPin;
 
     float _currentPosition = 0;
-    uint8_t _stepsPerRev = 200;
-    uint8_t _mmPerRev = 2;
-    float _mmPerStep = (float)_mmPerRev/_stepsPerRev;
+    float _mmPerStep = (float)mmPerRev/stepsPerRev;
     int _numberOfSteps;
+    bool _dir;
 
     int _distanceToSteps(int distance);
     void _updateCurrentPosition(int distance);

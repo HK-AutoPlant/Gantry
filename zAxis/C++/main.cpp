@@ -4,12 +4,23 @@
 
 #define BAUD_RATE 115200
 
-uint8_t dirPin    = 8;
-uint8_t stepPin   = 9;
-uint8_t enablePin = 10;
-uint8_t limitSwitchPin = 11;
+uint8_t zAxisDirPin    = 9;
+uint8_t zAxisStepPin   = 10;
+uint8_t zAxisEnablePin = 11;
+uint8_t zAxisLimitSwitchPin = 14; // Same as A0!
 
-stepperMotor zAxis(stepPin, dirPin, enablePin, limitSwitchPin);
+uint8_t gripperDirPin    = 10;
+uint8_t gripperStepPin   = 11;
+uint8_t gripperEnablePin = 12;
+uint8_t gripperAxisLimitSwitchPin = 19; // Same as A6!
+
+uint8_t soilSensor1 = 18;
+
+
+stepperMotor zAxis(zAxisStepPin, zAxisDirPin, zAxisEnablePin, zAxisLimitSwitchPin);
+stepperMotor Gripper(gripperStepPin, gripperDirPin, gripperEnablePin, gripperAxisLimitSwitchPin);
+
+limitSwitch soilSensor(soilSensor1);
 
 String msg;
 int distance;
@@ -19,33 +30,48 @@ void setup()
 {
   Serial.begin(BAUD_RATE);
   zAxis.initialize();
+  zAxis.maxDistance = 150;
+
+  Gripper.initialize();
+  Gripper.maxDistance = 7.3;
+  Gripper.stepsPerRev = 300;
+
 }
 
 void loop() {
   // Recieve Message:
   // If message Recieved:
 
-
-  if(Serial.available() > 0)
+  while(Serial.available() > 0)
   {
     msg = Serial.readString();
 
     switch (msg[0]) {
-      case 'H':
+      case 'H': //Home
         zAxis.home();
-        Serial.println("z-Axis homed.");
       break;
 
-      case 'z':
+      case 'z': //zMove
         distance = parseMessage(msg);
         zAxis.moveDistance(distance);
-
-        Serial.print("z-Axis moved ");
-        Serial.print(distance);
-        Serial.println(" mm");
-
       break;
 
+      case 'D': //moveDown
+        zAxis.moveDown();
+      break;
+
+      case 'G':
+        Gripper.moveDown();
+        Gripper.holdingTorque(true); // Might not be necessary!
+      break;
+
+      case 'c':
+        soilSensor.isPressed() ? Serial.println("Soil detected") : Serial.println("Soild not detected");
+      break;
+
+      case 'r':
+        Gripper.home();
+      break;
       default:
         Serial.println("Message not understood");
       break;
