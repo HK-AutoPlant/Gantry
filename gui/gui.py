@@ -449,7 +449,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def auto(self):    
         pos = 1
         row = 1
-        sleepTime = 0.1
+        sleepTime = 1.0
+        self.zAxis.sendMessage("G10")
+        time.sleep(3*sleepTime)
         self.goToBuffer()
         while self.controllerMode == "Auto":
             
@@ -459,33 +461,36 @@ class MainWindow(QtWidgets.QMainWindow):
 
             print("moving Z down...")
             self.movezAxis("Down",40) # Move down
-            time.sleep(6*sleepTime)
+            time.sleep(2*sleepTime)
 
             print("Gripping plants...")
             time.sleep(4*sleepTime)
 
             print("Moving Z up...")
             self.movezAxis("Up",40) # Move up
-            time.sleep(6*sleepTime)
+            time.sleep(2.5*sleepTime)
 
             print("Trees are correctly gripped")
 
             self.goToStart()
-            time.sleep(3*sleepTime)
+            time.sleep(1*sleepTime)
             
             self.goToBuffer()
             print("dropping plants into buffer")
             self.movezAxis("Down",10) # Move down
-            time.sleep(3*sleepTime)
+            time.sleep(1*sleepTime)
             self.movezAxis("Up",10) # Move up
-            time.sleep(5*sleepTime)
+            time.sleep(2*sleepTime)
             if pos == 4:
                 pos = 1
                 if row == 35:
                     print("Done picking all plants")
+                    pos = 1
+                    row = 1
                     self.controllerMode == "Manual"
-
-                row = row + 1                  
+                    break
+                else:
+                    row = row + 1                  
             else:
                 pos = pos + 1
                
