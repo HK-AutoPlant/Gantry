@@ -12,6 +12,8 @@ void stepperMotor::initialize()
 {
   _A4988.initialize();
   _limitSwitch.initialize();
+
+  _mmPerStep = (float)mmPerRev/stepsPerRev;
 }
 
 void stepperMotor::moveUp()
@@ -28,7 +30,7 @@ void stepperMotor::moveDown()
 void stepperMotor::moveDistance(int distance)
 {
 
-  distance >= 0 ? _moveCW() : _moveCCW();
+  distance >= 0 ? _moveCCW() : _moveCW();
 
   _numberOfSteps = _distanceToSteps(abs(distance));
 
@@ -51,7 +53,7 @@ void stepperMotor::moveDistance(int distance)
 
 void stepperMotor::home()
 {
-  _moveCCW();
+  _moveCW();
   _A4988.enableMotor(true);
   while(_limitSwitch.isPressed() == false)
     {
@@ -86,7 +88,7 @@ bool stepperMotor::_withinBoundaries()
   {
     _currentPosition = (float)maxDistance; // Resolves an issue that the machine takes one step to much
     return 0;
-  }else if(_limitSwitch.isPressed() && _dir == COUNTERCLOCKWISE)
+  }else if(_limitSwitch.isPressed() && _dir == CLOCKWISE)
   {
     _currentPosition = 0.0;
     return 0;

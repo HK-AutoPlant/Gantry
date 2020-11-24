@@ -9,10 +9,10 @@ uint8_t zAxisStepPin   = 10;
 uint8_t zAxisEnablePin = 11;
 uint8_t zAxisLimitSwitchPin = 14; // Same as A0!
 
-uint8_t gripperDirPin    = 10;
-uint8_t gripperStepPin   = 11;
-uint8_t gripperEnablePin = 12;
-uint8_t gripperAxisLimitSwitchPin = 19; // Same as A6!
+uint8_t gripperDirPin    = 5;
+uint8_t gripperStepPin   = 6;
+uint8_t gripperEnablePin = 7;
+uint8_t gripperAxisLimitSwitchPin = 14; // Same as A0!
 
 uint8_t soilSensor1 = 18;
 
@@ -29,13 +29,14 @@ int parseMessage(String msg);
 void setup()
 {
   Serial.begin(BAUD_RATE);
-  zAxis.initialize();
   zAxis.maxDistance = 150;
+  zAxis.mmPerRev = 6;
+  zAxis.initialize();
 
+  Gripper.maxDistance = 7;
+  Gripper.limitSwitchOffset = 3;
+  Gripper.stepsPerRev = 200;
   Gripper.initialize();
-  Gripper.maxDistance = 7.3;
-  Gripper.stepsPerRev = 300;
-
 }
 
 void loop() {
@@ -56,6 +57,11 @@ void loop() {
         zAxis.moveDistance(distance);
       break;
 
+      case 'g':
+        distance = parseMessage(msg);
+        Gripper.moveDistance(distance);
+      break;
+
       case 'D': //moveDown
         zAxis.moveDown();
       break;
@@ -72,6 +78,12 @@ void loop() {
       case 'r':
         Gripper.home();
       break;
+
+      case 's':
+        zAxis.status();
+        Gripper.status();
+      break;
+
       default:
         Serial.println("Message not understood");
       break;

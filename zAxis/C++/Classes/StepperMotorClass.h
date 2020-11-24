@@ -32,7 +32,7 @@ class stepperMotor
     uint8_t _limitSwitchPin;
 
     float _currentPosition = 0;
-    float _mmPerStep = (float)mmPerRev/stepsPerRev;
+    float _mmPerStep;
     int _numberOfSteps;
     bool _dir;
 
