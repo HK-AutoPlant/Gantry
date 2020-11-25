@@ -441,8 +441,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def goToBuffer(self):
         mmToRevolutions = 1/(25*math.pi)
-        self.odrv0.axis1.controller.input_pos = 0
-        self.odrv0.axis0.controller.input_pos = 2.5
+        self.odrv0.axis1.controller.input_pos = 0.7
+        self.odrv0.axis0.controller.input_pos = 5.8
         while not self.checkIfInPos():
             pass
 
@@ -450,9 +450,13 @@ class MainWindow(QtWidgets.QMainWindow):
         pos = 1
         row = 1
         sleepTime = 1.0
-        self.zAxis.sendMessage("G10")
-        time.sleep(3*sleepTime)
+        self.zAxis.sendMessage("r")  
+        time.sleep(2*sleepTime)  
         self.goToBuffer()
+        self.movezAxis("Home", 0)
+        time.sleep(10*sleepTime)
+        self.movezAxis("Down",100)
+        time.sleep(6*sleepTime)
         while self.controllerMode == "Auto":
             
             self.goToPosition(pos,row)# go to desired position
@@ -460,15 +464,16 @@ class MainWindow(QtWidgets.QMainWindow):
                 pass
 
             print("moving Z down...")
-            self.movezAxis("Down",40) # Move down
-            time.sleep(2*sleepTime)
+            self.movezAxis("Down",10) # Move down
+            time.sleep(0.5*sleepTime)
 
             print("Gripping plants...")
+            self.zAxis.sendMessage("g7")#closing gripper
             time.sleep(4*sleepTime)
 
             print("Moving Z up...")
-            self.movezAxis("Up",40) # Move up
-            time.sleep(2.5*sleepTime)
+            self.movezAxis("Up",110) # Move up
+            time.sleep(6*sleepTime)
 
             print("Trees are correctly gripped")
 
@@ -477,10 +482,16 @@ class MainWindow(QtWidgets.QMainWindow):
             
             self.goToBuffer()
             print("dropping plants into buffer")
-            self.movezAxis("Down",10) # Move down
+            self.movezAxis("Down",110) # Move down
+            time.sleep(6*sleepTime)
+            self.zAxis.sendMessage("g-7")
+            time.sleep(4*sleepTime)
+            self.odrv0.axis1.controller.input_pos = -0.5
             time.sleep(1*sleepTime)
             self.movezAxis("Up",10) # Move up
-            time.sleep(2*sleepTime)
+            time.sleep(0.5*sleepTime)
+
+            # self.odrv0.axis0.controller.input_pos = 5.8
             if pos == 4:
                 pos = 1
                 if row == 35:
@@ -789,14 +800,17 @@ class MainWindow(QtWidgets.QMainWindow):
             if hasattr(self, 'zAxis' ) == True:
                 if direction == "Down":
                     self.zAxis.sendMessage("z"+str(length))
+                    # self.zAxis.sendMessage("g"+str(length))
                     self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() - length))              
                     #print(direction + (str(length)))
                 elif direction == "Up":
                     self.zAxis.sendMessage("z-"+str(length))
+                    # self.zAxis.sendMessage("g-"+str(length))
                     self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() + length))  
                     #print(direction + (str(length)))
                 elif direction == "Home":                
                     self.zAxis.sendMessage(direction)
+                    # self.zAxis.sendMessage("r")
                     self.lcd_zAxis.setProperty("value",-10)
                     print("Homeing Z")
         except Exception as ex:
