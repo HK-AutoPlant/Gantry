@@ -11,7 +11,7 @@ class stepperMotor
     stepperMotor(uint8_t stepPin, uint8_t dirPin, uint8_t enablePin, uint8_t limitSwitchPin);
     void initialize();
     void moveDistance(int distance);
-    void moveTo(int position);
+    void moveTo(float position);
     void moveUp();
     void moveDown();
     void home();
@@ -36,7 +36,7 @@ class stepperMotor
     float _mmPerStep;
     int _numberOfSteps;
     bool _dir;
-    bool _initialHoming = 0; 
+    bool _initialHoming = 0;
 
     int _distanceToSteps(int distance);
     void _updateCurrentPosition(int distance);

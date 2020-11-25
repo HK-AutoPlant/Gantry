@@ -26,9 +26,9 @@ void stepperMotor::moveDown()
   moveDistance(maxDistance - (int)_currentPosition);
 }
 
-void stepperMotor::moveTo(int position)
+void stepperMotor::moveTo(float position)
 {
-  moveDistance(position - (int)_currentPosition);
+  moveDistance(position - _currentPosition);
 }
 
 void stepperMotor::moveDistance(int distance)
@@ -62,7 +62,7 @@ void stepperMotor::moveDistance(int distance)
 
 void stepperMotor::home()
 {
-  _initialHoming = 1; 
+  _initialHoming = 1;
   _moveCW();
   _A4988.enableMotor(true);
   while(_limitSwitch.isPressed() == false)

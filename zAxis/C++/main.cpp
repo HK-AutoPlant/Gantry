@@ -93,14 +93,15 @@ void loop() {
         Gripper.moveDown();
       break;
 
-      case 'M':
+      case 'P':
         position = parseMessage(msg);
         zAxis.moveTo(position);
       break;
 
-      case 'm':
+      case 'p':
         position = parseMessage(msg);
         Gripper.moveTo(position);
+      break;
 
       case 'c': //Check Soil Sesors
         detectSoil();
@@ -138,9 +139,9 @@ int parseMessage(String msg)
 
 void detectSoil()
 {
-  Serial.print(soilSensor1.isPressed()); 
-  Serial.print(soilSensor2.isPressed()); 
-  Serial.print(soilSensor3.isPressed()); 
-  Serial.print(soilSensor4.isPressed()); 
+  Serial.print(soilSensor1.isPressed());
+  Serial.print(soilSensor2.isPressed());
+  Serial.print(soilSensor3.isPressed());
+  Serial.print(soilSensor4.isPressed());
   Serial.print(soilSensor5.isPressed());
 }
