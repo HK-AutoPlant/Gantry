@@ -4,6 +4,8 @@
 
 #define BAUD_RATE 115200
 #define COMMAND_COMPLETED 1
+#define COMMAND_NOT_COMPLETED 0
+
 
 uint8_t zAxisDirPin    = 9;
 uint8_t zAxisStepPin   = 10;
@@ -65,6 +67,7 @@ void loop() {
 
   while(Serial.available() > 0)
   {
+    Serial.println(COMMAND_NOT_COMPLETED);
     msg = Serial.readString();
 
     switch (msg[0]) {
@@ -113,7 +116,7 @@ void loop() {
       break;
 
       default:
-        Serial.println("Message not understood");
+        //Serial.println("Message not understood");
       break;
     }
     Serial.println(COMMAND_COMPLETED);
