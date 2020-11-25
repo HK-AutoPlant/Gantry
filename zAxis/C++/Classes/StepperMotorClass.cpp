@@ -29,6 +29,11 @@ void stepperMotor::moveDown()
 
 void stepperMotor::moveDistance(int distance)
 {
+  if(!_initialHoming)
+  {
+    Serial.println("The Home is not homed!");
+    return;
+  }
 
   distance >= 0 ? _moveCCW() : _moveCW();
 
@@ -53,6 +58,7 @@ void stepperMotor::moveDistance(int distance)
 
 void stepperMotor::home()
 {
+  _initialHoming = 1; 
   _moveCW();
   _A4988.enableMotor(true);
   while(_limitSwitch.isPressed() == false)

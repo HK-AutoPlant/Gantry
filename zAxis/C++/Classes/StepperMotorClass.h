@@ -35,6 +35,7 @@ class stepperMotor
     float _mmPerStep;
     int _numberOfSteps;
     bool _dir;
+    bool _initialHoming = 0; 
 
     int _distanceToSteps(int distance);
     void _updateCurrentPosition(int distance);
