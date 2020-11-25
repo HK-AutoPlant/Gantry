@@ -3,6 +3,7 @@
 #include "Classes/limitSwitchClass.h"
 
 #define BAUD_RATE 115200
+#define COMMAND_COMPLETED 1
 
 uint8_t zAxisDirPin    = 9;
 uint8_t zAxisStepPin   = 10;
@@ -12,19 +13,29 @@ uint8_t zAxisLimitSwitchPin = 14; // Same as A0!
 uint8_t gripperDirPin    = 5;
 uint8_t gripperStepPin   = 6;
 uint8_t gripperEnablePin = 7;
-uint8_t gripperAxisLimitSwitchPin = 14; // Same as A0!
+uint8_t gripperAxisLimitSwitchPin = 18; // Same as A4!
 
-uint8_t soilSensor1 = 18;
+uint8_t soilSensorPin1 = 15;
+uint8_t soilSensorPin2 = 16;
+uint8_t soilSensorPin3 = 17;
+uint8_t soilSensorPin4 = 20;
+uint8_t soilSensorPin5 = 21;
 
 
 stepperMotor zAxis(zAxisStepPin, zAxisDirPin, zAxisEnablePin, zAxisLimitSwitchPin);
 stepperMotor Gripper(gripperStepPin, gripperDirPin, gripperEnablePin, gripperAxisLimitSwitchPin);
 
-limitSwitch soilSensor(soilSensor1);
+limitSwitch soilSensor1(soilSensorPin1);
+limitSwitch soilSensor2(soilSensorPin2);
+limitSwitch soilSensor3(soilSensorPin3);
+limitSwitch soilSensor4(soilSensorPin4);
+limitSwitch soilSensor5(soilSensorPin5);
+
 
 String msg;
 int distance;
 int parseMessage(String msg);
+void detectSoil();
 
 void setup()
 {
@@ -33,10 +44,17 @@ void setup()
   zAxis.mmPerRev = 6;
   zAxis.initialize();
 
-  Gripper.maxDistance = 7;
+  Gripper.maxDistance = 10;
   Gripper.limitSwitchOffset = 3;
   Gripper.stepsPerRev = 200;
   Gripper.initialize();
+
+  soilSensor1.initialize();
+  soilSensor2.initialize();
+  soilSensor3.initialize();
+  soilSensor4.initialize();
+  soilSensor5.initialize();
+
 }
 
 void loop() {
@@ -52,6 +70,9 @@ void loop() {
         zAxis.home();
       break;
 
+      case 'h':
+        Gripper.home();
+
       case 'z': //zMove
         distance = parseMessage(msg);
         zAxis.moveDistance(distance);
@@ -65,18 +86,12 @@ void loop() {
       case 'D': //moveDown
         zAxis.moveDown();
       break;
-
-      case 'G':
+      case 'd':
         Gripper.moveDown();
-        Gripper.holdingTorque(true); // Might not be necessary!
       break;
 
-      case 'c':
-        soilSensor.isPressed() ? Serial.println("Soil detected") : Serial.println("Soild not detected");
-      break;
-
-      case 'r':
-        Gripper.home();
+      case 'c': //Check Soil Sesors
+        detectSoil();
       break;
 
       case 's':
@@ -88,6 +103,7 @@ void loop() {
         Serial.println("Message not understood");
       break;
     }
+    Serial.println(COMMAND_COMPLETED);
   }
 }
 
@@ -106,4 +122,13 @@ int parseMessage(String msg)
   }
 
   return negativeNumber == 1 ? (-1)*msg.toInt() : msg.toInt();
+}
+
+void detectSoil()
+{
+  Serial.print(soilSensor1.isPressed()); 
+  Serial.print(soilSensor2.isPressed()); 
+  Serial.print(soilSensor3.isPressed()); 
+  Serial.print(soilSensor4.isPressed()); 
+  Serial.print(soilSensor5.isPressed());
 }
