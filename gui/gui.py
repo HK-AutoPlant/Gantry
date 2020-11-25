@@ -157,6 +157,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.pushButton_zUp.setIcon(QIcon("icons/up.png"))
         self.pushButton_zDown.setIcon(QIcon("icons/down.png"))
         self.pushButton_zHome.setIcon(QIcon("icons/home.png"))
+        self.pushButton_gripperGrip.setIcon(QIcon("icons/up.png"))
+        self.pushButton_gripperRelease.setIcon(QIcon("icons/down.png"))
+        self.pushButton_gripperHome.setIcon(QIcon("icons/home.png"))
         # Start worker threds
         self.threadpool = QThreadPool()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
@@ -169,7 +172,12 @@ class MainWindow(QtWidgets.QMainWindow):
         # Standrad ControlMode = Auto
         self.controllerMode = "Manual" 
         time.sleep(2)
+        # Home zAxis
         self.movezAxis("Home", 0)
+        self.waitForCompletion()
+        # Home Gripper
+        self.moveGripper("Home", 0)
+        self.waitForCompletion()
         
         # Webcam video feed
         # QWebEngineSettings.globalSettings().setAttribute(QWebEngineSettings.PluginsEnabled,True)        
@@ -210,6 +218,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.pushButton_zDown.clicked.connect(lambda: self.movezAxis("Down",self.zAxisStepInmm.value()))
         self.pushButton_zUp.clicked.connect(lambda: self.movezAxis("Up",self.zAxisStepInmm.value()))
         self.pushButton_zHome.clicked.connect(lambda: self.movezAxis("Home",0))
+        # pushButton for Gripper movement
+        self.pushButton_gripperGrip.clicked.connect(lambda: self.moveGripper("Grip",self.gripperStepInmm.value()))
+        self.pushButton_gripperRelease.clicked.connect(lambda: self.moveGripper("Release",self.gripperStepInmm.value()))
+        self.pushButton_gripperHome.clicked.connect(lambda: self.moveGripper("Home",0))
         # pushButton for buffer
         self.pushButton_BufferEmptied.clicked.connect(self.emptyBuffer)        
         # pushButton for collecting trees
@@ -335,20 +347,22 @@ class MainWindow(QtWidgets.QMainWindow):
 #-------------------- Other Functions --------------------------------------------------------
 
     def mapFromPosAndRowToSetPoints(self,pos,row): 
-        xOffset_mm = 0
-        yOffset_mm = 100
+        turns_to_mm = 25*math.pi      #These values are the offset from the machines zero to the first gripping position
+        xOffset_mm = 0.15*turns_to_mm #Change to correct value
+        yOffset_mm = 6.9*turns_to_mm  #Change to correct value
         plantXCC_mm = 35.1
         plantYCC_mm = 30
         trayWidth_mm = 352
+        beamWidth_mm = 45
         xOffsetBetweenRows_mm = 17.55
         if pos == 1:
             x_mm=xOffset_mm
         elif pos == 2:
             x_mm = xOffset_mm + plantXCC_mm
         elif pos == 3:
-            x_mm = xOffset_mm + trayWidth_mm
+            x_mm = xOffset_mm + trayWidth_mm + beamWidth_mm
         else: # 4
-            x_mm = xOffset_mm + trayWidth_mm + plantXCC_mm
+            x_mm = xOffset_mm + trayWidth_mm + beamWidth_mm + plantXCC_mm
         if not row % 2:# For even row number. Jackpot has an zigg zagg pattern
             x_mm = x_mm + xOffsetBetweenRows_mm
         
@@ -434,29 +448,47 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def goToStart(self):
         mmToRevolutions = 1/(25*math.pi)
-        self.odrv0.axis1.controller.input_pos = 50*mmToRevolutions
+        offset = 5.4 # Turns #offset*mmToRevolutions
+        self.odrv0.axis1.controller.input_pos = offset*mmToRevolutions #Change to correct value - This should go to the start of the row and a little further.
         print("going to start of column")
         while not self.checkIfInPos():
             pass
 
-    def goToBuffer(self):
+    def goToBuffer(self,bufferPosition):
         mmToRevolutions = 1/(25*math.pi)
+        if bufferPosition == 1:
+            self.odrv0.axis0.controller.input_pos = 5.8 #Change to correct value
+        elif bufferPosition == 2:
+            self.odrv0.axis0.controller.input_pos = 2 #Change to correct value
+        while not self.checkIfInPos():
+            pass
         self.odrv0.axis1.controller.input_pos = 0.7
-        self.odrv0.axis0.controller.input_pos = 5.8
         while not self.checkIfInPos():
             pass
 
-    def auto(self):    
+    def waitForCompletion(self): # wait for zAxis assemply to complete command
+        while True:             
+            if self.zAxis.messageRecieved() is True:
+                if self.zAxis.returnMessage() is "1":
+                    print("breaking")
+                    break
+            
+
+    def auto(self):
         pos = 1
         row = 1
         sleepTime = 1.0
         self.zAxis.sendMessage("r")  
-        time.sleep(2*sleepTime)  
-        self.goToBuffer()
+        self.waitForCompletion() # wait for homing gripper
+        bufferPosition = 1
+        self.goToBuffer(bufferPosition)
+
         self.movezAxis("Home", 0)
-        time.sleep(10*sleepTime)
+        self.waitForCompletion() # wait for homing zAxis  
+
         self.movezAxis("Down",100)
-        time.sleep(6*sleepTime)
+        self.waitForCompletion() # wait for going down...........
+        
         while self.controllerMode == "Auto":
             
             self.goToPosition(pos,row)# go to desired position
@@ -465,36 +497,43 @@ class MainWindow(QtWidgets.QMainWindow):
 
             print("moving Z down...")
             self.movezAxis("Down",10) # Move down
-            time.sleep(0.5*sleepTime)
+            self.waitForCompletion()
 
             print("Gripping plants...")
             self.zAxis.sendMessage("g7")#closing gripper
-            time.sleep(4*sleepTime)
+            self.waitForCompletion()
 
             print("Moving Z up...")
             self.movezAxis("Up",110) # Move up
-            time.sleep(6*sleepTime)
+            self.waitForCompletion()
 
             print("Trees are correctly gripped")
 
             self.goToStart()
             time.sleep(1*sleepTime)
-            
-            self.goToBuffer()
+
+            self.goToBuffer(bufferPosition)
             print("dropping plants into buffer")
             self.movezAxis("Down",110) # Move down
-            time.sleep(6*sleepTime)
-            self.zAxis.sendMessage("g-7")
-            time.sleep(4*sleepTime)
-            self.odrv0.axis1.controller.input_pos = -0.5
-            time.sleep(1*sleepTime)
+            self.waitForCompletion()
+
+            # releasing plants
+            self.moveGripper("Home", 0) # homing gripper for robustness, open-loop 
+            self.waitForCompletion()
+
+            self.odrv0.axis1.controller.input_pos = -0.5 # backoff
+            self.checkIfInPos()
+
+            # self.moveGripper("Home", 0) # homing gripper for robustness, open-loop
+            # self.waitForCompletion()
+
             self.movezAxis("Up",10) # Move up
-            time.sleep(0.5*sleepTime)
+            self.waitForCompletion()
 
             # self.odrv0.axis0.controller.input_pos = 5.8
-            if pos == 4:
+            if pos == 2:
                 pos = 1
-                if row == 35:
+                if row == 14:
                     print("Done picking all plants")
                     pos = 1
                     row = 1
@@ -504,6 +543,10 @@ class MainWindow(QtWidgets.QMainWindow):
                     row = row + 1                  
             else:
                 pos = pos + 1
+            if bufferPosition == 1:
+                bufferPosition = 2
+            else:
+                bufferPosition = 1
                
     def startAuto(self):
         worker = Worker(self.auto)
@@ -799,18 +842,15 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             if hasattr(self, 'zAxis' ) == True:
                 if direction == "Down":
-                    self.zAxis.sendMessage("z"+str(length))
-                    # self.zAxis.sendMessage("g"+str(length))
-                    self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() - length))              
-                    #print(direction + (str(length)))
+                    self.zAxis.sendMessage("z"+str(length))                    
+                    self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() - length))             
+                    
                 elif direction == "Up":
-                    self.zAxis.sendMessage("z-"+str(length))
-                    # self.zAxis.sendMessage("g-"+str(length))
+                    self.zAxis.sendMessage("z-"+str(length))                    
                     self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() + length))  
-                    #print(direction + (str(length)))
+                    
                 elif direction == "Home":                
-                    self.zAxis.sendMessage(direction)
-                    # self.zAxis.sendMessage("r")
+                    self.zAxis.sendMessage("H")                  
                     self.lcd_zAxis.setProperty("value",-10)
                     print("Homeing Z")
         except Exception as ex:
@@ -820,7 +860,23 @@ class MainWindow(QtWidgets.QMainWindow):
         # except:
         #     print("Arduino for zAxis not regonized, check connection, port and baud rate!")
 
-
+#-------------------- Functions For Moving The Gripper ------------------------------
+    def moveGripper(self, direction, length):
+        try:
+            if hasattr(self, 'zAxis' ) == True:
+                if direction == "Grip":                   
+                    self.zAxis.sendMessage("g"+str(length))
+                    self.lcd_gripper.setProperty("value",(self.lcd_gripper.value() - length))              
+                elif direction == "Release":                    
+                    self.zAxis.sendMessage("g-"+str(length))
+                    self.lcd_gripper.setProperty("value",(self.lcd_gripper.value() + length))  
+                elif direction == "Home":                                 
+                    self.zAxis.sendMessage("h")
+                    self.lcd_gripper.setProperty("value",-3)
+                    print("Homeing Gripper")
+        except Exception as ex:
+            print(ex)
+            # print("Arduino for zAxis not regonized, check connection, port and baud rate!")
 
 
 def main():
