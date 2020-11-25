@@ -11,6 +11,7 @@ class stepperMotor
     stepperMotor(uint8_t stepPin, uint8_t dirPin, uint8_t enablePin, uint8_t limitSwitchPin);
     void initialize();
     void moveDistance(int distance);
+    void moveTo(int position);
     void moveUp();
     void moveDown();
     void home();

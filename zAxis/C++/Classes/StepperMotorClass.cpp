@@ -26,6 +26,10 @@ void stepperMotor::moveDown()
   moveDistance(maxDistance - (int)_currentPosition);
 }
 
+void stepperMotor::moveTo(int position)
+{
+  moveDistance(position - (int)_currentPosition);
+}
 
 void stepperMotor::moveDistance(int distance)
 {
@@ -116,12 +120,6 @@ void stepperMotor::status()
   Serial.print("\t");
   Serial.print("\t");
   Serial.print(limitSwitchOffset);
-  Serial.println(" mm.");
-  Serial.print("Lower Position:");
-  Serial.print("\t");
-  Serial.print("\t");
-  Serial.print("\t");
-  Serial.print(maxDistance);
   Serial.println(" mm.");
   Serial.print("Maximum allowed position:");
   Serial.print("\t");

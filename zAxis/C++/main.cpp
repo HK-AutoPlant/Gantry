@@ -34,6 +34,8 @@ limitSwitch soilSensor5(soilSensorPin5);
 
 String msg;
 int distance;
+int position;
+
 int parseMessage(String msg);
 void detectSoil();
 
@@ -66,35 +68,45 @@ void loop() {
     msg = Serial.readString();
 
     switch (msg[0]) {
-      case 'H': //Home
+      case 'H': //Home zAxis
         zAxis.home();
       break;
 
-      case 'h':
+      case 'h': //Home Gripper
         Gripper.home();
+      break;
 
-      case 'z': //zMove
+      case 'z': //Move zAxis
         distance = parseMessage(msg);
         zAxis.moveDistance(distance);
       break;
 
-      case 'g':
+      case 'g': //Move Gripper
         distance = parseMessage(msg);
         Gripper.moveDistance(distance);
       break;
 
-      case 'D': //moveDown
+      case 'D': //Move down zAxis
         zAxis.moveDown();
       break;
-      case 'd':
+      case 'd': //Move down Gripper
         Gripper.moveDown();
       break;
+
+      case 'M':
+        position = parseMessage(msg);
+        zAxis.moveTo(position);
+      break;
+
+      case 'm':
+        position = parseMessage(msg);
+        Gripper.moveTo(position);
 
       case 'c': //Check Soil Sesors
         detectSoil();
       break;
 
-      case 's':
+      case 's': //Prints out the current status
         zAxis.status();
         Gripper.status();
       break;
