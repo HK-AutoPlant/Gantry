@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>986</width>
-    <height>663</height>
+    <width>733</width>
+    <height>514</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -42,27 +42,40 @@
         <string>Main</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_5">
-        <item row="0" column="2" colspan="2">
-         <widget class="QPushButton" name="pushButton_Auto_Manual">
-          <property name="text">
-           <string>Auto</string>
+        <item row="16" column="0" colspan="8">
+         <widget class="QScrollBar" name="posXSlider">
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="value">
+           <number>50</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
-        <item row="7" column="6" colspan="2">
-         <widget class="QPushButton" name="pushButton_gripperHome">
+        <item row="2" column="5">
+         <widget class="QLabel" name="label_12">
           <property name="text">
-           <string>PushButton</string>
+           <string>Axis0 Min</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="batteryVoltage_3">
+        <item row="1" column="0">
+         <widget class="QCheckBox" name="odriveConnect">
           <property name="text">
-           <string>Left_Right</string>
+           <string>odriveConnect</string>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+         </widget>
+        </item>
+        <item row="5" column="3" rowspan="2" colspan="3">
+         <widget class="QLCDNumber" name="lcd_zAxis"/>
+        </item>
+        <item row="2" column="3">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Axis1 Min</string>
           </property>
          </widget>
         </item>
@@ -73,71 +86,20 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="3">
-         <widget class="QLabel" name="label_10">
-          <property name="text">
-           <string>Axis1 Min</string>
+        <item row="9" column="7" rowspan="2">
+         <widget class="QDoubleSpinBox" name="gripperStepInmm">
+          <property name="minimum">
+           <double>1.000000000000000</double>
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
-         <widget class="QCheckBox" name="closedLoopAxis1CheckBox">
-          <property name="text">
-           <string>Closed Loop Axis 1</string>
-          </property>
-         </widget>
+        <item row="9" column="6" rowspan="2">
+         <widget class="QLCDNumber" name="lcd_vel"/>
         </item>
-        <item row="8" column="6" colspan="2">
-         <widget class="QPushButton" name="pushButton_gripperRelease">
-          <property name="text">
-           <string>PushButton</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0" rowspan="2" colspan="2">
-         <widget class="QLCDNumber" name="lcdPos_Up"/>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="errorAxis0">
-          <property name="text">
-           <string>Error Axis0</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="6">
-         <widget class="QFrame" name="endStop_Axis0_Max">
-          <property name="styleSheet">
-           <string notr="true">background-color:rgb(0, 255, 0)</string>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="6">
-         <widget class="QLabel" name="label_13">
-          <property name="text">
-           <string>Axis0 Max</string>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="1">
-         <widget class="QPushButton" name="pushButton_Home">
-          <property name="minimumSize">
-           <size>
-            <width>32</width>
-            <height>32</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>home.png</normaloff>home.png</iconset>
+        <item row="10" column="3">
+         <widget class="QDoubleSpinBox" name="zAxisStepInmm">
+          <property name="minimum">
+           <double>1.000000000000000</double>
           </property>
          </widget>
         </item>
@@ -157,9 +119,6 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="2" rowspan="2">
-         <widget class="QLCDNumber" name="lcdPos_Left"/>
-        </item>
         <item row="3" column="2">
          <widget class="QPushButton" name="pushButton_Reboot">
           <property name="text">
@@ -168,222 +127,6 @@
           <property name="icon">
            <iconset>
             <normaloff>right.png</normaloff>right.png</iconset>
-          </property>
-         </widget>
-        </item>
-        <item row="10" column="0">
-         <widget class="QDoubleSpinBox" name="stepInTurns">
-          <property name="minimum">
-           <double>0.100000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.100000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="4">
-         <widget class="QLabel" name="label_11">
-          <property name="text">
-           <string>Axis1 Max</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QCheckBox" name="closedLoopAxis0CheckBox">
-          <property name="text">
-           <string>Closed Loop Axis 0</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="3" colspan="3">
-         <widget class="QPushButton" name="pushButton_zUp">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="10" column="3">
-         <widget class="QDoubleSpinBox" name="zAxisStepInmm">
-          <property name="minimum">
-           <double>1.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="0">
-         <widget class="QPushButton" name="pushButton_Left">
-          <property name="minimumSize">
-           <size>
-            <width>32</width>
-            <height>32</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>left.png</normaloff>left.png</iconset>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="1">
-         <widget class="QPushButton" name="pushButton_Up">
-          <property name="minimumSize">
-           <size>
-            <width>32</width>
-            <height>32</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>up.png</normaloff>up.png</iconset>
-          </property>
-         </widget>
-        </item>
-        <item row="10" column="1">
-         <widget class="QLabel" name="batteryVoltage_4">
-          <property name="text">
-           <string>Step In turns</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="5">
-         <widget class="QFrame" name="endStop_Axis0_Min">
-          <property name="styleSheet">
-           <string notr="true">background-color:rgb(0, 255, 0)</string>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="errorAxis1">
-          <property name="text">
-           <string>Error Axis1</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="3">
-         <widget class="QFrame" name="endStop_Axis1_Min">
-          <property name="styleSheet">
-           <string notr="true">background-color:rgb(0, 255, 0)</string>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="6" colspan="2">
-         <widget class="QLCDNumber" name="lcd_gripper"/>
-        </item>
-        <item row="9" column="3" colspan="3">
-         <widget class="QPushButton" name="pushButton_zDown">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="5">
-         <widget class="QLabel" name="label_12">
-          <property name="text">
-           <string>Axis0 Min</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QCheckBox" name="odriveConnect">
-          <property name="text">
-           <string>odriveConnect</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="4">
-         <widget class="QFrame" name="endStop_Axis1_Max">
-          <property name="styleSheet">
-           <string notr="true">background-color:rgb(0, 255, 0)</string>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="6" colspan="2">
-         <widget class="QPushButton" name="pushButton_gripperGrip">
-          <property name="text">
-           <string>PushButton</string>
-          </property>
-         </widget>
-        </item>
-        <item row="9" column="1">
-         <widget class="QPushButton" name="pushButton_Down">
-          <property name="minimumSize">
-           <size>
-            <width>32</width>
-            <height>32</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset>
-            <normaloff>down.png</normaloff>down.png</iconset>
-          </property>
-         </widget>
-        </item>
-        <item row="16" column="0" colspan="8">
-         <widget class="QScrollBar" name="posXSlider">
-          <property name="maximum">
-           <number>100</number>
-          </property>
-          <property name="value">
-           <number>50</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="2">
-         <widget class="QLabel" name="batteryVoltage_2">
-          <property name="text">
-           <string>Up_Down</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="10" column="4">
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>mm</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="3" rowspan="2" colspan="3">
-         <widget class="QLCDNumber" name="lcd_zAxis"/>
-        </item>
-        <item row="4" column="3" colspan="2">
-         <widget class="QLabel" name="label_8">
-          <property name="text">
-           <string>Z-Axis</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -404,6 +147,282 @@
           </property>
          </widget>
         </item>
+        <item row="2" column="6">
+         <widget class="QLabel" name="label_13">
+          <property name="text">
+           <string>Axis0 Max</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="3" colspan="2">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Z-Axis</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <widget class="QLabel" name="batteryVoltage_2">
+          <property name="text">
+           <string>Up_Down</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="4">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>mm</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="errorAxis0">
+          <property name="text">
+           <string>Error Axis0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QCheckBox" name="closedLoopAxis1CheckBox">
+          <property name="text">
+           <string>Closed Loop Axis 1</string>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="1">
+         <widget class="QLabel" name="batteryVoltage_4">
+          <property name="text">
+           <string>Step In turns</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="6" colspan="2">
+         <widget class="QLCDNumber" name="lcd_gripper"/>
+        </item>
+        <item row="10" column="0">
+         <widget class="QDoubleSpinBox" name="stepInTurns">
+          <property name="decimals">
+           <number>3</number>
+          </property>
+          <property name="minimum">
+           <double>0.010000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.010000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0" rowspan="2" colspan="2">
+         <widget class="QLCDNumber" name="lcdPos_Up"/>
+        </item>
+        <item row="7" column="3" colspan="3">
+         <widget class="QPushButton" name="pushButton_zUp">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="5">
+         <widget class="QFrame" name="endStop_Axis0_Min">
+          <property name="styleSheet">
+           <string notr="true">background-color:rgb(0, 255, 0)</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QPushButton" name="pushButton_Up">
+          <property name="minimumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>up.png</normaloff>up.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="6" colspan="2">
+         <widget class="QPushButton" name="pushButton_gripperHome">
+          <property name="text">
+           <string>PushButton</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="3" colspan="3">
+         <widget class="QPushButton" name="pushButton_zDown">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="1">
+         <widget class="QPushButton" name="pushButton_Down">
+          <property name="minimumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>down.png</normaloff>down.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="errorAxis1">
+          <property name="text">
+           <string>Error Axis1</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="4">
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>Axis1 Max</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="6" colspan="2">
+         <widget class="QPushButton" name="pushButton_gripperGrip">
+          <property name="text">
+           <string>PushButton</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QPushButton" name="pushButton_Left">
+          <property name="minimumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>left.png</normaloff>left.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="batteryVoltage_3">
+          <property name="text">
+           <string>Left_Right</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="2" rowspan="2">
+         <widget class="QLCDNumber" name="lcdPos_Left"/>
+        </item>
+        <item row="8" column="1">
+         <widget class="QPushButton" name="pushButton_Home">
+          <property name="minimumSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>home.png</normaloff>home.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="6">
+         <widget class="QFrame" name="endStop_Axis0_Max">
+          <property name="styleSheet">
+           <string notr="true">background-color:rgb(0, 255, 0)</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QCheckBox" name="closedLoopAxis0CheckBox">
+          <property name="text">
+           <string>Closed Loop Axis 0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="6" colspan="2">
+         <widget class="QPushButton" name="pushButton_gripperRelease">
+          <property name="text">
+           <string>PushButton</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2" colspan="2">
+         <widget class="QPushButton" name="pushButton_Auto_Manual">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Auto</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="3">
+         <widget class="QFrame" name="endStop_Axis1_Min">
+          <property name="styleSheet">
+           <string notr="true">background-color:rgb(0, 255, 0)</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="4">
+         <widget class="QFrame" name="endStop_Axis1_Max">
+          <property name="styleSheet">
+           <string notr="true">background-color:rgb(0, 255, 0)</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0" colspan="2">
          <widget class="QLabel" name="batteryVoltage">
           <property name="text">
@@ -411,11 +430,12 @@
           </property>
          </widget>
         </item>
-        <item row="9" column="6" rowspan="2">
-         <widget class="QLCDNumber" name="lcd_vel"/>
-        </item>
-        <item row="9" column="7" rowspan="2">
-         <widget class="QDoubleSpinBox" name="gripperStepInmm"/>
+        <item row="4" column="6">
+         <widget class="QLabel" name="label_14">
+          <property name="text">
+           <string>Gripper</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -734,36 +754,36 @@
         <string>Settings</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_10">
-        <item row="0" column="2" rowspan="2">
+        <item row="0" column="0">
          <widget class="QWidget" name="widget" native="true">
           <layout class="QGridLayout" name="gridLayout_7">
-           <item row="2" column="2">
-            <widget class="QLabel" name="label_7">
+           <item row="0" column="0" colspan="2">
+            <widget class="QDialogButtonBox" name="settingsButtons_setings">
              <property name="maximumSize">
               <size>
-               <width>67</width>
-               <height>17</height>
+               <width>192</width>
+               <height>46</height>
               </size>
              </property>
-             <property name="text">
-              <string>Axis0</string>
+             <property name="standardButtons">
+              <set>QDialogButtonBox::Reset|QDialogButtonBox::Save</set>
+             </property>
+             <property name="centerButtons">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_6">
-             <property name="maximumSize">
+           <item row="0" column="2" rowspan="2">
+            <widget class="QLCDNumber" name="lcd_velX">
+             <property name="minimumSize">
               <size>
-               <width>67</width>
-               <height>17</height>
+               <width>100</width>
+               <height>50</height>
               </size>
-             </property>
-             <property name="text">
-              <string>Axis1</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
+           <item row="0" column="3" rowspan="2">
             <widget class="QLCDNumber" name="lcd_velY">
              <property name="minimumSize">
               <size>
@@ -773,32 +793,59 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="2">
-            <widget class="QSlider" name="velocityLimitY">
-             <property name="minimumSize">
-              <size>
-               <width>40</width>
-               <height>0</height>
-              </size>
-             </property>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="pushButton_CalibrateAxis1">
              <property name="maximumSize">
               <size>
-               <width>50</width>
-               <height>151</height>
+               <width>101</width>
+               <height>25</height>
               </size>
              </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-             <property name="maximum">
-              <number>25</number>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
+             <property name="text">
+              <string>Calibrate Axis1</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
+           <item row="1" column="1">
+            <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis0">
+             <property name="maximumSize">
+              <size>
+               <width>121</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Encoder Cal A0</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis1">
+             <property name="maximumSize">
+              <size>
+               <width>121</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Encoder Cal A1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="pushButton_CalibrateAxis0">
+             <property name="maximumSize">
+              <size>
+               <width>101</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Calibrate Axis0</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
             <widget class="QSlider" name="velocityLimitX">
              <property name="minimumSize">
               <size>
@@ -823,42 +870,32 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLCDNumber" name="lcd_velX">
+           <item row="2" column="3">
+            <widget class="QSlider" name="velocityLimitY">
              <property name="minimumSize">
               <size>
-               <width>100</width>
-               <height>50</height>
+               <width>40</width>
+               <height>0</height>
               </size>
              </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QWidget" name="widget" native="true">
-          <property name="maximumSize">
-           <size>
-            <width>2500</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_9">
-           <item row="0" column="1">
-            <widget class="QProgressBar" name="progressBar">
              <property name="maximumSize">
               <size>
-               <width>95</width>
-               <height>25</height>
+               <width>50</width>
+               <height>151</height>
               </size>
              </property>
-             <property name="value">
-              <number>24</number>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>25</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
+           <item row="3" column="0">
             <widget class="QLCDNumber" name="lcd_checkParameter">
              <property name="minimumSize">
               <size>
@@ -874,7 +911,7 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
+           <item row="3" column="1">
             <widget class="QComboBox" name="comboBox_CheckParameter">
              <property name="maximumSize">
               <size>
@@ -904,7 +941,46 @@
              </item>
             </widget>
            </item>
-           <item row="2" column="1">
+           <item row="3" column="2">
+            <widget class="QLabel" name="label_6">
+             <property name="maximumSize">
+              <size>
+               <width>67</width>
+               <height>17</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Axis1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="3">
+            <widget class="QLabel" name="label_7">
+             <property name="maximumSize">
+              <size>
+               <width>67</width>
+               <height>17</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Axis0</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QProgressBar" name="progressBar">
+             <property name="maximumSize">
+              <size>
+               <width>95</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="value">
+              <number>24</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
             <widget class="QPushButton" name="pushButton">
              <property name="maximumSize">
               <size>
@@ -917,77 +993,99 @@
              </property>
             </widget>
            </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QWidget" name="widget" native="true">
-          <layout class="QGridLayout" name="gridLayout_8">
-           <item row="0" column="0">
-            <widget class="QDialogButtonBox" name="settingsButtons_setings">
-             <property name="maximumSize">
+           <item row="4" column="2" rowspan="2">
+            <widget class="QLCDNumber" name="lcd_accX">
+             <property name="minimumSize">
               <size>
-               <width>192</width>
-               <height>46</height>
+               <width>100</width>
+               <height>50</height>
               </size>
-             </property>
-             <property name="standardButtons">
-              <set>QDialogButtonBox::Reset|QDialogButtonBox::Save</set>
-             </property>
-             <property name="centerButtons">
-              <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QPushButton" name="pushButton_CalibrateAxis1">
-             <property name="maximumSize">
+           <item row="4" column="3" rowspan="2">
+            <widget class="QLCDNumber" name="lcd_accY">
+             <property name="minimumSize">
               <size>
-               <width>101</width>
-               <height>25</height>
+               <width>100</width>
+               <height>50</height>
               </size>
-             </property>
-             <property name="text">
-              <string>Calibrate Axis1</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
-            <widget class="QPushButton" name="pushButton_CalibrateAxis0">
-             <property name="maximumSize">
+           <item row="5" column="0" rowspan="2">
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
               <size>
-               <width>101</width>
-               <height>25</height>
+               <width>20</width>
+               <height>129</height>
               </size>
              </property>
-             <property name="text">
-              <string>Calibrate Axis0</string>
+            </spacer>
+           </item>
+           <item row="5" column="1" rowspan="2">
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>129</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="6" column="2">
+            <widget class="QSlider" name="accelerationLimitX">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>50</width>
+               <height>151</height>
+              </size>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>25</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
-            <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis1">
-             <property name="maximumSize">
+           <item row="6" column="3">
+            <widget class="QSlider" name="accelerationLimitY">
+             <property name="minimumSize">
               <size>
-               <width>121</width>
-               <height>25</height>
+               <width>40</width>
+               <height>0</height>
               </size>
              </property>
-             <property name="text">
-              <string>Encoder Cal A1</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QPushButton" name="pushButton_calibrateEncodeOffsetAxis0">
              <property name="maximumSize">
               <size>
-               <width>121</width>
-               <height>25</height>
+               <width>50</width>
+               <height>151</height>
               </size>
              </property>
-             <property name="text">
-              <string>Encoder Cal A0</string>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>25</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
              </property>
             </widget>
            </item>
@@ -1001,8 +1099,106 @@
         <string>TreeView</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0" colspan="4">
-         <widget class="TreeHive" name="treeWidget" native="true"/>
+        <item row="0" column="0">
+         <widget class="QFrame" name="frame_big_4">
+          <property name="minimumSize">
+           <size>
+            <width>81</width>
+            <height>351</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color:rgb(181, 181, 181)</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_12">
+           <item row="0" column="0">
+            <widget class="QFrame" name="frame_21">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color:rgb(0, 255, 0)</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QFrame" name="frame_22">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color:rgb(0, 255, 0)</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QFrame" name="frame_23">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color:rgb(0, 255, 0)</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QFrame" name="frame_24">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color:rgb(0, 255, 0)</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QFrame" name="frame_25">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color:rgb(0, 255, 0)</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_2">
@@ -1011,7 +1207,7 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
+        <item row="1" column="2">
          <widget class="QComboBox" name="comboBox_TreeRow">
           <property name="editable">
            <bool>false</bool>
@@ -1196,28 +1392,28 @@
           </item>
          </widget>
         </item>
-        <item row="1" column="2" rowspan="2">
+        <item row="1" column="3" rowspan="2">
          <widget class="QPushButton" name="pushButton_GoToPosition">
           <property name="text">
            <string>Go To Position</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="3" rowspan="2">
+        <item row="1" column="4" rowspan="2">
          <widget class="QProgressBar" name="progressBar_treeCollecting">
           <property name="value">
            <number>24</number>
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
+        <item row="2" column="0" colspan="2">
          <widget class="QLabel" name="label_3">
           <property name="text">
            <string>Gripper Position: </string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="2" column="2">
          <widget class="QComboBox" name="comboBox_TreePos">
           <item>
            <property name="text">
@@ -1240,6 +1436,110 @@
            </property>
           </item>
          </widget>
+        </item>
+        <item row="0" column="1" colspan="2">
+         <widget class="QFrame" name="frame_big_3">
+          <property name="minimumSize">
+           <size>
+            <width>81</width>
+            <height>351</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color:rgb(181, 181, 181)</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0">
+            <widget class="QFrame" name="frame_11">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color:rgb(0, 255, 0)</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QFrame" name="frame_12">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color:rgb(0, 255, 0)</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QFrame" name="frame_13">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color:rgb(0, 255, 0)</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QFrame" name="frame_14">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color:rgb(0, 255, 0)</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QFrame" name="frame_15">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color:rgb(0, 255, 0)</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="3" colspan="3">
+         <widget class="TreeHive" name="treeWidget" native="true"/>
         </item>
        </layout>
       </widget>
@@ -1398,8 +1698,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>986</width>
-     <height>22</height>
+     <width>733</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMain">

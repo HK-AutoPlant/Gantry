@@ -12,17 +12,17 @@ import numpy
 #and the second argument is Row (A row here is actually the column in the matrix of trees)
 
 class TreeHive(QWidget):
-    def __init__(self,*args,x=50,y=50,iconsize=25,CC=30,rows=20,columns=35):
+    def __init__(self,*args,x=50,y=50,iconsize=25,CCx=30,CCy=30,rows=20,columns=35):
         super(QWidget,self).__init__(*args)
         #self.createTrees(x,y,iconsize,CC,rows,columns)
         self.iconArray = numpy.full((100,100),QLabel(self))
-    def createTrees(self, x, y, iconsize, CC, rows, columns):
+    def createTrees(self, x, y, iconsize, CCx,CCy, rows, columns):
         self.iconArray = numpy.full((rows,columns),QLabel(self))
         for i in range(self.iconArray.shape[1]):
             for j in range(self.iconArray.shape[0]):
                 self.iconArray[j,i]=QLabel(self)
                 self.iconArray[j,i].setPixmap(QPixmap("images/pine-tree.png"))
-                self.iconArray[j,i].setGeometry(x + CC*i, y + CC*j, iconsize, iconsize)
+                self.iconArray[j,i].setGeometry(x + CCx*i, y + CCy*j, iconsize, iconsize)
                 self.iconArray[j,i].setScaledContents(True)
         
 
