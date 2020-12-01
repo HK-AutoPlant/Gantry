@@ -424,21 +424,58 @@ class MainWindow(QtWidgets.QMainWindow):
         print(n)
 
     def xboxMove(self,key):
-        # print("hhejeje")
-        while True:
-            print(key)
-            if key[0] == "Down":
-                self.moveDown()
-            elif key[0] == "Up":
-                self.moveUp()
-            elif key[0] == "Right":
-                self.moveRight()
-            elif key[0] == "Left":
-                self.moveLeft()
-            elif key[0] == "A":
-                self.moveHome()
+        print("Checking if plants are present")
+        # self.zAxis.sendMessage("c")
+        # while self.zAxis.messageRecieved() is not True:
+        #     pass
+        # self.zAxis.readMessage();        
+
+        # print("hhejeje")        
+        print(key)
+        if key[0] == "Down":
+            self.moveDown()
+        elif key[0] == "Up":
+            self.moveUp()
+        elif key[0] == "Right":
+            self.moveRight()
+        elif key[0] == "Left":
+            self.moveLeft()
+        elif key[0] == "A":
+            self.movezAxis("Down",100)
+        elif key[0] == "Y":
+            self.movezAxis("Up",100)
+        elif key[0] == "B":
+            self.moveGripper("Grip",13)
+        elif key[0] == "X":
+            self.moveGripper("Release",13)
             
-            time.sleep(0.2)
+                
+
+        elif key[0] == "Gas":
+            print("gasarsomsatans")
+        elif key[0] == "JoyY":
+            #0 up and 65535 down
+            if key[1] < 65535/4:
+                self.moveUp()
+            elif key[1] > 65535.0/1.5:
+                self.moveDown()
+        
+        elif key[0] == "JoyX":
+            #0 up and 65535 down
+            if key[1] < 65535/4:
+                self.moveLeft()
+            elif key[1] > 65535.0/1.5:
+                self.moveRight()
+
+        elif key[0] == "JoyRZ":
+            #0 up and 65535 down
+            if key[1] < 65535/4:
+                self.movezAxis("Up",10)
+            elif key[1] > 65535.0/1.5:
+                self.movezAxis("Down",10)          
+                print("asdasdadsadsasdasd")
+        
+            
         # self.startWorkers()
 
     def mqttInitiate(self):
@@ -531,6 +568,18 @@ class MainWindow(QtWidgets.QMainWindow):
             print("Gripping plants...")
             self.zAxis.sendMessage("g12")#closing gripper
             self.waitForCompletion()
+
+            print("Checking if plants are present")
+            self.zAxis.sendMessage("c")
+            while not self.zAxis.messageRecieved():
+                pass
+            for item in self.zAxis.returnMessage():
+                if item == 0:
+                    # Logic
+                    pass
+                else:
+                    pass
+            # print(self.zAxis.returnMessage())
 
             print("Moving Z up...")
             self.movezAxis("Up",130) # Move up

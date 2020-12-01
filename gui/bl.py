@@ -34,7 +34,7 @@ class xboxOne:
     # 
     def readXboxInput(self):
         # key_axis = ""
-        for event in gamepad.read_loop():
+        for event in gamepad.read_loop():        
             self.key_axis = []
             self.value = 0
             if event.type == ecodes.EV_KEY:
@@ -105,7 +105,27 @@ class xboxOne:
                         self.key_axis ="Down"
                         self.value    = a[1]
                         # print("Hat0 Down")
+
+                    elif a[0] == "ABS_Y":
+                        self.key_axis ="JoyY"
+                        self.value    = a[1]
+                        print("joy Up/Down")
+
+                    elif a[0] == "ABS_X":
+                        self.key_axis ="JoyX"
+                        self.value    = a[1]
+                        print("joy Left/Right")
                     
+                    elif a[0] == "ABS_RZ":
+                        self.key_axis ="JoyRZ"
+                        self.value    = a[1]
+                        print("joyZ Left/Right")
+
+                    elif a[0] == "ABS_Z":
+                        self.key_axis ="JoyZ"
+                        self.value    = a[1]
+                        print("joyZ Up/Down")
+
                     if not self.key_axis == []:
                         return self.key_axis, self.value
             #print(key_axis)
