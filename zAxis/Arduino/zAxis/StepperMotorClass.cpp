@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "StepperMotorClass.h"
+#include "SteppermotorClass.h"
 
 #define CLOCKWISE 1
 #define COUNTERCLOCKWISE 0

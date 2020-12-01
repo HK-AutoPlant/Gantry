@@ -4,34 +4,33 @@
             "name": "!!! WARNING !!! AUTO-GENERATED FILE, PLEASE DO NOT MODIFY IT AND USE https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags"
         },
         {
-            "name": "Mac",
-            "macFrameworkPath": [],
+            "name": "Linux",
             "includePath": [
-                "/Users/Philip/Documents/PlatformIO/Projects/zAxis/include",
-                "/Users/Philip/Documents/PlatformIO/Projects/zAxis/src",
-                "/Users/Philip/.platformio/packages/framework-arduino-avr/cores/arduino",
-                "/Users/Philip/.platformio/packages/framework-arduino-avr/variants/eightanaloginputs",
-                "/Users/Philip/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
-                "/Users/Philip/.platformio/packages/framework-arduino-avr/libraries/HID/src",
-                "/Users/Philip/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
-                "/Users/Philip/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
-                "/Users/Philip/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
-                "/Users/Philip/.platformio/packages/tool-unity",
+                "/home/hk3/Documents/Gantry/zAxis/PlatformIO/Projects/zAxis/include",
+                "/home/hk3/Documents/Gantry/zAxis/PlatformIO/Projects/zAxis/src",
+                "/home/hk3/.platformio/packages/framework-arduino-avr/cores/arduino",
+                "/home/hk3/.platformio/packages/framework-arduino-avr/variants/eightanaloginputs",
+                "/home/hk3/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                "/home/hk3/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                "/home/hk3/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                "/home/hk3/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                "/home/hk3/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                "/home/hk3/.platformio/packages/tool-unity",
                 ""
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "/Users/Philip/Documents/PlatformIO/Projects/zAxis/include",
-                    "/Users/Philip/Documents/PlatformIO/Projects/zAxis/src",
-                    "/Users/Philip/.platformio/packages/framework-arduino-avr/cores/arduino",
-                    "/Users/Philip/.platformio/packages/framework-arduino-avr/variants/eightanaloginputs",
-                    "/Users/Philip/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
-                    "/Users/Philip/.platformio/packages/framework-arduino-avr/libraries/HID/src",
-                    "/Users/Philip/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
-                    "/Users/Philip/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
-                    "/Users/Philip/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
-                    "/Users/Philip/.platformio/packages/tool-unity",
+                    "/home/hk3/Documents/Gantry/zAxis/PlatformIO/Projects/zAxis/include",
+                    "/home/hk3/Documents/Gantry/zAxis/PlatformIO/Projects/zAxis/src",
+                    "/home/hk3/.platformio/packages/framework-arduino-avr/cores/arduino",
+                    "/home/hk3/.platformio/packages/framework-arduino-avr/variants/eightanaloginputs",
+                    "/home/hk3/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                    "/home/hk3/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                    "/home/hk3/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                    "/home/hk3/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                    "/home/hk3/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                    "/home/hk3/.platformio/packages/tool-unity",
                     ""
                 ]
             },
@@ -47,23 +46,11 @@
             "intelliSenseMode": "gcc-x64",
             "cStandard": "c11",
             "cppStandard": "c++11",
-            "compilerPath": "/Users/Philip/.platformio/packages/toolchain-atmelavr/bin/avr-gcc",
+            "compilerPath": "/home/hk3/.platformio/packages/toolchain-atmelavr/bin/avr-gcc",
             "compilerArgs": [
                 "-mmcu=atmega328p",
                 ""
             ]
-        },
-        {
-            "name": "testConfig",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [],
-            "macFrameworkPath": [],
-            "compilerPath": "/usr/local/bin/gcc-10",
-            "cStandard": "gnu17",
-            "cppStandard": "gnu++14",
-            "intelliSenseMode": "gcc-x64"
         }
     ],
     "version": 4

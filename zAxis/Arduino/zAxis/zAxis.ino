@@ -1,6 +1,5 @@
-#include <Arduino.h>
-#include "Classes/StepperMotorClass.h"
-#include "Classes/limitSwitchClass.h"
+#include "StepperMotorClass.h"
+#include "limitSwitchClass.h"
 
 #define BAUD_RATE 115200
 #define COMMAND_COMPLETED 1
@@ -48,7 +47,7 @@ void setup()
   zAxis.mmPerRev = 6;
   zAxis.initialize();
 
-  Gripper.maxDistance = 12;
+  Gripper.maxDistance = 10;
   Gripper.limitSwitchOffset = 0;
   Gripper.stepsPerRev = 200;
   Gripper.initialize();

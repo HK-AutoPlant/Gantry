@@ -1,6 +1,6 @@
 #import evdev
 from evdev import InputDevice, categorize, ecodes
-gamepad = InputDevice('/dev/input/event2')
+gamepad = InputDevice('/dev/input/event0')
 aBtn = 304
 bBtn = 305
 yBtn = 308
