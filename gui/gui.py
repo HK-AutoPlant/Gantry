@@ -126,11 +126,12 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi('mainwindow2.ui', self)
         # Importing TreeHive into widget window        
         #x=50,y=50,iconsize=25,CC=30,rows=20,columns=35):
-        ratio = resHeight/resWidth
-        cc = 1.3*ratio*resHeight/(19+2*0.8)
-        iconSize = ratio*cc
+        # ratio = resHeight/resWidth
+        ccy = 0.3*resHeight/(12+2*0.8)
+        ccx = 0.2*resWidth/(12+2*0.8)
+        iconSize = 0.6*ccy
         # print(self.treeWidget))
-        self.treeWidget.createTrees(0,0,iconSize,cc,20,35)
+        self.treeWidget.createTrees(0,0,iconSize,ccx,ccy,20,14)
         # Create paho Mqtt object
         self.client = paho.Client("Autoplant1") #create client object
         # Arduino Stepper Motor 
