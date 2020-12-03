@@ -48,8 +48,8 @@ void setup()
   zAxis.mmPerRev = 6;
   zAxis.initialize();
 
-  Gripper.maxDistance = 10;
-  Gripper.limitSwitchOffset = 3;
+  Gripper.maxDistance = 20;
+  Gripper.limitSwitchOffset = 0;
   Gripper.stepsPerRev = 200;
   Gripper.initialize();
 
@@ -67,7 +67,7 @@ void loop() {
 
   while(Serial.available() > 0)
   {
-    Serial.println(COMMAND_NOT_COMPLETED);
+    //Serial.println(COMMAND_NOT_COMPLETED);
     msg = Serial.readString();
 
     switch (msg[0]) {
@@ -116,7 +116,7 @@ void loop() {
       break;
 
       default:
-        //Serial.println("Message not understood");
+        Serial.println("Message not understood");
       break;
     }
     Serial.println(COMMAND_COMPLETED);
@@ -142,9 +142,6 @@ int parseMessage(String msg)
 
 void detectSoil()
 {
-  Serial.print(soilSensor1.isPressed());
-  Serial.print(soilSensor2.isPressed());
-  Serial.print(soilSensor3.isPressed());
-  Serial.print(soilSensor4.isPressed());
-  Serial.print(soilSensor5.isPressed());
+  String divisor = ",";
+  Serial.println(soilSensor1.isPressed() + divisor + soilSensor2.isPressed() + divisor + soilSensor3.isPressed() + divisor + soilSensor4.isPressed() + divisor + soilSensor5.isPressed());
 }
