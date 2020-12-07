@@ -14,6 +14,7 @@ from PyQt5 import QtWidgets, uic , QtCore
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from func_timeout import func_timeout, FunctionTimedOut
 #from pyqtgraph import PlotWidget
 import pyqtgraph as pg
 import sys
@@ -126,14 +127,15 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi('mainwindow2.ui', self)
         # Importing TreeHive into widget window        
         #x=50,y=50,iconsize=25,CC=30,rows=20,columns=35):
-        # ratio = resHeight/resWidth
-        ccy = 0.3*resHeight/(12+2*0.8)
-        ccx = 0.2*resWidth/(12+2*0.8)
-        iconSize = 0.6*ccy
+        ratio = resHeight/resWidth
+        cc = 1.3*ratio*resHeight/(19+2*0.8)
+        iconSize = ratio*cc
         # print(self.treeWidget))
-        self.treeWidget.createTrees(0,0,iconSize,ccx,ccy,20,14)
+        self.treeWidget.createTrees(0,0,iconSize,cc,cc,20,35)
         # Create paho Mqtt object
         self.client = paho.Client("Autoplant1") #create client object
+        self.client.on_connect = self.mqtt_on_connect
+        self.client.on_message = self.mqtt_on_message
         # Arduino Stepper Motor 
         # files_and_directories = os.listdir("/dev/ttyUSB*")
         try:
@@ -150,7 +152,7 @@ class MainWindow(QtWidgets.QMainWindow):
             print(e)        
         # For using an Xbox One Controller
         try:
-            self.readXboxInput = xboxOne()
+            #self.readXboxInput = xboxOne()
             print("xbox created")
         except :
             pass
@@ -163,7 +165,7 @@ class MainWindow(QtWidgets.QMainWindow):
             print("Buffer Arduino error")
             print(exp)
         
-        #Sets icon of the control buttons, can be made in QtCreator as well...
+        #-------Sets icon of the control buttons, can be made in QtCreator as well...-----
         self.pushButton_Home.setIcon(QIcon("icons/home.png"))
         self.pushButton_Left.setIcon(QIcon("icons/left.png"))
         self.pushButton_Right.setIcon(QIcon("icons/right.png"))
@@ -179,8 +181,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.threadpool = QThreadPool()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
         self.startWorkers()    
-        # Start Odrive connectiong as a thred to not lock the GUI!
+        # Start Odrive connectiong as a thred to not lock the GUI!        
         self.odriveConnect.clicked.connect(self.workerConnectOdrive)
+        self.workerConnectOdrive()
         # Set Axis motor intop close loop control
         self.closedLoopAxis0CheckBox.clicked.connect(lambda:self.closedLoop(0))
         self.closedLoopAxis1CheckBox.clicked.connect(lambda:self.closedLoop(1))       
@@ -189,10 +192,12 @@ class MainWindow(QtWidgets.QMainWindow):
         time.sleep(2)        
         try:
             # Home zAxis
+            # func_timeout(5,self.waitForCompletion())
             self.movezAxis("Home", 0)
             self.waitForCompletion()
             # Home Gripper
             self.moveGripper("Home", 0)
+            # func_timeout(5,self.waitForCompletion())
             self.waitForCompletion()
         except Exception as exp:
             print(exp)
@@ -224,6 +229,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # Sliders for maximum speed
         self.velocityLimitX.valueChanged.connect(lambda:self.odriveVelocityLimit(1))
         self.velocityLimitY.valueChanged.connect(lambda:self.odriveVelocityLimit(0))
+        # Trap_traj acc and vel limits
+        # self.accelerationLimitX.valueChanged.connect()
         # pushButton for Calibration
         self.pushButton_CalibrateAxis0.clicked.connect(lambda:self.calibrateAxis(0))
         self.pushButton_CalibrateAxis1.clicked.connect(lambda:self.calibrateAxis(1))
@@ -365,31 +372,40 @@ class MainWindow(QtWidgets.QMainWindow):
 #---------------- END Plotting ---------------------------------------------------------------
 
 #-------------------- Other Functions --------------------------------------------------------
-
     def mapFromPosAndRowToSetPoints(self,pos,row): 
         turns_to_mm = 25*math.pi      #These values are the offset from the machines zero to the first gripping position
-        xOffset_mm = 0.15*turns_to_mm #Change to correct value
-        yOffset_mm = 6.3*turns_to_mm  #Change to correct value 7.3
-        plantXCC_mm = 35.1
+        xOffset_mm = -1.25*turns_to_mm #Change to correct value
+        yOffset_mm = 7.23*turns_to_mm  #Change to correct value 7.3
+        plantXCC_mm = 35.1*1.1681 #+5.9 # org 35.1
         plantYCC_mm = 30
-        trayWidth_mm = 352
-        beamWidth_mm = 45
+        trayWidth_mm = 352*1.1681 
+        beamWidth_mm = 45*1.1681 
         xOffsetBetweenRows_mm = 17.55
+        yOffsetInTurns = 0.425
         if pos == 1:
             x_mm=xOffset_mm
+            x_revolutions = -1.25
+            y_revolutions = 7.3
         elif pos == 2:
             x_mm = xOffset_mm + plantXCC_mm
+            x_revolutions = -0.727967839            
         elif pos == 3:
             x_mm = xOffset_mm + trayWidth_mm + beamWidth_mm
+            x_revolutions = 4.40
         else: # 4
             x_mm = xOffset_mm + trayWidth_mm + beamWidth_mm + plantXCC_mm
+            x_revolutions = 5.1764-0.25
+            print(x_mm)
         if not row % 2:# For even row number. Jackpot has an zigg zagg pattern
             x_mm = x_mm + xOffsetBetweenRows_mm
+            x_revolutions = x_revolutions + 0.26
         
         y_mm = yOffset_mm + row*plantYCC_mm - plantYCC_mm + math.floor(row/8)*6
         mmToRevolutions = 1/(25*math.pi)
-        x_revolutions = x_mm * mmToRevolutions
+        # x_revolutions = x_mm * mmToRevolutions
         y_revolutions = y_mm * mmToRevolutions
+        if row >=2:
+            y_revolutions = 7.3 + (row-1) * yOffsetInTurns 
         return x_revolutions, y_revolutions
 
     def goToPosition(self,pos,row):
@@ -398,6 +414,9 @@ class MainWindow(QtWidgets.QMainWindow):
         string = "X coordinate: {}, Y coordinate: {}".format(x,y)
         
         self.odrv0.axis0.controller.input_pos = x
+        while not self.checkIfInPos():
+            pass
+        time.sleep(1)
         self.odrv0.axis1.controller.input_pos = y
         print(string)
 
@@ -425,7 +444,7 @@ class MainWindow(QtWidgets.QMainWindow):
         print(n)
 
     def xboxMove(self,key):
-        print("Checking if plants are present")
+        
         # self.zAxis.sendMessage("c")
         # while self.zAxis.messageRecieved() is not True:
         #     pass
@@ -453,7 +472,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 
 
         elif key[0] == "Gas":
-            print("gasarsomsatans")
+            throttle_value = key[1]/1024
+            self.stepInTurns.setProperty("value",throttle_value) 
         elif key[0] == "JoyY":
             #0 up and 65535 down
             if key[1] < 65535/4:
@@ -478,55 +498,111 @@ class MainWindow(QtWidgets.QMainWindow):
         
             
         # self.startWorkers()
-
+#-------------------- Mqtt Functions --------------------------------------------------------
     def mqttInitiate(self):
-        try:
+        try:            
             self.client.connect(broker,broker_port)#connect
             self.client.loop_start() #start loop to process received messages
+            
         except Exception as exp:
             print(exp)
 
+    def mqtt_on_connect(self,client, userdata, flags, rc):
+        print("Connected with result code "+str(rc))
+        self.client.subscribe("gantry/move")
+        self.client.subscribe("odrive/onOff")
+        
+    def mqtt_on_message(self,client, userdata, msg):
+        message = str(msg.payload, 'utf-8') 
+        print(message)                
+        if "Up" in message:
+            self.stepInTurns.setProperty("value",0.4) 
+            if self.odrv0.axis1.encoder.pos_estimate + 0.4 >= 7.5:             
+                return
+            else:
+                self.moveUp()
+            
+        elif "Down" in message:
+            self.stepInTurns.setProperty("value",0.4)
+            if self.odrv0.axis1.encoder.pos_estimate - 0.4 <= -0.5:  
+                return 
+            else:
+                self.moveDown()
+
+        elif "Left" in message:
+            self.stepInTurns.setProperty("value",0.4)  
+            if self.odrv0.axis0.encoder.pos_estimate - 0.4 <= -1.25: 
+                return
+            else:
+                self.moveLeft()
+
+        elif "Right" in message:
+            self.stepInTurns.setProperty("value",0.4)              
+            if self.odrv0.axis0.encoder.pos_estimate + 0.4 >= 5.2: 
+                return
+            else:
+                self.moveRight()
+
+        elif "Home" in message:
+            self.stepInTurns.setProperty("value",0.4)  
+            self.moveHome()
+        # zAxis
+        elif "zU" in message:
+            self.movezAxis("Up",10)
+        elif "zD" in message:            
+            self.movezAxis("Down",125)
+        # Gripper
+        elif "Grip" in message:
+            self.zAxis.sendMessage("g10")#closing gripper
+        elif "Release" in message:            
+            self.moveGripper("Home", 0)
+        # switch odrive closed loop
+        elif "motorOn" in message:
+            if self.controllerMode == "Manual":
+                try:
+                    self.odrv0.axis0.requested_state = 8
+                    print("closedLoop set AXIS 0")
+                    self.odrv0.axis1.requested_state = 8
+                    print("closedLoop set AXIS 1")
+                except:
+                    pass
+
+        elif "motorOff" in message:
+            if self.controllerMode == "Manual":
+                try:
+                    self.odrv0.axis0.requested_state = 1
+                    print("closedLoop UNset AXIS 0")
+                    self.odrv0.axis1.requested_state = 1
+                    print("closedLoop UNset AXIS 1")
+                except:
+                    pass
 
 # ------------------- Functions for autonomous mode ------------------------------------------
     def checkIfInPos(self):
-        setpointX = self.odrv0.axis0.controller.pos_setpoint
-        positionX = self.odrv0.axis0.encoder.pos_estimate
-        errorX = abs(setpointX - positionX)
-        tolerance = 0.02
-        if errorX < tolerance:
-            xInPos = True
-        else:
-            xInPos = False
-        setpointY = self.odrv0.axis1.controller.pos_setpoint
-        positionY = self.odrv0.axis1.encoder.pos_estimate
-        errorY = abs(setpointY - positionY)
-        if errorY < tolerance:
-            yInPos = True
-        else: 
-            yInPos = False
-        return (xInPos and yInPos)
-
+        while not (self.odrv0.axis0.controller.trajectory_done and self.odrv0.axis1.controller.trajectory_done):
+            pass
+        return True
+     
     def goToStart(self):
         mmToRevolutions = 1/(25*math.pi)
-        offset = 5.8 # Turns #offset*mmToRevolutions
+        offset = 6.3 # Turns #offset*mmToRevolutions
         self.odrv0.axis1.controller.input_pos = offset #Change to correct value - This should go to the start of the row and a little further.
         print("going to start of column")
-        while not self.checkIfInPos():
-            pass
+        self.checkIfInPos()
 
     def goToBuffer(self,bufferPosition):
-        mmToRevolutions = 1/(25*math.pi)
+        # mmToRevolutions = 1/(25*math.pi)
         if bufferPosition == 1:
-            self.odrv0.axis0.controller.input_pos = 6.55 #Change to correct value
-            self.odrv0.axis1.controller.input_pos = 1.25 #Change to correct value
+            self.odrv0.axis0.controller.input_pos = 5.15 #Change to correct value
+            self.checkIfInPos()                
+            self.odrv0.axis1.controller.input_pos = 1.2 #Change to correct value
         elif bufferPosition == 2:
-            self.odrv0.axis0.controller.input_pos = 1.3 #Change to correct value
-            self.odrv0.axis1.controller.input_pos = 1.25 #Change to correct value
-        while not self.checkIfInPos():
-            pass
+            self.odrv0.axis0.controller.input_pos = -0.08 #Change to correct value
+            self.checkIfInPos()                
+            self.odrv0.axis1.controller.input_pos = 1.2 #Change to correct value
+        self.checkIfInPos()
         # self.odrv0.axis1.controller.input_pos = 0.7
-        while not self.checkIfInPos():
-            pass
+        # self.checkIfInPos()
 
     def waitForCompletion(self): # wait for zAxis assemply to complete command
         while True:             
@@ -538,7 +614,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def auto(self):
         pos = 1
         row = 1
+        last_row = 14
         sleepTime = 1.0
+        treesPicked = 0
         self.zAxis.sendMessage("r")  
         self.waitForCompletion() # wait for homing gripper
         bufferPosition = 1
@@ -547,90 +625,101 @@ class MainWindow(QtWidgets.QMainWindow):
         self.movezAxis("Home", 0)
         self.waitForCompletion() # wait for homing zAxis  
 
-        self.movezAxis("Down",90)
+        self.movezAxis("Down",125)
         self.waitForCompletion() # wait for going down...........
         
         while self.controllerMode == "Auto":
+            self.movezAxis("Down",125)
+            self.waitForCompletion() # wait for going down...........   
             
             self.goToPosition(pos,row)# go to desired position
-            while not self.checkIfInPos():
-                pass
+            self.checkIfInPos()
            # Go an incremental offset
-            time.sleep(1.5)
-            self.odrv0.axis1.controller.move_incremental(1.0 , 1)
-            while not self.checkIfInPos():
-                pass
-            time.sleep(2.5)
+            # time.sleep(1.5)
+            # self.odrv0.axis1.controller.move_incremental(1.0 , 1)
+            # while not self.checkIfInPos():
+            #     pass
+            # time.sleep(1.0)
 
             print("moving Z down...")
-            self.movezAxis("Down",30) # Move down
+            self.movezAxis("Down",130) # Move down
             self.waitForCompletion()
 
             print("Gripping plants...")
-            self.zAxis.sendMessage("g12")#closing gripper
+            self.zAxis.sendMessage("g11")#closing gripper
             self.waitForCompletion()
 
-            print("Checking if plants are present")
-            self.zAxis.sendMessage("c")
-            while not self.zAxis.messageRecieved():
-                pass
-            for item in self.zAxis.returnMessage():
-                if item == 0:
-                    # Logic
-                    pass
-                else:
-                    pass
+            # print("Checking if plants are present")
+            # self.zAxis.sendMessage("c")
+            # while not self.zAxis.messageRecieved():
+            #     pass
+            # for item in self.zAxis.returnMessage():
+            #     if item == 0:
+            #         # Logic
+            #         pass
+            #     else:
+            #         pass
             # print(self.zAxis.returnMessage())
 
             print("Moving Z up...")
-            self.movezAxis("Up",130) # Move up
+            self.movezAxis("Up",30) # Move up
             self.waitForCompletion()
 
             print("Trees are correctly gripped")
 
             self.goToStart() # safe zone
-            # Wait for buffer to be ready
-            while not self.BufferReady:
-                pass
-            time.sleep(2.5)
+
+            print("Wait for buffer to be ready")
+            if hasattr(self, 'BufferControl' ) == True:
+                print("buffer present")
+                try:
+                    while not self.BufferReady:
+                        continue
+                    time.sleep(1.0)
+                except Exception as exp:
+                    print(exp)
 
             self.goToBuffer(bufferPosition)
             print("dropping plants into buffer")
-            self.movezAxis("Down",100) # Move down
+            self.movezAxis("Down",120) # Move 
             self.waitForCompletion()
 
             # releasing plants
             self.moveGripper("Home", 0) # homing gripper for robustness, open-loop 
             self.waitForCompletion()
 
-            self.odrv0.axis1.controller.input_pos = -0.5 # backoff
-            while not self.checkIfInPos():
-                pass  
-            time.sleep(0.5)    
-            if bufferPosition == 1:
-                self.odrv0.axis0.controller.input_pos = 2 # move lef/right
-            elif bufferPosition == 2:
-                self.odrv0.axis0.controller.input_pos = 5.8 # move lef/right
+            # set percentage of plants picked
+            treesPicked = treesPicked + 5
+            self.progressBar_treeCollecting.setProperty("value",100*(treesPicked/(4*5*last_row)))
+            self.sendMqttMessage("treeStatus/picked",100*(treesPicked/(4*5*last_row)))
 
-            while not self.checkIfInPos():
-                pass            
+            self.odrv0.axis1.controller.input_pos = -0.5 # backoff
+
+            self.checkIfInPos() 
+            # time.sleep(0.5)    
+            if bufferPosition == 1:
+                self.odrv0.axis0.controller.input_pos = -0.08 # move lef/right
+            elif bufferPosition == 2:
+                self.odrv0.axis0.controller.input_pos = 5.15 # move lef/right
+
+            self.checkIfInPos()           
              
             # self.moveGripper("Home", 0) # homing gripper for robustness, open-loop
             # self.waitForCompletion()
 
-            self.movezAxis("Up",20) # Move up
+            self.movezAxis("Up",110) # Move up
             self.waitForCompletion()
 
             self.goToStart()
-            while not self.checkIfInPos():
-                pass 
-            time.sleep(2.5)
+            self.checkIfInPos()
+            # time.sleep(0.5)
             # Move of in a safe manner
-
+            
+            # Align with 
             # self.odrv0.axis0.controller.input_pos = 5.8
             if pos == 2:
                 pos = 1
-                if row == 14:
+                if row == last_row:
                     print("Done picking all plants")
                     pos = 1
                     row = 1
@@ -680,6 +769,7 @@ class MainWindow(QtWidgets.QMainWindow):
             print(ex)
         #print("odrive connected")
         self.odriveConnect.setText("odrive connected")
+        self.sendMqttMessage("odrive/onOff","True")
         self.odriveConnect.adjustSize()        
         return odrv0
 
@@ -811,7 +901,7 @@ class MainWindow(QtWidgets.QMainWindow):
             vbusVoltage = self.odrv0.vbus_voltage
             self.batteryVoltage.setText(str(vbusVoltage))
             self.lcdNumber.setProperty("value",vbusVoltage)
-            chargeLevel = round(92.98507 * vbusVoltage - 1095.39005, 1) 
+            chargeLevel = round(92.98507 * vbusVoltage/2.0 - 1095.39005, 1) 
             if chargeLevel > 100:
                 chargeLevel = 100
             if chargeLevel < 0:
@@ -820,9 +910,15 @@ class MainWindow(QtWidgets.QMainWindow):
             self.batteryChargeLevel.setProperty("value",chargeLevel)
             # publish to mqtt
             if hasattr(self, 'client' ) == True:
+                # print("sending mqqt message")
                 self.client.publish("oDrive/batteryVoltage",chargeLevel)#publish
         except:
             pass
+
+    def sendMqttMessage(self,topic,payload):
+        if hasattr(self, 'client' ) == True:
+            # print("sending mqqt message")
+            self.client.publish(topic,payload)#publish
 
 # ------------------- Functions for Odrive control parameters --------------------------------
     # Should Probalby be event base, such as "upon change value"
@@ -845,15 +941,19 @@ class MainWindow(QtWidgets.QMainWindow):
         max_velY = self.velocityLimitY.value()
         vel_gain = self.gainVelController.value() 
         self.lcd_velX.setProperty("value",max_velX)
+        self.lcd_velY.setProperty("value",max_velY)
         try:
-            pass
             # self.odrv0.axis0.controller.config.pos_gain = self.gainPosController.value()
             if axis == 1:
-                self.odrv0.axis1.controller.config.vel_limit = max_velX 
-                self.lcd_velX.setProperty("value",self.odrv0.axis1.controller.config.vel_limit)
+                # self.odrv0.axis1.controller.config.vel_limit = max_velX 
+                self.odrv0.axis1.trap_traj.config.vel_limit = max_velX 
+                self.lcd_velX.setProperty("value",self.odrv0.axis1.trap_traj.config.vel_limit)
+                # self.lcd_velX.setProperty("value",self.odrv0.axis1.controller.config.vel_limit)
             elif axis == 0:
-                self.odrv0.axis0.controller.config.vel_limit = max_velY 
-                self.lcd_velY.setProperty("value",self.odrv0.axis0.controller.config.vel_limit)
+                # self.odrv0.axis0.controller.config.vel_limit = max_velY 
+                self.odrv0.axis0.trap_traj.config.vel_limit = max_velY 
+                self.lcd_velY.setProperty("value",self.odrv0.axis0.trap_traj.config.vel_limit)
+                # self.lcd_velY.setProperty("value",self.odrv0.axis0.controller.config.vel_limit)
             # self.odrv0.axis0.controller.config.vel_gain  = vel_gain
         except:
             pass
@@ -886,7 +986,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def moveUp(self):
         StepSize = self.stepInTurns.value()        
         self.lcdPos_Up.setProperty("value", round(self.lcdPos_Up.value() + StepSize , 2))        
-        try:
+        try:        
+            # print(self.odrv0.axis1.requested_state)
+            # if self.odrv0.axis1.requested_state == 8:    
             self.odrv0.axis1.controller.move_incremental(StepSize , 1)
         except:
             pass
@@ -895,6 +997,7 @@ class MainWindow(QtWidgets.QMainWindow):
         StepSize = self.stepInTurns.value()       
         self.lcdPos_Up.setProperty("value", round(self.lcdPos_Up.value() - StepSize , 2))
         try:
+            # if self.odrv0.axis1.requested_state == 8:
             self.odrv0.axis1.controller.move_incremental(-StepSize , 1)
         except:
             pass
@@ -903,6 +1006,7 @@ class MainWindow(QtWidgets.QMainWindow):
         StepSize = self.stepInTurns.value()     
         self.lcdPos_Left.setProperty("value", round(self.lcdPos_Left.value() - StepSize , 2))
         try:
+            # if self.odrv0.axis0.requested_state == 8:
             self.odrv0.axis0.controller.move_incremental(-StepSize , 1)
         except:
             pass
@@ -911,6 +1015,7 @@ class MainWindow(QtWidgets.QMainWindow):
         StepSize = self.stepInTurns.value()
         self.lcdPos_Left.setProperty("value", round(self.lcdPos_Left.value() + StepSize , 2))
         try:
+            # if self.odrv0.axis0.requested_state == 8:
             self.odrv0.axis0.controller.move_incremental(StepSize , 1)
         except:
             pass
@@ -919,6 +1024,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.lcdPos_Up.setProperty("value", 0)
         self.lcdPos_Left.setProperty("value", 0)
         try:
+            # if self.odrv0.axis0.requested_state == 8 and self.odrv0.axis1.requested_state == 8:
             self.odrv0.axis0.controller.input_pos = 0
             self.odrv0.axis1.controller.input_pos = 0
         except:
@@ -942,12 +1048,12 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             if hasattr(self, 'zAxis' ) == True:
                 if direction == "Down":
-                    self.zAxis.sendMessage("z"+str(length))                    
-                    self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() - length))             
+                    self.zAxis.sendMessage("P"+str(length))                    
+                    self.lcd_zAxis.setProperty("value",(-length))             
                     
                 elif direction == "Up":
-                    self.zAxis.sendMessage("z-"+str(length))                    
-                    self.lcd_zAxis.setProperty("value",(self.lcd_zAxis.value() + length))  
+                    self.zAxis.sendMessage("P"+str(length))                    
+                    self.lcd_zAxis.setProperty("value",(-length))  
                     
                 elif direction == "Home":                
                     self.zAxis.sendMessage("H")                  
@@ -1020,6 +1126,9 @@ def main():
 if __name__ == '__main__':   
     #while(True):
      #   print("hej")     
+    timer = QTimer()
+    timer.timeout.connect(lambda: None)
+    timer.start(100)
     main()
 
 
