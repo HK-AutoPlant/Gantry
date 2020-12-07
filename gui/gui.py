@@ -1,8 +1,10 @@
-# window.progressbar.    = od.busvoltage()
-# pyuic5 mainwindow.ui -o MainWindow.py
-#while (1):
-	#app.exec()
-	
+# start program with either:
+# python3 gui.py -platform vnc    for vnc server to remotely control gui
+# or
+# export DISPLAY=:0
+# then
+# python3 gui.py
+# this opens the gui on te PIs screen	
 
 import sys
 import os
