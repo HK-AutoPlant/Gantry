@@ -10,13 +10,13 @@ import sys
 import os
 sys.path.append("../zAxis/Python") # Adds higher directory to python modules path.
 # sys.path.append("~/Documents/Buffer") # Adds higher directory to python modules path.
-sys.path.append("../Buffer") # Adds higher directory to python modules path.
+sys.path.append("../../Buffer") # Adds higher directory to python modules path.
 
 from PyQt5 import QtWidgets, uic , QtCore  
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from func_timeout import func_timeout, FunctionTimedOut
+# from func_timeout import func_timeout, FunctionTimedOut
 #from pyqtgraph import PlotWidget
 import pyqtgraph as pg
 import sys
